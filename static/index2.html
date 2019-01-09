@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>首页</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <!-- Toastr style -->
+    <link href="css/plugins/toastr/toastr.min.css" rel="stylesheet">
+
+    <link href="css/animate.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <!-- 生成导航栏 -->
+    <script src="js/jquery-2.1.1.js"></script>
+    <script src="js/module/navigation.js"></script>
+    <style>
+        .vm_running, .vm_stoped {
+            cursor: default;
+        }
+        .running_info,.table>tbody>tr.running_info:hover,
+        .stoped_info,.table>tbody>tr.stoped_info:hover
+        {
+            background: #B8E3F9;
+        }
+        .pagination{
+           margin: 0px!important;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar-default navbar-static-side" role="navigation" id="navbar"></nav>
+
+<div id="page-wrapper" class="gray-bg dashbard-1">
+    <div class="row border-bottom">
+        <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+                <div class="pagetitle">概览</div>
+            </div>
+            <ul class="nav navbar-top-links navbar-right">
+                <li>
+                    <a href="#" onclick="javascript:logout(); event.returnValue=false; ">
+                        <i class="fa fa-sign-out"></i> Log out
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="row white-bg dashboard-header" style="overflow: auto; z-index: 50;position: relative;">
+        <div class="row" style="padding-top: 10px;background: #fff;">
+            <div class="col-xs-12" id="succ_req">
+                <h3>资源总览</h3>
+                <div class="panel-group" id="accordion">
+                </div>
+            </div>
+            <div class="col-xs-12" id="erro_req" style="display: none;padding: 30px">
+                <h3 class="text-danger">不好意思,您没有权限访问此网页,请与管理员联系。</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Mainly scripts -->
+<script src="js/jquery-2.1.1.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+
+<!-- data tables -->
+<script src="js/bootstrap-table.js"></script>
+<script src="js/bootstrap-table-zh-CN.min.js"></script>
+
+
+<!-- Custom and plugin javascript -->
+<script src="js/inspinia.js"></script>
+<script src="js/plugins/pace/pace.min.js"></script>
+<script src="js/module/common.js"></script>
+<script>
+    var Bulidhtml = function () {
+    };
+
+    Bulidhtml.tableInner = function (id,
+                                     group_name,
+                                     cpu_used,
+                                     cpu_no_use,
+                                     cpu_per,
+                                     mem_used,
+                                     mem_no_use,
+                                     mem_per,
+                                     disk_used,
+                                     disk_no_used,
+                                     disk_per,
+                                     vm_used,
+                                     vm_no_use,
+                                     vm_per,
+                                     vm_runing,
+                                     vm_stoped,
+                                     vm_total_num,
+                                     show_in,
+                                     group_id
+    ) {
+        var html;
+        html = ' <div class="panel panel-info">'
+        html += '     <div class="panel-heading">'
+        html += '                <h4 class="panel-title">'
+        html += '                     <a data-toggle="collapse" data-parent="#accordion" href="#' + id + '">' + group_name + '</a>'
+        html += '                 </h4>'
+        html += '      </div>'
+        html += '      <div id="' + id + '" class="panel-collapse collapse ' + show_in + '">'
+        html += '                 <div class="panel-body">'
+        html += '                     <table class="table table-striped">'
+        html += '                         <thead>'
+        html += '                         <tr class="bg-info">'
+        html += '                             <th>资源名</th>'
+        html += '                             <th>可用容量比例</th>'
+        html += '                             <th>已用量/总额</th>'
+        html += '                         </tr>'
+        html += '                         </thead>'
+        html += '                         <tbody>'
+        html += '                         <tr>'
+        html += '                             <td>CPU</td><td>' + cpu_no_use + '%</td>'
+        html += '                             <td>'
+        html += '                                 <div class="progress" style="background:#4d4d4d;margin-bottom: 0px">'
+        html += '                                     <div class="progress-bar"style="width: ' + cpu_per + '%; background: linear-gradient(to right, #00b360 35%,#ffb036 68%);">'
+        html += '                                         <div class="progress-value">' + cpu_used + '</div>'
+        html += '                                     </div>'
+        html += '                                 </div>'
+        html += '                             </td>'
+        html += '                         </tr>'
+        html += '                         <tr>'
+        html += '                             <td>MEM</td><td>' + mem_no_use + '%</td>'
+        html += '                             <td>'
+        html += '                                 <div class="progress" style="background:#4d4d4d;margin-bottom: 0px">'
+        html += '                                     <div class="progress-bar"style="width: ' + mem_per + '%; background: linear-gradient(to right, #00b360 35%,#ffb036 68%);">'
+        html += '                                         <div class="progress-value">' + mem_used + 'M</div>'
+        html += '                                     </div>'
+        html += '                                 </div>'
+        html += '                             </td>'
+        html += '                         </tr>'
+        html += '                         <tr>'
+        html += '                             <td>DISK</td><td>' + disk_no_used + '%</td>'
+        html += '                             <td>'
+        html += '                                 <div class="progress" style="background:#4d4d4d;margin-bottom: 0px">'
+        html += '                                     <div class="progress-bar"style="width: ' + disk_per + '%; background: linear-gradient(to right, #00b360 35%,#ffb036 68%);">'
+        html += '                                         <div class="progress-value">' + disk_used + 'G</div>'
+        html += '                                     </div>'
+        html += '                                 </div>'
+        html += '                             </td>'
+        html += '                         </tr>'
+        html += '                         <tr>'
+        html += '                             <td>VM</td><td>' + vm_no_use + '%</td>'
+        html += '                             <td>'
+        html += '                                 <div class="progress" style="background:#4d4d4d;margin-bottom: 0px">'
+        html += '                                     <div class="progress-bar"style="width: ' + vm_per + '%; background: linear-gradient(to right, #00b360 35%,#ffb036 68%);">'
+        html += '                                         <div class="progress-value">' + vm_used + '</div>'
+        html += '                                     </div>'
+        html += '                                 </div>'
+        html += '                             </td>'
+        html += '                         </tr>'
+        html += '                         </tbody>'
+        html += '                     </table>'
+        html += '                     <h3>资源使用</h3>'
+        html += '                     <table class="table table-hover">'
+        html += '                         <thead>'
+        html += '                         <tr class="bg-info">'
+        html += '                             <th>查看详情</th>'
+        html += '                             <th>资源名</th>'
+        html += '                             <th>数量</th>'
+        html += '                         </tr>'
+        html += '                         </thead>'
+        html += '                         <tbody>'
+        html += '                         <tr class="vm_running" data-group-id='+group_id+'>'
+        html += '                             <td><a class="detail-icon-running" href="javascript:"><i class="glyphicon glyphicon-plus icon-plus"></i></a></td><td>运行中的VM</td><td>' + vm_runing + '</td>';
+        html += '                         </tr>';
+        html += '                         <tr class="running_info" style="display: none;">'
+        html += '                             <td colspan="3">';
+        html += '                                   <table id="runninglist">';
+        html += '                                   </table>';
+        html += '                             </td>';
+        html += '                         </tr>'
+        html += '                         <tr class="vm_stoped" data-group-id='+group_id+'>';
+        html += '                             <td><a class="detail-icon-stoped" href="javascript:"><i class="glyphicon glyphicon-plus icon-plus"></i></a></td><td>已停止的VM</td><td>' + vm_stoped + '</td>';
+        html += '                         </tr>';
+        html += '                         <tr class="stoped_info"  style="display: none;">'
+        html += '                             <td colspan="3">';
+        html += '                                   <table id="stopedlist">';
+        html += '                                   </table>';
+        html += '                             </td>';
+        html += '                         </tr>'
+        html += '                         <tr>';
+        html += '                             <td colspan="2">总VM数</td><td>' + vm_total_num + '</td>';
+        html += '                         </tr>';
+        html += '                         </tbody>';
+        html += '                     </table>';
+        html += '                 </div>';
+        html += '             </div>';
+        html += '         </div>';
+        return html;
+    }
+
+    $(function () {
+        $.ajax({
+            url: "/dashboard/v2",
+            type: "get",
+            success: function (res) {
+                if (res.code != 0) {
+                    res.msg != "" ? showMessage(res.msg, "danger", 2000) : show("数据加载失败，请刷新重试！！！", "danger", 2000);
+                } else {
+                    var list = res.data.info_list,
+                            id,
+                            group_name,
+                            cpu_used,
+                            cpu_no_use,
+                            cpu_per,
+                            mem_used,
+                            mem_no_use,
+                            mem_per,
+                            disk_used,
+                            disk_no_used,
+                            disk_per,
+                            vm_used,
+                            vm_no_use,
+                            vm_per,
+                            vm_runing,
+                            vm_stoped,
+                            vm_total_num,
+                            show_in,
+                            group_id,
+                            str = "";
+                    if (list.length > 0) {
+                        $.each(list, function (index, tmp) {
+                            if (index == 0) {
+                                show_in = "in";
+                            } else {
+                                show_in = "";
+                            }
+                            id = "collapse" + index;
+                            group_name = tmp.group_name;
+                            cpu_no_use = parseFloat(tmp.cpu_usable_per).toFixed(2);
+                            cpu_per = 100 - cpu_no_use;
+                            cpu_used = tmp.cpu_used + "/" + tmp.cpu_all;
+                            mem_no_use = parseFloat(tmp.mem_usable_per).toFixed(2);
+                            mem_per = 100 - mem_no_use;
+                            mem_used = tmp.mem_used + "/" + tmp.mem_all;
+                            disk_no_used = parseFloat(tmp.disk_usable_per).toFixed(2);
+                            disk_per = 100 - disk_no_used;
+                            disk_used = tmp.disk_used + "/" + tmp.disk_all;
+                            vm_no_use = parseFloat(tmp.vm_usable_per).toFixed(2);
+                            vm_per = 100 - disk_used;
+                            vm_used = tmp.vm_used + "/" + tmp.all_vms;
+                            vm_runing = tmp.running_vms;
+                            vm_stoped = tmp.stop_vms;
+                            vm_total_num = tmp.vm_used;
+                            group_id = tmp.group_id;
+                            console.log(group_id);
+                            str += Bulidhtml.tableInner(
+                                    id,
+                                    group_name,
+                                    cpu_used,
+                                    cpu_no_use,
+                                    cpu_per,
+                                    mem_used,
+                                    mem_no_use,
+                                    mem_per,
+                                    disk_used,
+                                    disk_no_used,
+                                    disk_per,
+                                    vm_used,
+                                    vm_no_use,
+                                    vm_per,
+                                    vm_runing,
+                                    vm_stoped,
+                                    vm_total_num,
+                                    show_in,
+                                    group_id
+                            );
+                        });
+                        $("#succ_req").css("display", "block");
+                        $("#erro_req").css("display", "none");
+                    } else {
+                        $("#succ_req").css("display", "none");
+                        $("#erro_req").css("display", "block");
+                    }
+                    $("#accordion").html(str);
+                }
+            }
+        });
+    });
+
+    window.onload = function () {
+        $("#accordion").on("click", ".vm_running", function () {
+            var group_id = $(this).attr("data-group-id");
+                init_table(runninglist,group_id,"3");
+                $(".running_info").slideToggle();
+        });
+         $("#accordion").on("click", ".vm_stoped", function () {
+            var group_id = $(this).attr("data-group-id");
+                init_table(stopedlist,group_id,"1");
+                $(".stoped_info").slideToggle();
+        });
+    };
+    function init_table(_id,_group_id,_status) {
+        $(_id).bootstrapTable({
+            url: '/instance/list',
+            method: 'GET',
+            dataType: "json",
+            detailView: false,
+            uniqueId: "group_id", //删除时能用到 removeByUniqueId
+            queryParamsType: "search",
+//            showRefresh: true,
+            contentType: "application/x-www-form-urlencoded",
+            pagination: true,
+//            pageList: [10,25],
+            pageSize: 10,
+            pageNumber: 1,
+            search: false, //不显示全表模糊搜索框
+//            searchText: getQueryString('search'),
+//            showColumns: true, //不显示下拉框（选择显示的列）
+            sidePagination: "client", //服务端请求
+            clickToSelect: false,
+            singleSelect: false,
+            onBeforeLoadParams: {},//查询参数设置，供导出使用，在search_form.js里赋值
+            sortable: false,
+            responseHandler: function (res) {
+                if (res.code == 0) {
+                    var data_info = {},total = res.data.total,rows = [];
+                    var rows_info = res.data.rows;
+                    for(var i = 0,len = rows_info.length;i<len;i++){
+                            var tmp = rows_info[i];
+                          if(
+                                  parseInt(_group_id) === tmp.group_id,
+                                  tmp.status === _status
+                          ){
+                              rows.push(tmp);
+                          }
+                    }
+                    data_info.total = rows.length;
+                    data_info.rows = rows;
+                    console.log(data_info);
+                    if(rows.length>0){
+                         return rows;
+                    }else{
+                        return {"rows":[],total:0};
+                    }
+                } else {
+                    return {"rows":[],total:0};
+                }
+            },
+            queryParams: function (q) {
+                return {
+//                    "page_size": q.pageSize,
+                    "page_size": 10000,
+                    "page_no": q.pageNumber
+                };
+            },
+            formatRecordsPerPage: function (a) {
+                return;
+            },
+            onLoadSuccess: function ($element) {
+
+            },
+            onClickRow: function ($element, row) {
+            },
+            columns: [
+                {
+                    title: "主机名",
+                    field: "displayname",
+                    align: "left",
+                },
+                {
+                    title: "IP地址",
+                    field: "ip_address",
+                    align: "left",
+                },
+                {
+                    title: "所属集群",
+                    field: "hostpool",
+                    align: "left",
+                },
+                 {
+                    title: "机房类型",
+                    field: "dc_type",
+                    align: "left",
+                    formatter: function (value, row, index) {
+                    var arr = ['其他', '测试SIT', '准生产STG', '研发DEV', '生产PRD', '容灾DR', '腾讯云双活'];
+                    var dc_type = parseInt(row.dc_type);
+                    return arr[dc_type];
+                }
+                },
+                  {
+                    title: "应用组信息",
+                    field: "app_info",
+                    align: "left",
+                }
+            ]
+        })
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+# POST /image_manage/image_edit 镜像开机编辑接口
+
+## 请求参数
+```
+    json
+```
+
+{
+"image_name":image_name,    #镜像名称
+}
+
+返回值：
+{
+  "code": 0,
+  "data": {}
+  "msg": "success"
+}
+

@@ -1,0 +1,25 @@
+# POST /v2v/openstack/task_check
+
+
+## 请求参数
+| 参数 | 是否必须 | 类型 | 描述 |
+|-----|----------|------|-------------|-------|
+| flavor_id   | 是| string| flavor ID|
+| vm_ostype   | 是| string| 操作系统类型 |
+| cloud_area   | 是| string| openstack环境 |
+| segment   | 是| int| vm所在网段 |
+| vm_ip   | 是| string| 虚拟机IP |
+
+
+
+
+## 返回参数
+```json
+
+	{
+	  "msg": "success",
+	  "code": 0,
+	  "data": {}
+    }
+
+```

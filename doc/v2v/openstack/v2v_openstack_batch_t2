@@ -1,0 +1,40 @@
+# POST /v2v/openstack/batch_2
+
+
+## 请求参数
+| 参数 | 是否必须 | 类型 | 描述 |
+|-----|----------|------|-------------|-------|
+| openstack_batch   | 是| str| openstack_task清单|
+其中openstack_batch中的list对象内容如下：
+{
+'vm_name':vmname,
+'vm_ip':vmip,
+'flavor_id':flavor_id,
+'cloud_area':cloud_area,
+'vm_ostype':vm_ostype,
+'vm_app_info':vm_app_info,
+'vm_owner':vm_owner,
+'group_id':group_id,
+'user_id':user_id,
+'segment':segment,
+'hostpool_id':hostpool_id,
+'vm_disk':vm_disk,
+'vm_osver':vm_osver
+}
+
+
+## 返回参数
+```json
+
+	{
+        'code':code,         #全部成功 0；全部失败 -10009 ；部分成功 0
+        'message':message,             #message信息
+        'data':return_list              #详细错误task的list
+    }
+```
+##其中 return_list中对象的 格式如下
+{
+'vm_name':vmname,
+...
+error_message':message
+}

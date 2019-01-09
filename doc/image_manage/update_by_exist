@@ -1,0 +1,20 @@
+# POST /image_manage/update_by_exist  已有镜像的补录
+
+## 请求参数
+```
+    json
+```
+
+{
+"version":version,    #操作系统版本
+"eimage_name":eimage_name,    #镜像名称
+"displayname":displayname     #镜像显示名称
+}
+
+返回值：
+{
+  "code": 0,
+  "data": {}
+  "msg": "success"
+}
+

@@ -1,0 +1,48 @@
+
+一、新增功能
+1、	研发用户，不允许创建SIT、STG的VM，创建页面的权限要去掉
+SIT、STG环境，应用管理员通过维石调用接口创建VM。
+DEV环境，应用管理员通过cloud创建VM。
+2、加VM配置：8Core16GB；8Core32GB
+3、root密码后面加一个提示语：如果是Windows服务器，这里对应的是Winsvruser的密码
+4、VM清单支持Excel导出
+5、支持Windows VM创建时修改Winsvruser密码
+6、ESX TO KVM 单台VM迁移，批量VM迁移
+7、Openstack TO KVM 批量VM迁移
+8、维石VM创建API接口
+   a、新增外部应用接入生成token逻辑函数
+   b、新增查询总部指定网络区域、机房类型对应的物理集群数据库函数
+   c、新增查询指定内存、cpu对应的虚拟机配置模板id数据库函数
+   d、新增创建虚拟机过程中返回外部接口友好提示信息函数
+   e、新增维石接口新增应用自动创建应用组功能函数
+   f、新增维石接口应用组所有者发生改变修改kvm平台应用组所有者功能函数
+   g、新增数据库表request_record及其相关数据库操作函数
+   h、外部接口创建虚拟机时录入工单记录到request_record表中
+   i、新增工单状态更新及给外部接口返回任务信息进程
+
+二、BUG
+1、v2v重试操作可能清空kvm host上vm目录的BUG
+2、同一kvm host上有并发的v2v任务时配置迁移限速错误BUG
+3、应用管理员属于不同应用组的时候进入VM页面,部分组的VM不能进行操作以及查看console和监控
+4、外部接口调用时校验用户密码使用base64解密
+
+三、优化
+1、取消前端登录页面对用户密码加密，以及后端用户登录解密，因为使用了证书加密形式
+2、新增判断root密码是否需要注入修改逻辑
+
+
+@安轲
+DB改动项：
+v2v_task表：
+1]增加列：source；类型：varchar；长度:10;注释：用来标明v2v来源
+2]增加列：esx_ip；类型：varchar；长度：20；注释：esxi的ip地址
+3]增加列：esx_passwd；类型：varchar；长度：25；注释：esx root密码
+4]增加列：volumelist;类型:varchar；长度:10;注释：vm数据盘数量
+5]增加列：vmware_vm；类型：varchar；长度：50；注释：vmware平台上vm名称
+v2v_instance_info表：
+1]修改列：os_version：长度从10改成50
+
+@思远
+表更新
+1、修改表tb_user，auth_type中新增外部应用用户编码2
+2、新增数据库表request_record

@@ -1,0 +1,31 @@
+#GET /image_sync/singe_host_sync_list<int:host_id> 镜像同步获取信息函数
+
+
+## 返回参数
+```json
+
+	{
+	  "local_image":[local_image_list],
+	  "remote_image":[remote_image_list]
+    }
+其中local_image_list中信息如下：
+[
+{
+'image_id':image_id,
+'uptodate':'0' or '1'      #0代表是最新，1代表不是最新
+'task_ondo_exist':'0' or '1'   #0代表有在跑的任务，1代表没有在跑的任务
+'task_ondo_list':[task_list]
+}
+,
+{
+}
+]
+其中sch_list中信息如下：此处只会将sch_state值为'0','1','3'的信息返回
+[
+{
+"sch_starttime":sch_starttime,
+"sch_endtime":sch_endtime,
+"sch_num":sch_num,          #sch任务的编号,从0-6对应7个任务
+"sch_state":sch_state       #sch_state:'0'代表未开始,'1'代表进行中,'2'代表已完成,'3'代表错误
+}
+]

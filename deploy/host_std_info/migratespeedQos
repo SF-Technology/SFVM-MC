@@ -1,0 +1,14 @@
+#!/bin/bash
+
+network_card=`cat /proc/net/bonding/bond0 | grep 'Currently Active Slave' | awk -F ':' '{print $2}' | sed 's/^ //g'`
+
+
+if [ `/sbin/tc qdisc show | grep $network_card | awk '{print $2}'` == 'mq' ]; then
+  /sbin/tc qdisc add dev $network_card root handle 1: htb
+  /sbin/tc class add dev $network_card parent 1: classid 1:12 htb rate $2mbit ceil $2mbit
+  /sbin/tc filter add dev $network_card parent 1: protocol ip prio 1 u32 match ip dst $1/32 flowid 1:12
+else
+  /sbin/tc class change dev $network_card parent 1: classid 1:12 htb rate $2mbit ceil $2mbit
+  /sbin/tc filter add dev $network_card parent 1: protocol ip prio 1 u32 match ip dst $1/32 flowid 1:12
+fi
+

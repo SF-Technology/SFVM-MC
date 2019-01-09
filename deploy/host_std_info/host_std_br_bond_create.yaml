@@ -1,0 +1,16 @@
+---
+- name: kvm host bridge bond create
+  hosts: 'all'
+  gather_facts: false
+  
+  tasks:
+
+    - name: add bridge_create shell
+      copy: src={{ srcdir }}/check_vlan_connection.py dest=/root
+
+    - name: add bridge_create shell
+      copy: src={{ srcdir }}/bridge_create.sh dest=/root
+
+    - name: create_vm_bridge
+      shell: /bin/sh /root/bridge_create.sh '{{ item }}' {{ br_bond }}
+      with_items: "{{ host_vlan_list }}"

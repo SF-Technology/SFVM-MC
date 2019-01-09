@@ -1,0 +1,17 @@
+# POST /image_manage/image_release_by_exist  根据已有镜像发布镜像的接口
+
+## 请求参数
+```
+    json
+```
+{
+"name":"centos7.2",     #镜像名称
+}
+
+返回值：
+{
+  "code": 0,
+  "data": {}
+  "msg": "success"
+}
+

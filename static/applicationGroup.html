@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>组管理</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+
+    <!-- Toastr style -->
+    <link href="css/plugins/toastr/toastr.min.css" rel="stylesheet">
+    <link href="css/animate.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/jsTree/style.min.css">
+    <!-- 生成导航栏 -->
+    <script src="js/jquery-2.1.1.js"></script>
+    <script src="js/module/navigation.js"></script>
+</head>
+
+<body>
+<div id="wrapper">
+    <nav class="navbar-default navbar-static-side" role="navigation" id="navbar"></nav>
+
+    <div id="page-wrapper" class="gray-bg dashbard-1">
+        <div class="row border-bottom">
+            <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                <div class="navbar-header">
+                    <div class="pagetitle">应用组管理</div>
+                </div>
+                <ul class="nav navbar-top-links navbar-right pull-right">
+                    <li>
+                        <a href="#" onclick="javascript:logout(); event.returnValue=false; ">
+                            <i class="fa fa-sign-out"></i> Log out
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="row white-bg dashboard-header" style="overflow: auto; z-index: 50;position: relative;">
+            <div class="row" style="padding-top: 15px;background: #fff;">
+                   <div class="col-xs-12" style="margin-bottom: 30px;position: absolute" id="main-page">
+                       <div class="col-xs-4 col-sm-3 col-lg-2">
+                           <select class="form-control" id="groupOwn">
+                               <option value="0">应用组名</option>
+                               <option value="1">所有者</option>
+                                <option value="2">账号</option>
+                           </select>
+                       </div>
+                       <div class="col-xs-4 col-sm-3 col-lg-2">
+                           <input type="text" class="form-control" placeholder="请输入内容" id="owner-group">
+                       </div>
+                       <div class="col-xs-2 col-sm-1 text-center">
+                           <button class="btn btn-primary" id="singleCheck">查询</button>
+                       </div>
+                       <div class="col-xs-2 col-sm-1 text-left">
+                           <button class="btn btn-success" data-toggle="modal" data-target="#addApplicationGroup"
+                                   id="add-01" style="display: none;">创建
+                           </button>
+                       </div>
+                       <div class="col-xs-12">
+                           <table id="groupList" data-locale="zh-US" data-use-row-attr-func="true"
+                                  data-reorderable-rows="true"></table>
+                       </div>
+                   </div>
+                <!--创建组-->
+                   <div class="col-xs-12">
+                         <!--创建组-->
+                         <div id="create-application-page" class="row border-bottom white-bg"
+                             style="overflow: auto;display:none; position: absolute; left: 100%;width: 100%;height: 85vh;">
+                            <div class="slide">
+                                <div class="header" style="margin-left: 35px">
+                                    <div class="back" id="groupCreattomain">返回</div>
+                                            |
+                                    <div class="title">创建组</div>
+                                </div>
+                                <div class="slider-body">
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <div class="form-group"><label class="col-xs-3 col-md-2 control-label text-right">应用组名称：</label>
+                                                <div class="col-xs-9 col-md-3">
+                                                    <input type="text" placeholder="请输入组名称" id="group-name-a" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12">
+                                            <div class="form-group"><label class="col-xs-3 col-md-2 control-label text-right">所有者：</label>
+                                                <div class="col-xs-9 col-md-3">
+                                                    <input type="text" id="owner-name-a" placeholder="请输入组所有者"  class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12">
+                                            <div class="form-group"><label class="col-xs-3 col-md-2 control-label text-right">角色：</label>
+                                                <div class="col-xs-9 col-md-3">
+                                                    <select name="" id="role_id"  class="form-control">
+                                                        <option value="-1">请选择角色</option>
+                                                        <option value="1">系统管理员</option>
+                                                        <option value="2">应用管理员</option>
+                                                        <option value="3">只读用户</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12">
+                                            <div class="form-group"><label class="col-xs-3 col-md-2 control-label text-right">环境类型：</label>
+                                                <div class="col-xs-9 col-md-3">
+                                                    <select name="" id="group_env"  class="form-control">
+                                                        <!--<option value="-1">请选择环境</option>-->
+                                                        <!--<option value="1">测试SIT</option>-->
+                                                        <!--<option value="2">准生产STG</option>-->
+                                                        <!--<option value="3">研发DEV</option>-->
+                                                        <!--<option value="4">生产PRD</option>-->
+                                                        <!--<option value="5">容灾DR</option>-->
+                                                        <!--<option value="6">容灾微应用</option>-->
+                                                        <!--<option value="7">腾讯云双活</option>-->
+                                                        <!--<option value="0">其他</option>-->
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                          <div class="col-xs-12">
+                                            <div class="form-group"><label class="col-xs-3 col-md-2 control-label text-right">CMDB物理集群ID：</label>
+                                                <div class="col-xs-9 col-md-3">
+                                                    <input type="text" id="cmdb-host-id" placeholder="请输入CMDB物理集群ID"  class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12">
+                                            <div class="form-group" style="margin-bottom: 120px"><label class="col-xs-3 col-md-2  control-label text-right">设置配额：</label>
+                                                     <div class="col-xs-9 col-lg-4">
+                                                         <div style="width:270px;padding-left: 10px">
+                                                             <form action="" id="form-info">
+                                                                 <div>
+                                                                     <div class="input-group">
+                                                                            <span class="input-group-btn">
+                                                                                <button class="btn btn-default"
+                                                                                        type="button"  style="width: 80px">CPU
+                                                                                </button>
+                                                                            </span>
+                                                                         <input type="text" value="40"
+                                                                                class="form-control text-center"
+                                                                                style="width:100px;" name="cpu"
+                                                                                onkeyup="value=value.replace(/[^\d]/g,'') ">
+                                                                             <span class="input-group-btn">
+                                                                                <button class="btn btn-default"
+                                                                                        type="button"  style="width: 80px;margin-left: -81px">核
+                                                                                </button>
+                                                                            </span>
+                                                                     </div><!-- /input-group -->
+                                                                 </div>
+                                                                 <div>
+                                                                     <div class="input-group">
+                                                                            <span class="input-group-btn">
+                                                                                <button class="btn btn-default"
+                                                                                        type="button" style="width: 80px">MEM
+                                                                                </button>
+                                                                            </span>
+                                                                         <input type="text" value="80"
+                                                                                class="form-control text-center"
+                                                                                style="width:100px" name="mem"
+                                                                                onkeyup="value=value.replace(/[^\d]/g,'') " style="width:100px;">
+                                                                            <span class="input-group-btn">
+                                                                                <button class="btn btn-default"
+                                                                                        type="button" style="width: 80px;margin-left: -81px">G
+                                                                                </button>
+                                                                            </span>
+                                                                     </div><!-- /input-group -->
+                                                                 </div>
+                                                                 <div>
+                                                                     <div class="input-group">
+                                                                            <span class="input-group-btn">
+                                                                                <button class="btn btn-default"
+                                                                                        type="button" style="width: 80px">DISK
+                                                                                </button>
+                                                                            </span>
+                                                                         <input type="text" value="2000"
+                                                                                class="form-control text-center"
+                                                                                name="disk"
+                                                                                onkeyup="value=value.replace(/[^\d]/g,'') " style="width:100px;">
+                                                                            <span class="input-group-btn">
+                                                                                <button class="btn btn-default"
+                                                                                        type="button" style="width: 80px;margin-left: -81px">G
+                                                                                </button>
+                                                                            </span>
+                                                                     </div><!-- /input-group -->
+                                                                 </div>
+                                                                 <div>
+                                                                     <div class="input-group">
+                                                                            <span class="input-group-btn">
+                                                                                <button class="btn btn-default"
+                                                                                        type="button" style="width: 80px">VM
+                                                                                </button>
+                                                                            </span>
+                                                                         <input type="text" value="10"
+                                                                                class="form-control text-center"
+                                                                                name="vm" style="width:100px"
+                                                                                onkeyup="value=value.replace(/[^\d]/g,'') " style="width:100px;">
+                                                                            <span class="input-group-btn">
+                                                                                <button class="btn btn-default"
+                                                                                        type="button" style="width: 80px;margin-left: -81px">个
+                                                                                </button>
+                                                                            </span>
+                                                                     </div><!-- /input-group -->
+                                                                 </div>
+                                                             </form>
+                                                         </div>
+
+                                                    </div>
+                                             </div>
+                                        </div>
+                                        <div class="col-xs-12">
+                                            <div class="form-group"><label
+                                                    class="col-xs-3 col-md-2 control-label text-right">区域分配：</label>
+                                                <div class="col-xs-4 col-md-3 col-lg-2" style="height: 300px;overflow: auto">
+                                                    <div class="ibox-content">
+                                                        <div id="area-tree"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-1"></div>
+                                                <div class="col-xs-5 col-md-6"  style="display: none;height:300px;overflow: auto">
+                                                    <caption class="text-left" style="font-weight: bold;margin-top:-8px;">已分配区域:</caption>
+                                                    <table class="table table-bordered">
+                                                        <thead>
+                                                        <th>序号</th>
+                                                        <th>区域</th>
+                                                        <th>子区域</th>
+                                                        <th>操作</th>
+                                                        </thead>
+                                                        <tbody id="area-sel-table">
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <div class="row" style="margin-top: 10px">
+                                    <div class="col-xs-8  text-center">
+                                        <button class="btn btn-success" id="group-add-submit">提交</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+            </div>
+                   </div>
+                <!--修改组-->
+                    <div class="col-xs-12">
+                         <!--修改组-->
+                         <div id="affirm-application-page" class="row border-bottom white-bg"
+                             style="overflow: auto;display:none; position: absolute; left: 100%;width: 100%;">
+                            <div class="slide">
+                                <div class="header" style="margin-left: 35px;width: 190px">
+                                    <div class="back" id="groupaffirmtomain">返回</div>
+                                            |
+                                    <div class="title">修改组信息</div>
+                                </div>
+                                <div class="slider-body">
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <div class="form-group"><label class="col-xs-3 col-md-2 control-label text-right">应用组名称：</label>
+                                                <div class="col-xs-6 col-md-2">
+                                                    <input type="text"  id="group-name-b" class="form-control" name="name">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12">
+                                            <div class="form-group"><label class="col-xs-3 col-md-2 control-label text-right">所有者：</label>
+                                                <div class="col-xs-6 col-md-2">
+                                                    <input type="text" id="owner-name-b"  class="form-control" name="owner">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12">
+                                            <div class="form-group"><label class="col-xs-3 col-md-2 control-label text-right">CMDB物理集群ID：</label>
+                                                <div class="col-xs-6 col-md-2">
+                                                    <input type="text" id="cmdb-host-id-b" placeholder="请输入CMDB物理集群ID"  class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12">
+                                            <div class="form-group"><label class="col-xs-3 col-md-2 control-label text-right">角色：</label>
+                                                <div class="col-xs-6 col-md-2">
+                                                    <input type="text" id="role_id_show"  class="form-control" disabled>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12">
+                                            <div class="form-group" style="margin-bottom: 120px"><label class="col-xs-3 col-md-2  control-label text-right">设置配额：</label>
+                                                     <div class="col-xs-9 col-md-8 col-lg-4">
+                                                        <div style="width:270px;padding-left: 10px">
+                                                            <form action="" id="form-info-show">
+                                                                 <div>
+                                                                        <div class="input-group">
+                                                                            <span class="input-group-btn">
+                                                                                <button class="btn btn-default" type="button" style="width: 80px;">CPU</button>
+                                                                            </span>
+                                                                            <input type="text"  class="form-control qutao_b" name="cpu" id="quato_cpu" style="width:100px"  onkeyup="value=value.replace(/[^\d]/g,'') ">
+                                                                             <span class="input-group-btn">
+                                                                                <button class="btn btn-default" type="button" style="width: 80px;margin-left: -81px">核</button>
+                                                                            </span>
+                                                                        </div><!-- /input-group -->
+                                                                    </div>
+                                                                 <div>
+                                                                        <div class="input-group">
+                                                                            <span class="input-group-btn">
+                                                                                <button class="btn btn-default" type="button" style="width: 80px;">MEM</button>
+                                                                            </span>
+                                                                            <input type="text"  class="form-control qutao_b" name="mem" id="quato_mem" style="width:100px" onkeyup="value=value.replace(/[^\d]/g,'') ">
+                                                                            <span class="input-group-btn">
+                                                                                <button class="btn btn-default" type="button" style="width: 80px;margin-left: -81px">G</button>
+                                                                            </span>
+                                                                        </div><!-- /input-group -->
+                                                                    </div>
+                                                                 <div>
+                                                                        <div class="input-group">
+                                                                            <span class="input-group-btn">
+                                                                                <button class="btn btn-default" type="button" style="width: 80px;">DISK</button>
+                                                                            </span>
+                                                                            <input type="text"  class="form-control qutao_b" name="disk" id="quato_disk" style="width:100px" onkeyup="value=value.replace(/[^\d]/g,'') ">
+                                                                            <span class="input-group-btn">
+                                                                                <button class="btn btn-default" type="button" style="width: 80px;margin-left: -81px">G</button>
+                                                                            </span>
+                                                                        </div><!-- /input-group -->
+                                                                    </div>
+                                                                 <div>
+                                                                        <div class="input-group">
+                                                                            <span class="input-group-btn">
+                                                                                <button class="btn btn-default" type="button" style="width: 80px;">VM</button>
+                                                                            </span>
+                                                                            <input type="text"  class="form-control qutao_b" name="vm" id="quato_vm" style="width:100px" onkeyup="value=value.replace(/[^\d]/g,'') ">
+                                                                            <span class="input-group-btn">
+                                                                                <button class="btn btn-default" type="button" style="width: 80px;margin-left: -81px">个</button>
+                                                                            </span>
+                                                                        </div><!-- /input-group -->
+                                                                    </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                             </div>
+                                        </div>
+                                        <div class="col-xs-12">
+                                            <div class="form-group"><label
+                                                    class="col-xs-3 col-md-2 control-label text-right">区域分配：</label>
+                                                <div class="col-xs-4 col-md-3 col-lg-2" style="height: 300px;overflow: auto">
+                                                    <div class="ibox-content">
+                                                        <div id="affirm-area-tree"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-1"></div>
+                                                <div class="col-xs-5 col-md-6"  style="display: none;height:300px;overflow: auto">
+                                                    <caption class="text-left" style="font-weight: bold;margin-top:-8px;">已分配区域:</caption>
+                                                    <table class="table table-bordered">
+                                                        <thead>
+                                                        <th>序号</th>
+                                                        <th>区域</th>
+                                                        <th>子区域</th>
+                                                        <th>操作</th>
+                                                        </thead>
+                                                        <tbody id="affirm-area-sel-table">
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <div class="row" style="margin-top: 20px">
+                                    <div class="col-xs-8  text-center">
+                                        <button class="btn btn-success" id="group-affirm-submit">提交</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+            </div>
+                   </div>
+        </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+<!--在应用组中添加成员模态框-->
+<div class="modal fade" id="addMember">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">添加成员</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group"><label class="col-sm-3 control-label text-right" style="margin-top: 12px;">应用组名称：</label>
+                            <div class="col-sm-7" style="margin-top: 12px;" id="user_group">
+                                user_admin01
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-3 control-label text-right">用户域：</label>
+                            <div class="col-sm-7">
+                                <select name="" class="form-control" id="sel-region">
+                                    <option value="-1">请选择用户类型</option>
+                                    <option value="0">FF</option>
+                                    <option value="1">MC</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-3 control-label text-right" style="margin-top: 12px;">用户ID：</label>
+                            <div class="col-sm-7">
+                                <input type="text" placeholder="请输入用户ID" class="form-control"id="user_id_addmember">
+                            </div>
+                        </div>
+                        <div id = "others-role" style="display:none;">
+                         <div class="form-group"><label class="col-sm-3 control-label text-right" style="margin-top: 12px;">姓名：</label>
+                            <div class="col-sm-7">
+                                <input type="text" placeholder="请输入用户姓名" class="form-control"id="user_name_addmember">
+                            </div>
+                        </div>
+                         <div class="form-group"><label class="col-sm-3 control-label text-right" style="margin-top: 12px;">密码：</label>
+                            <div class="col-sm-7">
+                                <input type="password" placeholder="大小写字母+数字+特殊字符十位以上" class="form-control" id="user_password_addmember">
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-3 control-label text-right" style="margin-top: 12px;">确认密码：</label>
+                            <div class="col-sm-7">
+                                <input type="password" placeholder="请确认密码" class="form-control" id="user_password_addmember_affirm">
+                            </div>
+                        </div>
+                         <div class="form-group"><label class="col-sm-3 control-label text-right" style="margin-top: 12px;">邮箱：</label>
+                            <div class="col-sm-7">
+                                <input type="email" placeholder="请输入管理员邮箱" class="form-control"id="user_email_addmember">
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="addMemberOneBtn">确定</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+
+<!--删除应用组模态框-->
+<div class="modal fade" id="deleteGroup">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">删除应用组</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group" style="margin-bottom: 10px"><h3><label class="col-sm-5 control-label text-left">您已选择应用组：</label></h3>
+                            <div class="col-sm-12">
+                                <table class="table table-bordered">
+                                      <thead>
+                                        <tr>
+                                              <th>应用组名称</th>
+                                              <th>所有者</th>
+                                              <th>配额</th>
+
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        <tr height="30px" id="groupInfoOne">
+                                              <td></td>
+                                              <td></td>
+                                              <td></td>
+
+                                        </tr>
+                                      </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                           <div class="col-xs-4 text-right text-danger pull-right"> <h3>确认删除？</h3></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="margin-top: 30px">
+                        <button type="button" class="btn btn-primary" id="deletegroupBtn">确定</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </div>
+            </div>
+</div>
+
+
+
+<!--删除应用组成员模态框-->
+<div class="modal fade" id="deleteMember">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">删除成员</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group" style="margin-bottom: 10px"><h3><label class="col-sm-5 control-label text-left">您已选择成员：</label></h3>
+                            <div class="col-sm-12">
+                                <table class="table table-bordered">
+                                      <thead>
+                                        <tr>
+                                              <th>ID</th>
+                                              <th>姓名</th>
+                                              <th>用户组</th>
+                                              <!--<th>到期时间</th>-->
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                            <tr height="30px" id="deleteMemberInfo">
+                                              <td></td>
+                                              <td></td>
+                                              <td></td>
+                                              <td></td>
+                                        </tr>
+                                      </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                           <div class="col-xs-4 text-right text-danger pull-right"> <h3>确认删除？</h3></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="margin-top: 30px">
+                        <button type="button" class="btn btn-primary" id="deletMember">确定</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </div>
+            </div>
+</div>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="js/inspinia.js"></script>
+<script src="js/plugins/pace/pace.min.js"></script>
+
+<!-- jQuery UI -->
+<script src="js/plugins/jquery-ui/jquery-ui.min.js"></script>
+
+<!-- data tables -->
+<script src="js/bootstrap-table.js"></script>
+<script src="js/bootstrap-table-zh-CN.min.js"></script>
+
+<!-- 消息框 -->
+<script src="js/jquery.bootstrap-growl.min.js"></script>
+<script src="js/module/common.js"></script>
+
+<script src="js/jstree.min.js"></script>
+<!--本页面js-->
+<script src="js/module/applicationgroup.js"></script>
+
+</body>
+</html>

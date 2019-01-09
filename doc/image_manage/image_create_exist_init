@@ -1,0 +1,28 @@
+# GET /image_manage/create_exist_init  根据已有镜像创建新镜像初始化时需返回给前台的字段
+
+## 返回参数
+```
+    json
+```
+后端字段说明
+{
+"os_type":os_type,  #操作系统类型
+"os_ver_list":os_ver_list,    #操作系统版本
+}
+
+
+返回值：
+{
+  "code": 0,
+  "data": [
+    33,
+    [
+      {
+        "displayname": "web_3",
+        "name": "web_3",
+        "system": "linux",
+        "tag": 3,
+        "version": "6.6"
+      }
+  "msg": "success"
+}

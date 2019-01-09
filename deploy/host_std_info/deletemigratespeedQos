@@ -1,0 +1,12 @@
+#!/bin/bash
+
+network_card=`cat /proc/net/bonding/bond0 | grep 'Currently Active Slave' | awk -F ':' '{print $2}' | sed 's/^ //g'`
+
+
+if [ `/sbin/tc qdisc show | grep $network_card | head -1 | awk '{print $2}'` == 'mq' ]; then
+  exit 0
+else
+  /sbin/tc qdisc del dev $network_card root
+fi
+
+exit 0

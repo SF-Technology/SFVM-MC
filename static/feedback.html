@@ -1,0 +1,333 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <title>用户反馈</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>INSPINIA | Dashboard</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <!-- Toastr style -->
+    <link href="css/plugins/toastr/toastr.min.css" rel="stylesheet">
+
+
+    <link href="css/animate.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <!-- 生成导航栏 -->
+    <script src="js/jquery-2.1.1.js"></script>
+    <script src="js/module/navigation.js"></script>
+    <style>
+
+        .marginTop{
+                padding-right: 0px;
+        }
+        /*body{*/
+            /*font-family: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif;*/
+            /*background-color: #2f4050;*/
+            /*font-size: 12px;*/
+            /*color: #676a6c;*/
+          /*}*/
+
+        /*.form-control, .single-line {*/
+            /*font-size: 12px;*/
+        /*}*/
+    </style>
+</head>
+
+<body>
+<div id="wrapper">
+    <nav class="navbar-default navbar-static-side" role="navigation" id="navbar"></nav>
+
+    <div id="page-wrapper" class="gray-bg dashbard-1">
+        <div class="row border-bottom">
+            <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                <div class="navbar-header">
+                    <div class="pagetitle">用户反馈</div>
+                </div>
+                <ul class="nav navbar-top-links navbar-right pull-right">
+                     <li>
+                        <a href="#" onclick="javascript:logout(); event.returnValue=false; ">
+                            <i class="fa fa-sign-out"></i> Log out
+                        </a>
+                    </li>
+                </ul>
+
+            </nav>
+        </div>
+        <div class="row" style="padding-top: 30px;background: #fff">
+            <div class="col-xs-12" style="margin-bottom: 30px">
+                <div class="row">
+                    <div class="col-xs-3 col-sm-2 col-md-2 text-right  marginTop">
+                        <h4 style="margin-top: 7px;">问题分类:</h4>
+                    </div>
+                    <div class="col-xs-4 col-sm-4 col-md-3">
+                        <select   class="form-control" id="category" onChange = "getCategory(this.options[this.selectedIndex].value)">
+                            <option selected value="请选择模块">请选择模块</option>
+                        </select>
+                    </div>
+                    <div class="col-xs-4 col-sm-4 col-md-3">
+                        <select   class="form-control" id="subclass" onchange="addProblem(this.options[this.selectedIndex].value)">
+                            <option selected value="请选择问题类型">请选择问题类型</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="padding-top: 0px;background: #fff">
+            <div class="col-xs-12" style="margin-bottom: 30px">
+                <div class="row" style="margin-top: -10px">
+                    <div class="col-xs-3 col-sm-2 col-md-2 text-right">
+                    </div>
+                    <div id="problem" class="col-xs-9 col-sm-10 col-md-10">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="background: #fff">
+            <div class="col-xs-12" style="margin-bottom: 30px">
+                <div class="row">
+                    <div class="col-xs-3 col-sm-2 col-md-2 text-right marginTop">
+                        <h4>问题描述:</h4>
+                    </div>
+                    <div class="col-xs-8 col-sm-8 col-md-6">
+                        <textarea  type="text" class="form-control" rows="6" name="problem_description" id="problem_description" maxlength="200"
+                                  placeholder="请您填写问题描述，将有助于我们更快的发现和解决问题！非常感谢！"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="background: #fff">
+            <div class="col-xs-12" style="margin-bottom: 30px">
+                <div class="row">
+                    <div class="col-xs-3 col-sm-2 col-md-2 text-right marginTop">
+                        <h4>相关页面:</h4>
+                    </div>
+                    <div class="col-xs-8 col-sm-8 col-md-6">
+                        <textarea type="text" class="form-control" rows="1" name="network_address" id="network_address" maxlength="100"
+                                  placeholder="请您复制浏览器地址栏中完整的网络地址并粘贴在这里"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="background: #fff">
+            <div class="col-xs-12" style="margin-bottom: 30px">
+                <div class="row">
+                    <div class="col-xs-3 col-sm-2 col-md-2 text-right">
+                    </div>
+                    <div class="col-xs-8 col-sm-8 col-md-6 text-center">
+                        <button class="btn btn-info btn-lg" data-toggle="modal" data-target="#addAreaModal" onclick="addFeedback()">提交</button>
+                    </div>
+                    <!--<div class="col-xs-4 col-sm-3 col-md-2">-->
+                        <!--<button class="btn btn-success" data-toggle="modal" data-target="#addAreaModal" onclick="init_table()" >查看提交记录</button>-->
+                    <!--</div>-->
+                </div>
+            </div>
+        </div>
+        <!--<div class="row  border-bottom white-bg dashboard-header" style="overflow: auto; z-index: 50;">-->
+            <!--<div class="row" style="position: relative;">-->
+                <!--<div class="col-xs-12 col-sm-12 col-md-10">-->
+                     <!--<table id="feedback_list" data-locale="zh-US"></table>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    </div>
+</div>
+
+<!-- Mainly scripts -->
+<script src="js/bootstrap.min.js"></script>
+<script src="js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+
+
+<!-- Custom and plugin javascript -->
+<script src="js/inspinia.js"></script>
+<script src="js/plugins/pace/pace.min.js"></script>
+
+<!-- jQuery UI -->
+<script src="js/plugins/jquery-ui/jquery-ui.min.js"></script>
+
+<!-- data tables -->
+<script src="js/bootstrap-table.js"></script>
+<script src="js/bootstrap-table-zh-CN.min.js"></script>
+
+<script src="js/module/common.js"></script>
+<script src="js/jquery.bootstrap-growl.min.js"></script>
+
+<script>
+        window.onload = function () {
+            $.ajax({
+            url: '/feedback',
+
+            type: 'GET',
+            data: {},
+            dataType: 'json',
+            success: function (data) {
+                res = data.data;
+                var temArray = new Array();
+                for (var i in res) {
+                    //document.writeln(i);
+                    temArray.push(i);
+                }
+                for (var j = 0; j < temArray.length; j++) {
+                    document.all.category.options[document.all.category.length] = new Option(temArray[j], temArray[j]);
+                }
+            }
+            });
+        }
+        function getCategory(Category) {
+            currCategory = Category;
+            var i, j;
+            var d = res ;
+            //document.writeln(Category);
+            document.all.subclass.length = 0 ;
+            hidden("problem");
+            for (i in d) {
+                //document.writeln(i);
+                var tmpArray = new Array();
+                tmpArray.push("请选择问题类型");
+                if(currCategory == "请选择模块"){
+                     document.all.subclass.options[document.all.subclass.length] = new Option(tmpArray[0], tmpArray[0]);
+                    return;
+                }else{
+                    if(i==currCategory) {
+                    for (j in d[i]) {
+                        //document.writeln(j);
+                        tmpArray.push(j);
+                    }
+                    for(j=0; j<tmpArray.length; j++) {
+                        document.all.subclass.options[document.all.subclass.length] = new Option(tmpArray[j], tmpArray[j]);
+                    }
+                };
+                }
+
+            }
+        }
+        function addProblem(Subclass) {
+            var a = currCategory, b = Subclass, i;
+            //document.writeln(b);
+            var dict = res[a][b];
+            document.getElementById("problem").innerHTML = ""
+            for(i in dict){
+                document.getElementById("problem").innerHTML += "<div class='col-xs-3 col-sm-3 col-md-2'>" +
+                        "<input type='radio' name='currproblem' value=" + i + ">"+i+"</div>";
+            }
+            show("problem");
+        }
+        function hidden(id){
+            document.getElementById(id).style.display="none";
+            //alert(document.getElementById("div").style.display)
+        }
+        function show(id){
+            document.getElementById(id).style.display="";
+            //alert(document.getElementById("div").style.display)
+        }
+        function addFeedback() {
+            var userId = JSON.parse(sessionStorage.user).user_id;
+            var description = document.getElementById('problem_description').value;
+            var addr = document.getElementById('network_address').value;
+            var a = document.getElementById('category').value;
+            var b = document.getElementById('subclass').value;
+            var c = $('input:radio:checked').val();
+            var dataType = typeof res[a][b];
+            if (dataType=='number'){
+                var problemId = res[a][b];
+                var problem_category = a +'-'+ b;
+            }
+            else {
+                var problemId = res[a][b][c];
+                var problem_category = a +'-'+ b +'-'+ c;
+            }
+            $.ajax({
+              url:"/feedback/add",
+              type:"POST",
+              data:{"user_id":userId, "problem_category":problem_category, "problem_id":problemId, "problem_description": description, "network_address":addr},
+              dataType:"json",
+              success:function(res){
+                  if(res.code!=0){
+                      res.msg!=null ? showMessage(res.msg,"danger",1000):showMessage("操作失败","danger",1000);
+                  }else{
+                      showMessage("操作成功","success",1000);
+                  }
+                    document.getElementById('problem_description').value = "";
+                    document.getElementById('network_address').value = "";
+                    document.getElementById('category').value = "请选择模块";
+                    document.getElementById('subclass').innerHTML = "<option value='请选择问题类型'>请选择问题类型</option>";
+                    hidden("problem");
+              }
+          })
+        }
+        function init_table() {
+        $('#feedback_list').bootstrapTable({
+            url: '/feedback/list',
+            method: 'GET',
+            dataType: "json",
+            cardView:true,
+            detailView: false,
+            queryParamsType: "search",
+            showRefresh: true,
+            contentType: "application/x-www-form-urlencoded",
+            pagination: true,
+            pageList: [10, 25],
+            pageSize: 5,
+            pageNumber: 1,
+            search: false, //不显示全表模糊搜索框
+//            searchText: getQueryString('search'),
+            showColumns: false, //不显示下拉框（选择显示的列）
+            sidePagination: "server", //服务端请求
+            clickToSelect: false,
+            singleSelect: false,
+            onBeforeLoadParams: {},//查询参数设置，供导出使用，在search_form.js里赋值
+            sortable: false,
+            responseHandler: function (res) {
+                 if (res.code == 0) {
+                    return res.data;
+                } else {
+                    return{rows: [], total: 0};
+                }
+            },
+            queryParams: function (q) {
+                var searchContent = q.searchText;
+                return {
+                    "page_size": q.pageSize,
+                    "page_no": q.pageNumber,
+                    "user_id": JSON.parse(sessionStorage.user).user_id
+                };
+            },
+            formatRecordsPerPage: function (a) {
+                return;
+            },
+            onLoadSuccess: function($element){
+
+            },
+            onClickRow: function ($element, row) {
+            },
+            columns: [
+                {
+                    title: "<b>提交时间</b>  :  ",
+                    field: "submit_time",
+                    align: "center",
+                },
+                {
+                    title: "<b>问题类型</b>  :  ",
+                    field: "problem_category",
+                    align: "center",
+                },
+                {
+                    title: "<b>问题描述</b>  :  <br/>",
+                    field: "problem_description",
+                    align: "center",
+                }
+            ]
+        })
+    }
+    </script>
+
+</body>
+</html>

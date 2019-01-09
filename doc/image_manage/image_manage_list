@@ -1,0 +1,36 @@
+# GET /image_manage/list 展示镜像管理页面list信息
+字段名称                显示名称
+id                      id值
+image_name              镜像名称
+image_dis_name          镜像显示名称
+image_tem_ip            镜像模板机IP
+image_tem_status        镜像模板机状态
+image_manage_status     镜像状态
+image_os_ver            镜像版本
+create_time             创建时间
+image_manage_message    镜像管理任务详情
+
+
+返回值：
+{
+  "code": 0,
+  "data": {
+    "rows": [
+      {
+        "create_time": "2018-02-06 14:21:03",
+        "displayname": "asdfsdfa",
+        "image_id": 4,
+        "image_manage_message": "asdfsadf",
+        "image_update_status_id": 2,
+        "related_image_tag": -1,
+        "status": "-1",
+        "system": "linux",
+        "template_status": "1",
+        "template_vm_ip": "1.1.1.10",
+        "version": "6.3"
+      }
+    ],
+    "total": 1
+  },
+  "msg": "success"
+}

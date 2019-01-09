@@ -1,0 +1,139 @@
+
+.body {
+    width: 97%;
+    margin-top: 15px;
+}
+.create-image-page{
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 100%;
+    padding-left: 15px;
+    display: none;
+    background: #fff;
+    min-height: 500px;
+    font-size: 14px;
+    font-family: "Microsoft Sans Serif";
+}
+.header{
+    /*width: 114px;*/
+    /*height: 40px;*/
+    /*line-height: 40px;*/
+    /*margin-top: 10px;*/
+    /*margin-bottom: 50px;*/
+    /*cursor: pointer;*/
+    /*box-shadow: 1px 1px 1px #aaaaaa;*/
+    /*text-align: center;*/
+    width: 170px;
+    line-height: 36px;
+    font-size: 20px;
+    font-weight: 600;
+    border-bottom: 2px solid #ccc;
+    margin-bottom: 24px;
+}
+.header .back{
+    font-weight: 600;
+    color: #5E9BD5;
+    cursor: pointer;
+    margin: 0 10px;
+}
+.header>.back,.header>.title{
+    display: inline-block;
+}
+
+/*.header .title{*/
+    /*font-size: 16px;*/
+/*}*/
+.new-image,.used-image{
+    margin-top:30px;
+}
+.item_t{
+    color: #555;
+    font-weight: 500;
+}
+.nav-tabs > li > a {
+    font-weight: 500;
+}
+.item_btn .btn:first-child{
+    margin-right: 15px;
+}
+.item_btn .btn:last-child{
+    margin-left: 15px;
+}
+
+.item_w{
+    width: 310px;
+}
+.item_btn{
+   margin-top: 25px;
+}
+.search_input_os,.search_input_used,.search_input_used_os,.search_input_type_in{
+    position: relative;
+}
+.select_list_os,.select_list_used,.select_list_used_os,.select_list_type_in{
+    position: absolute;
+    width: 310px;
+    max-height: 210px;
+    overflow-y: scroll;
+    list-style: none;
+    border: 1px solid #ddd;
+    border-top: 0;
+    display: none;
+    z-index: 10;
+    background: #fff;
+    padding: 15px 0px;
+}
+.select_item_used,.select_item_os,.select_item_used_os{
+    height: 40px;
+    line-height: 40px;
+    padding-left: 13px;
+}
+.select_item_used>a,.select_item_os>a,.select_item_used_os>a{
+    color: #676a6c;
+}
+
+.select_item_used:hover a,.select_item_os:hover a,.select_item_used_os:hover a{
+    color: #0d8ddb;
+}
+.select_item_used:hover,.select_item_os:hover,.select_item_used_os:hover{
+    background: #f6f6f6;
+}
+.image-btn-list .dropdown-menu{
+    left: -90px;
+}
+.tickText{
+    font-size: 20px;
+    margin: 0;
+    color: #1A39ED;
+    font-weight: 600;
+}
+.is_dis{
+    pointer-events: none;
+    cursor: not-allowed;
+}
+.image-btn-list .is_dis{
+    color: #ddd !important;
+}
+.taskDetails{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
+    line-height: 50px;
+    height: 50px;
+    width: 200px;
+    cursor: pointer;
+}
+.taskDetails:hover{
+    color: #0a6aa1;
+}
+.bs-checkbox {
+    vertical-align: middle !important;
+}
+.errTask{
+        font-size: 14px;
+    margin-bottom: 15px;
+    text-align: justify;
+    text-indent: 40px;
+    background: #f9f9f9;
+}

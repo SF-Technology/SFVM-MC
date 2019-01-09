@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Host管理</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/bootstrap-datetimepicker.min.css">
+    <link href="font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <!-- Toastr style -->
+    <link href="css/plugins/toastr/toastr.min.css" rel="stylesheet">
+
+
+    <link href="css/animate.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+
+
+    <!--<link rel="stylesheet" href="css/bootstrap-table.min.css">-->
+    <!-- 生成导航栏 -->
+    <script src="js/jquery-2.1.1.js"></script>
+    <script src="js/module/navigation.js"></script>
+    <script src="js/monitor_report.js"></script>
+    <style>
+        /*解决监控模态框在切换时间区间造成滚动条消失问题*/
+        .monitor_model_overflow {
+            overflow-x: hidden;
+            overflow-y: auto;
+            display: block;
+        }
+        .title {
+            width: 150px;
+            font-size: 20px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #ddd;
+        }
+        #imageList{
+            margin: 0;
+        }
+        #imageList>li{
+            display: inline-block;
+            /*width: 110px;*/
+            height: 40px;
+            padding: 0 10px;
+            line-height: 40px;
+            font-size: 13px;
+            text-align: center;
+            overflow: hidden;
+        }
+        li.active{
+            /*border: 1px solid #EEF2FB;*/
+            /*border-bottom: none;*/
+            background:#EEF2FB ;
+        }
+        .taskBox{
+            background:#F5F5F6 ;
+            /*background:#fff ;*/
+            margin-top: -5px;
+            padding: 15px 0 20px 30px;
+            min-width: 800px;
+            min-height: 170px;
+            font-size: 14px;
+        }
+        .imageItem{
+            line-height: 40px;
+        }
+        .imageItem>span:first-child{
+            display: inline-block;
+            color:#8E8F8F;
+            width: 100px;
+            text-align: left;
+            margin-right: 5px;
+        }
+        .imageItem input{
+            height: 24px;
+            line-height: 24px;
+            vertical-align: middle;
+        }
+        .addImageBox{
+            position: relative;
+        }
+        .addImageBox ul{
+            width: 200px;
+            position: absolute;
+            left: 15%;
+            background: rgba(255, 250, 240, 0.5);
+        }
+         .addImageBox ul>li{
+             cursor: pointer;
+         }
+        .addImageBox ul>li:hover{
+            background: #efe;
+        }
+        #tasktimeList li>span{
+            padding:5px;
+        }
+        .errorColor{
+            color:#f00;
+        }
+        div.columns.columns-right.btn-group.pull-right {
+            margin-right: 5%;
+        }
+    </style>
+</head>
+
+<body>
+<div id="wrapper">
+    <nav class="navbar-default navbar-static-side" role="navigation" id="navbar"></nav>
+
+
+    <div id="page-wrapper" class="gray-bg dashbard-1">
+        <div class="row border-bottom">
+            <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                <div class="navbar-header">
+                    <div class="pagetitle">Host管理</div>
+                </div>
+                <ul class="nav navbar-top-links navbar-right">
+                    <li>
+                        <a href="#" onclick="javascript:logout(); event.returnValue=false; ">
+                            <i class="fa fa-sign-out"></i> Log out
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="row border-bottom white-bg dashboard-header" style="overflow: auto; z-index: 50;position: relative">
+            <div class="row" id="mainHost" style="position: absolute; width: 100%;">
+                <div class="col-xs-12" id="mainWrapper">
+                    <div class="row">
+                        <div class="col-xs-12 btn-cel" style="margin-bottom: 10px">
+                            <div class="row">
+                                <div class="col-xs-12 col-md-6">
+                                    <button style="margin:0 10px;display: none" class="btn btn-info promission"
+                                            data-toggle="modal" data-promission="add"
+                                            onclick="createHostInfo.addHostSelect()">创建
+                                    </button>
+                                    <button style="margin:0 10px;display: none"
+                                            class="btn btn-success  disabled promission" data-toggle="modal"
+                                            id="onPower" data-promission="start">开机
+                                    </button>
+                                    <button style="margin:0 10px;display: none"
+                                            class="btn btn-danger  disabled promission" data-toggle="modal"
+                                            id="offPower" data-promission="stop">关机
+                                    </button>
+                                    <button style="margin:0 10px;display: none"
+                                            class="btn btn-warning  disabled promission" data-toggle="modal"
+                                            id="restart" data-promission="reset">重启
+                                    </button>
+                                    <button style="margin:0 10px;display: none"
+                                            class="btn btn-danger  disabled promission" data-toggle="modal"
+                                            id="host-delete-some" data-promission="delete">删除
+                                    </button>
+                                </div>
+                                <div class="col-xs-12 col-md-6">
+                                    <div class="row">
+                                        <div class="col-xs-2 pull-right">
+                                            <button class="btn btn-primary" id="host-search-btn">查询</button>
+                                        </div>
+                                        <div class="col-xs-4 pull-right">
+                                            <input type="text" class="form-control export-excel" placeholder="为空则查询全部"
+                                                   id="host-search-text">
+                                            <select class="form-control" id="host-statu-text" style="display: none">
+                                                <option value="-1">选择HOST的状态</option>
+                                                <option value="0">运行中</option>
+                                                <option value="1">关机</option>
+                                                <option value="99">Unknown</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-xs-4  pull-right">
+                                            <select class="form-control" id="host-search-sel">
+                                                <option value="ip_address">IP</option>
+                                                <option value="sn">序列号</option>
+                                                <option value="name">主机名</option>
+                                                <option value="manage_ip">管理IP</option>
+                                                <option value="status">状态</option>
+                                                <option value="hostpool_name">集群</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <table id="host_list" data-locale="zh-US" data-classes="table table-hover"
+                           class="table-responsive"></table>
+                </div>
+            </div>
+            <div class="row" id="secondHost">
+                <div class="col-xs-12">
+                    <div id="host-details">
+                        <ul id="returnBtn">
+                            <li><a href="">返回</a></li>
+                            <li><span style="font-size: 18px;"> |&nbsp;Host详情</span></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <div class="row" id="infoList">
+                        <div class="col-xs-6 col-md-6">
+                            <div id="localInfo">
+                                <p><b>基本信息</b></p>
+                                <table class="table table-responsive table-bordered table-hover">
+                                    <tr>
+                                        <td>序列号（主键）</td>
+                                        <td title="sn"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>主机名</td>
+                                        <td title="displayname"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>IP地址</td>
+                                        <td title="ipaddress"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>状态</td>
+                                        <td title="status"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>开机时间</td>
+                                        <td title="start_time"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>OS版本</td>
+                                        <td title="ostype"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>所在集群</td>
+                                        <td title="hostpool"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>所在机房</td>
+                                        <td title="datacenter"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>管理IP</td>
+                                        <td title="manage_ip"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Libvirt服务端口</td>
+                                        <td title="libvirt_port"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Libvirt服务状态</td>
+                                        <td title="libvirt_status"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>VM数量</td>
+                                        <td title="instance_nums"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>卷存储路径</td>
+                                        <td>
+                                            /app/image
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>镜像</td>
+                                        <td title="images"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>保留内存</td>
+                                        <td title="hold_mem_gb"></td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                        </div>
+                        <div class="col-xs-1"></div>
+                        <div class="col-xs-3">
+                            <div id="configInfo">
+                                <p><b>配置信息</b></p>
+                                <table class="table table-responsive table-bordered table-hover">
+                                    <tr>
+                                        <td>CPU</td>
+                                        <td title="cpu_core"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>CPU使用率</td>
+                                        <td title="current_cpu_used"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>内存</td>
+                                        <td title="mem_size"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>内存使用率</td>
+                                        <td title="current_mem_used"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>磁盘容量</td>
+                                        <td title="disk_size"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>磁盘使用率</td>
+                                        <td title="current_disk_used"></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="thirdHost" style="margin-right: 40px">
+                <div class="title">
+                    <a href="" class="gotomainhost">返回</a>
+                    |
+                    <span>同步镜像</span>
+                </div>
+                <div id="syncBody" style="margin-top: 15px;margin-left: 20px;">
+                    <ul id="imageList" class="list-unstyled">
+                    </ul>
+                    <div class="taskBox">
+                        <div class="imageItem">
+                           <span> 限速：</span><input type="text" style="text-align: center;" id="speed_limit" class="form-inline" placeholder="请输入同步镜像速度">&nbsp;&nbsp;MB/S
+                        </div>
+                        <div class="imageItem">
+                            <span style="vertical-align: top;">已有任务列表:</span>
+                            <ul class="list-unstyled" id="oldtasktimeList" style="display: inline-block;">
+                            </ul>
+                        </div>
+                        <div class="imageItem">
+                            <span>同步需要时长:</span><span><strong id="needTime" style="color: #0e9aef;font-size: 20px;">0</strong>Min</span>
+                        </div>
+                         <div class="imageItem">
+                             <span>开始时间：</span><input  class="form-inline" id="statrtTime">
+                        </div>
+                        <div class="imageItem">
+                            <span>结束时间：</span><input class="form-inline" id="endTime">
+                        </div>
+                        <div class="imageItem">
+                            <span></span>
+                            <span style="margin-left: -4px;"><button class="btn" style="background: #5AACF5;color: #fff" id="addTask">添加</button></span>
+                            <span style="color: #f00;">提示:此镜像您还可以添加<strong id="residueNum" style="color: #0e9aef;font-size: 20px;"></strong>个任务时间(如果时间段已有任务将不可选)</span>
+                        </div>
+                    </div>
+                    <table class="table table-bordered" style="margin-top: 15px">
+                        <thead>
+                        <tr>
+                            <th>镜像名称</th>
+                            <th>限速</th>
+                            <th>任务时间</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="newtasktable">
+                        </tbody>
+                    </table>
+                    <button class="btn btn-primary pull-right" id="submitNewtask">提交</button>
+                </div>
+            </div>
+        </div>
+
+
+        <!--展示用户需要同步的镜像-->
+        <div class="modal fade" id="getImageModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">需要同步的镜像列表</h4>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th></th>
+                                <th>镜像名称</th>
+                                <th>操作系统</th>
+                                <th>描述</th>
+                            </tr>
+                            </thead>
+                            <tbody id="getImage-table">
+
+                            </tbody>
+                        </table>
+
+                         <div class="form-group addImageBox">
+                             <span>搜索新镜像：</span>
+                             <input class="searchImage" type="text" class="form-control" placeholder="请输入镜像名(支持模糊匹配)">
+                             <ul class="list-group">
+                             </ul>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="getImageBtn">确定</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+
+
+        <!--提示用户为添加任务镜像-->
+         <div class="modal fade" id="showImageModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">以下镜像未添加任务:</h4>
+                    </div>
+                    <div class="modal-body">
+                         <ul id="someImageNone" class="list-group">
+
+                         </ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="sureSubmit">确定提交</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+
+        <!--显示错误任务-->
+        <div class="modal fade" id="showerrorImageModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">错误任务提示:</h4>
+                    </div>
+                    <div class="modal-body">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>镜像名称</th>
+                                <th>任务时间</th>
+                                <th>任务提示</th>
+                            </tr>
+                            </thead>
+                            <tbody id="someerrorImage">
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary">确定</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+
+
+        <!-- 创建HOST模态框 -->
+        <div class="modal fade" id="addHostModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="addHostModalLabel">创建Host</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group"><label class="col-sm-3 control-label text-right">主机名称：</label>
+                            <div class="col-sm-9">
+                                <input id="new_hostname" type="text" class="form-control" placeholder="请输入名称（同CMDB）">
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-3 control-label text-right">序列号(主键)：</label>
+                            <div class="col-sm-9">
+                                <input id="new_sn" type="text" class="form-control" placeholder="请输入序列号">
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-3 control-label text-right">位置：</label>
+                            <div class="col-sm-5">
+                                <select name="searchtype" class="form-control searchHost"
+                                        onchange="createHostInfo.searchNet()">
+
+                                </select>
+                            </div>
+                            <div class="col-sm-4 local-area">
+                                <select name="searchtype" class="form-control searchNetArea"
+                                        onchange="createHostInfo.searchGroup()">
+                                    <option value="-1">请选择网络区域</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-3 control-label text-right">集群：</label>
+                            <div class="col-sm-9">
+                                <select id="new_hostpool_id" name="searchtype" class="form-control">
+                                    <option value="-1">请选择Host所属集群</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-3 control-label text-right">保留内存(G)：</label>
+                            <div class="col-sm-9">
+                                <form class="bs-example bs-example-form" role="form">
+                                    <div class="input-group alterMemory">
+                                        <span class="input-group-addon minus-micro"
+                                              onclick="createHostInfo.minusMemory('.memoryInfo')">-</span>
+                                        <input type="text" class="form-control memoryInfo" placeholder="12" value="12" onkeyup="value=value.replace(/[^\d]/g,'')">
+                                        <span class="input-group-addon plus-micro"
+                                              onclick="createHostInfo.plusMemroy('.memoryInfo')">+</span>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-3 control-label text-right">IP地址：</label>
+                            <div class="col-sm-9">
+                                <input id="new_ipaddress" type="text" class="form-control" placeholder="请输入ip地址">
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-3 control-label text-right">VLAN ID：</label>
+                            <div class="col-sm-9">
+                                <input id="new_vlan_id" type="text" class="form-control" placeholder="请输入VLAN ID" onkeyup="value=value.replace(/[^\d]/g,'')">
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-3 control-label text-right">管理IP：</label>
+                            <div class="col-sm-9">
+                                <input id="new_manage_ip" type="text" class="form-control" placeholder="请输入管理ip地址">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="createSure">确定</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 开机模态框 -->
+        <div class="modal fade" id="poweronModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="poweronModalLabel">开机</h4>
+                    </div>
+                    <div class="modal-body">
+                        <h4><label class="col-sm-3 control-label">您已选择Host：</label></h4>
+
+                        <table class="table table-bordered" id="tables">
+                            <thead>
+                            <tr>
+                                <th>Host名称</th>
+                                <th>Host IP</th>
+                                <th>所属集群</th>
+                                <th>所在机房</th>
+                            </tr>
+                            </thead>
+                            <tbody id="poweron-table">
+
+                            </tbody>
+                        </table>
+                        <label class="control-label h3"><strong style="color: #337ab7">确定启动Host?</strong></label>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="powerOnBtn">确定</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+        <!-- 关机模态框 -->
+        <div class="modal fade" id="shutdownModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="shutdownModalLabel">关机</h4>
+                    </div>
+                    <div class="modal-body">
+                        <h4><label class="col-sm-3 control-label">您已选择Host：</label></h4>
+
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th>Host名称</th>
+                                <th>Host IP</th>
+                                <th>VM数量</th>
+                                <th>所属集群</th>
+                                <th>所在机房</th>
+                            </tr>
+                            </thead>
+                            <tbody id="powerOff-table">
+                            </tbody>
+                        </table>
+
+                        <div class="i-checks1"><label> <input type="radio" checked value="option1" name="hostoff">
+                            <i></i> 关机 </label></div>
+                        <div class="i-checks1"><label> <input type="radio" value="option2" name="hostoff"> <i></i> 强制关机
+                        </label></div>
+                        <div class="i-checks1" style="display: none"><label> <input type="checkbox" value=""> <i></i>
+                            确定强制关机 </label></div>
+                        <div><span class='text-danger'>强制关机会导致未保存的数据丢失</span></div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="powerOffBtn">确定</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+        <!-- 重启模态框 -->
+        <div class="modal fade" id="restartModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="restartModalLabel">重启</h4>
+                    </div>
+                    <div class="modal-body">
+                        <h4><label class="col-sm-3 control-label">您已选择Host：</label></h4>
+
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th>Host名称</th>
+                                <th>Host IP</th>
+                                <th>VM数量</th>
+                                <th>所属集群</th>
+                                <th>所在机房</th>
+                            </tr>
+                            </thead>
+                            <tbody id="restart-table">
+
+                            </tbody>
+                        </table>
+
+                        <div class="i-checks2"><label> <input type="radio" value="option1" name="restart" checked>
+                            <i></i> 重启 </label></div>
+                        <div class="i-checks2"><label> <input type="radio" value="option2" name="restart"> <i></i> 强制重启
+                        </label></div>
+                        <div class="i-checks2" style="display: none"><label> <input type="checkbox" value=""> <i></i>
+                            确定强制关机 </label></div>
+                        <div><span class='text-danger'>强制关机会导致未保存的数据丢失</span></div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="restartBtn">确定</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+
+        <!-- 删除模态框 -->
+        <div class="modal fade" id="host-delete-some-modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="host-delete-someLabel">删除主机</h4>
+                    </div>
+                    <div class="modal-body">
+                        <h4><label class="col-sm-3 control-label">您已选择Host：</label></h4>
+
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th>Host名称</th>
+                                <th>Host IP</th>
+                                <th>VM数量</th>
+                                <th>所属集群</th>
+                                <th>所在机房</th>
+                            </tr>
+                            </thead>
+                            <tbody id="host-delete-some-table">
+
+                            </tbody>
+                        </table>
+
+                        <h3><span class='text-danger'>确认删除主机？</span></h3>
+                        <div class="delete-check"><label> <input type="checkbox" value="option" name="delete"> <i></i>
+                            确认删除主机 </label></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="host-delete-someBtn" disabled>确定</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+
+        <!-- 监控信息模态框 -->
+        <div class="modal fade" id="hostMonitor" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document" style="width:1000px;left: 7%;">
+                <div class="modal-content ">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel"> 应用监控</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <h4 style="display:inline; margin-top: 50px; margin-right: 6px">主机名: </h4>
+                            <span id="model-title"></span>
+                        </div>
+
+                        <!-- echart div -->
+                        <div id="main" style="width: 900px;height:1050px; margin-top: 30px;"></div>
+
+                        <div class="modal fade" id="time_range" style="margin-top:100px">
+                            <div class="modal-dialog" style="width: 580px">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <label>选择粒度: </label>
+                                        <div class="btn-group" style="margin-top: 10px">
+                                            <button class="btn btn-success btn-outline"
+                                                    style="width:80px;margin-left: 5px"
+                                                    value="30">30分
+                                            </button>
+                                            <button class="btn btn-success btn-outline"
+                                                    style="width:80px;margin-left: 5px"
+                                                    value="60">60分
+                                            </button>
+                                            <button class="btn btn-success btn-outline"
+                                                    style="width:80px;margin-left: 5px"
+                                                    value="today">天
+                                            </button>
+                                            <!--<button class="btn btn-success btn-outline" style="width:80px;margin-left: 5px"-->
+                                            <!--value="month">月-->
+                                            <!--</button>-->
+                                            <div class="btn-group" style="margin-top: 10px">
+                                                <div>
+                                                    <span class="">开始时间: </span><input type="date" id="start_date"/>
+                                                    <span class="">结束时间: </span><input type="date" id="end_date"/>
+                                                    <button class="btn btn-primary refresh-chart">确定</button>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--修改信息-->
+        <div class="modal fade" id="updateHostModal" style="top:10%;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">修改HOST信息</h4>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="form-group"><label class="col-sm-3 control-label">主机名：</label>
+                            <div class="col-sm-6">
+                                <input id="update-host-name" name="displayname" type="text"
+                                       class="form-control"
+                                       placeholder="请输入主机名">
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-3 control-label">IP：</label>
+                            <div class="col-sm-6">
+                                <input id="update-ip-name" name="ip" type="text"
+                                       class="form-control"
+                                       placeholder="请输入IP">
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-3 control-label">管理IP：</label>
+                            <div class="col-sm-6">
+                                <input id="update-manageip-name" name="manageip" type="text"
+                                       class="form-control"
+                                       placeholder="请输入管理IP">
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-3 control-label">保留内存(G)：</label>
+                            <div class="col-sm-6">
+                                <form class="bs-example bs-example-form" role="form">
+                                    <div class="input-group alterMemory">
+                                        <span class="input-group-addon minus-limit" style="cursor: pointer"
+                                              onclick="createHostInfo.minusMemory('.update-memory')">-</span>
+                                        <input type="text" id="update-memory" class="form-control update-memory"
+                                               placeholder="12"
+                                               name="memory" onkeyup="value=value.replace(/[^\d]/g,'') ">
+                                        <span class="input-group-addon plus-limit" style="cursor: pointer"
+                                              onclick="createHostInfo.plusMemroy('.update-memory')">+</span>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" id="update_host_sure">确定</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+    </div>
+</div>
+<div id="loading">
+    <div style="position:fixed;top:35%;left:36%;text-align: center;color: #0A7504;">
+        <img src="img/lodaing.gif" alt="正在处理,请耐心等候">
+        <h2 class="text-primary warn-text-title">正在处理,请耐心等候...</h2>
+    </div>
+</div>
+
+<!-- Mainly scripts -->
+<script src="js/bootstrap.min.js"></script>
+<script src="js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+
+<!-- Custom and plugin javascript -->
+<script src="js/inspinia.js"></script>
+<script src="js/plugins/pace/pace.min.js"></script>
+
+<!-- jQuery UI -->
+<script src="js/plugins/jquery-ui/jquery-ui.min.js"></script>
+
+<!-- data tables -->
+<script src="js/bootstrap-table.js"></script>
+<script src="js/bootstrap-table-zh-CN.min.js"></script>
+<script src="js/bootstrap-datetimepicker.js"></script>
+<script src="js/bootstrap-datetimepicker.zh-CN.js"></script>
+
+<script src="js/jquery.bootstrap-growl.min.js"></script>
+<script src="js/module/common.js"></script>
+ <script src="js/bootstrap-table-export.js"></script>
+    <script src="js/tableExport.js"></script>
+<script src="js/module/host.js"></script>
+
+<!-- echart -->
+<script src="js/echarts/echarts.min.js"></script>
+<!--<script src="js/echarts/theme/macarons.js"></script>-->
+
+
+<script>
+    var myChart;
+
+</script>
+
+</body>
+</html>

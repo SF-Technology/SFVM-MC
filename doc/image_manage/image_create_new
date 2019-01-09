@@ -1,0 +1,20 @@
+# POST /image_manage/create_new 创建全新镜像的接口
+
+## 请求参数
+```
+    json
+```
+
+{
+"version":version,    #操作系统版本
+"image_name":image_name,    #镜像名称
+"displayname":displayname     #镜像显示名称
+}
+
+返回值：
+{
+  "code": 0,
+  "data": {}
+  "msg": "success"
+}
+

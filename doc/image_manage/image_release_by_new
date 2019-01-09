@@ -1,0 +1,20 @@
+# POST /image_manage/image_release_by_new  发布新镜像的接口
+
+## 请求参数
+```
+    json
+```
+{
+"name":SFIM_debian7.8,     #镜像名称
+"displayname": SFIM_debian7.8  #镜像显示名称
+"version": debian   版本
+"system": linux  操作系统
+}
+
+返回值：
+{
+  "code": 0,
+  "data": {}
+  "msg": "success"
+}
+

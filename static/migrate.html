@@ -1,0 +1,1559 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>迁移</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="font-awesome/css/font-awesome.css" rel="stylesheet">
+
+
+    <link href="css/animate.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+
+
+    <link rel="stylesheet" href="css/jsTree/style.min.css">
+    <!-- 生成导航栏 -->
+    <script src="js/jquery-2.1.1.js"></script>
+    <script src="js/module/navigation.js"></script>
+
+    <script src="js/fileinput/fileinput.min.js"></script>
+    <link href="js/fileinput/fileinput.css" rel="stylesheet">
+    <script src="js/fileinput/fileinput_locale_zh.js"></script>
+    <script src="js/module/common.js"></script>
+    <style>
+        #openstack-paper, #esx-paper {
+            position: absolute;
+            left: 33px;
+            top: 0px;
+            display: none;
+            padding-top: 30px;
+        }
+
+        #openstack-paper .openstack-item > div, #esx-paper .esx-item > div {
+            display: inline-block;
+        }
+
+        #openstack-box, #esx-box {
+            font-size: 13px;
+        }
+
+        .DivSelect {
+            background-color: transparent;
+            /*overflow: hidden; !*隐藏了小三角，宽度为比select宽度少20px*!*/
+            border-width: 0px;
+        }
+    /* ----------------------------------*/
+        .DivSelect ,.groupSel{
+            position: relative;
+        }
+
+        .DivSelect #esx-batch-group, #openstack-batch-group{
+            line-height: 22px;
+            width: 200px;
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+
+        .DivSelect #esx-batch-group-list, #openstack-group-list,#vm-group-list ,#openstack-batch-group-list{
+            position: absolute;
+            list-style: none;
+            z-index: 10;
+            width: 200px;
+            border: 1px solid rgb(238, 238, 238);
+            min-height: 80px;
+            max-height: 160px;
+            padding: 0;
+            padding-bottom: 5px;
+            background: #fff;
+            overflow-y: scroll;
+            display: none;
+        }
+        #openstack-group-list{
+            width: 240px;
+        }
+        #vm-group-list{
+            width: 239px;
+        }
+        .DivSelect #esx-batch-group-list li, #openstack-group-list li ,#vm-group-list li,#openstack-batch-group-list li{
+            font-size: 14px;
+            background: #fff;
+            line-height: 30px;
+            padding-left: 5px;
+            padding-right: 5px;
+            cursor: default;
+        }
+
+        .DivSelect #esx-batch-group-list li:hover,  #openstack-group-list li:hover,#vm-group-list li:hover,#openstack-batch-group-list li:hover {
+            background: #00C1DE;
+            color: #fff;
+        }
+    /*----------------------------------*/
+
+
+        .select-style {
+            height: 30px;
+            line-height: 30px;
+            /*width: 105px;*/
+            margin: 0px;
+            font-size: 12px;
+            background-color: transparent;
+            overflow: hidden;
+            width: 110px;
+        }
+
+        .input-stye {
+            height: 30px;
+            line-height: 30px;
+            margin: 0px;
+            font-size: 12px;
+            width: 100px;
+        }
+
+        .second-info {
+            background: #F5F5F6;
+            font-weight: bold;
+        }
+
+        .header {
+            margin-bottom: 20px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #000;
+            border-bottom: 2px solid #ddd;
+            width: 280px;
+            height: 45px;
+            line-height: 45px;
+            padding-bottom: 10px;
+        }
+
+        .header #openstacktomain, .header #esxtomain {
+            color: #0d8ddb;
+            font-weight: normal;
+            cursor: pointer;
+        }
+
+        .file-preview {
+            display: none;
+        }
+        .delete-item{
+           line-height: 43px;
+           font-size: 15px;
+        }
+        div.columns.columns-right.btn-group.pull-right {
+                margin-right: 35px;
+            }
+    </style>
+    <script src="js/fileinput/fileinput.min.js"></script>
+</head>
+
+<body>
+<div id="wrapper">
+    <nav class="navbar-default navbar-static-side" role="navigation" id="navbar"></nav>
+
+    <div id="page-wrapper" class="gray-bg dashbard-1">
+        <div class="row border-bottom">
+            <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                <div class="navbar-header">
+                    <div class="pagetitle">迁移管理</div>
+                </div>
+                <ul class="nav navbar-top-links navbar-right pull-right">
+                    <li>
+                        <a href="#" onclick="javascript:logout(); event.returnValue=false; ">
+                            <i class="fa fa-sign-out"></i> Log out
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="row white-bg dashboard-header" style="overflow: auto; z-index: 50;position: relative;">
+            <div id="main-paper" class="row" style="padding-top: 30px;background: #fff;">
+                <div class="col-xs-12" style="margin-bottom: 30px;position: absolute" id="main-page">
+                    <div class="row">
+                        <div class="col-xs-12" style="margin-bottom: 20px">
+                            <div class="row">
+                                <div class="col-xs-9">
+                                    <div class="opera-btn-migrate">
+                                        <button class="btn btn-default" id="esx-btn">Esx</button>
+                                        <button class="btn btn-default" id="esx-batch">Esx批量迁移
+                                        </button>
+                                        <button class="btn btn-default" id="openstack-btn">Openstack</button>
+                                        <button class="btn btn-default" id="openstack-batch">Openstack批量迁移
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-xs-3">
+                                    <div class="pull-right opera-btn-migrate">
+                                        <button class="btn btn-info" id="retryVm">重试</button>
+                                        <!--<button class="btn btn-warning">取消</button>-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12">
+                            <table id="migrateTable" data-locale="zh-US" data-classes="table table-hover"></table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row" id="openstack-paper">
+                <!--<p>Openstack | <button class="btn btn-default" id="openstacktomain" style="margin-bottom: 15px">返回上一级</button></p>-->
+                <div class="header">
+                    <div id="openstacktomain" class="inline">返回上一级</div>
+                    |
+                    <div class="title inline">Openstack批量迁移</div>
+                </div>
+                <div style="margin-bottom: 16px;">
+                    <div><h3>方式一：Excel导入</h3></div>
+                    <div class="col-xs-7" style="padding-left: 0px;">
+                        <form role="form" id="importFile" method="post"
+                              enctype="multipart/form-data">
+                            <input id="excelOpenstackFile" name="file" class="file-loading"
+                                   type="file" accept=".xls,.xlsx" data-min-file-count="1"
+                                   data-show-preview="true"> <br>
+                        </form>
+                    </div>
+                    <div style="margin-top: 17px;">
+                        <a href="/v2v/openstack/excel">下载模板</a>
+                    </div>
+                </div>
+
+                <div class="col-xs-7" style="padding-left: 0px;"><h3>方式二：表格填写</h3></div>
+                <div id="openstack-box">
+                    <table class="table table-condensed ">
+                        <thead>
+                        <tr class="second-info">
+                            <th>迁移方式</th>
+                            <th>Openstack环境</th>
+                            <th>VM名称</th>
+                            <th>VM IP</th>
+                            <th>VM所在网段</th>
+                            <th>应用系统信息</th>
+                            <th>VM应用管理员</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td style="line-height: 30px">
+                                Openstack
+                                <!--<select name="" class="select-style">-->
+                                <!--<option value="Openstack">Openstack</option>-->
+                                <!--<option value="ESX">ESX</option>-->
+                                <!--</select>-->
+                            </td>
+                            <td class="DivSelect">
+                                <select name="" class="select-style" id="openstack-batch-env">
+                                    <option value="-1">请选择</option>
+                                    <option value="SIT">SIT</option>
+                                    <option value="DEV">DEV</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" placeholder="VM名称" name="vm_name" class="input-stye "
+                                       id="openstack-batch-vmname" style="width:135px">
+                            </td>
+                            <td><input type="text" placeholder="VM Ip" name="vm_ip" class="input-stye"
+                                       id="openstack-batch-vmip"></td>
+                            <td class="DivSelect">
+                                <select name="" class="select-style" id="openstack-batch-segment">
+                                    <option value="-1">请选择</option>
+                                </select></td>
+                            <td>
+                                <input type="text" placeholder="应用系统信息" name="vm_app_info" class="input-stye "
+                                       id="openstack-batch-appinfo">
+                            </td>
+                            <td><input type="text" placeholder="应用管理员" name="vm_owner" class="input-stye"
+                                       id="openstack-batch-admin" style="width: 80px"></td>
+                        </tr>
+                        <tr class="second-info">
+                            <td>VM环境</td>
+                            <td>VM网络区域</td>
+                            <td>VM集群</td>
+                            <td>VM系统版本</td>
+                            <td>应用组</td>
+                            <td>CPU数量</td>
+                            <td>内存容量</td>
+                        </tr>
+                        <tr>
+                            <td class="DivSelect">
+                                <select name="" class="select-style " id="openstack-batch-vmenvi">
+                                    <option value="-1">请选择</option>
+                                </select></td>
+                            <td class="DivSelect"><select name="" class="select-style" id="openstack-batch-netarea">
+                                <option value="-1">请选择</option>
+                            </select></td>
+                            <td class="DivSelect"><select name="" class="select-style" style="width: 135px"
+                                                          id="openstack-batch-hostpool">
+                                <option value="-1">请选择</option>
+                            </select></td>
+                            <td class="DivSelect"><select name="" class="select-style" style="width: 100px"
+                                                          id="openstack-batch-ostype">
+                                <option value="-1">请选择</option>
+                                <option value="Windows">Windows</option>
+                                <option value="Linux">Linux</option>
+                            </select></td>
+                            <td class="DivSelect">
+                                <!--<select name="" class="select-style" id="openstack-batch-group">-->
+                                    <!--<option value="-1">请选择</option>-->
+                                <!--</select>-->
+                                <input type="text" class="input-stye" id="openstack-batch-group" placeholder="应用组(支持模糊搜索)">
+                                <ul id="openstack-batch-group-list">
+
+                                </ul>
+                            </td>
+                            <td class="DivSelect">
+                                <select name="" class="select-style" style="width: 80px" id="openstack-batch-cpu">
+                                    <option value="-1">请选择</option>
+                                </select></td>
+                            <td class="DivSelect">
+                                <select name="" class="select-style" style="width: 80px" id="openstack-batch-mem">
+                                    <option value="-1">请选择</option>
+                                </select></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <p>
+                        <button class="btn btn-default pull-right" id="add-one-vm">添加</button>
+                    </p>
+                    <table class="table table-bordered" style="margin-top: 70px">
+                        <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>环境</th>
+                            <th>VM名称</th>
+                            <th>VM IP</th>
+                            <th>VM所在网段</th>
+                            <th>VM环境</th>
+                            <th>VM网络区域</th>
+                            <th>VM集群</th>
+                            <th>VM系统版本</th>
+                            <th>应用组</th>
+                            <th>CPU数量</th>
+                            <th>内存容量</th>
+                            <th>应用系统信息</th>
+                            <th>VM管理员</th>
+                            <th>操作</th>
+                        </tr>
+                        <tbody id="batch-info-table">
+                        </tbody>
+                        </thead>
+                    </table>
+                    <p>
+                        <button class="btn btn-primary pull-right" id="migrate-batch-vm">批量提交</button>
+                    </p>
+                </div>
+            </div>
+            <div class="row" id="esx-paper" style="display: none">
+                <!--<p>Openstack | <button class="btn btn-default" id="openstacktomain" style="margin-bottom: 15px">返回上一级</button></p>-->
+                <div class="header">
+                    <div id="esxtomain" class="inline">返回上一级</div>
+                    <div class="title inline">ESX批量迁移</div>
+                </div>
+                <div style="margin-bottom: 16px;">
+                    <div><h3>方式一：Excel导入</h3></div>
+                    <div class="col-xs-7" style="padding-left: 0px;">
+                        <form role="form" id="" method="post"
+                              enctype="multipart/form-data">
+                            <input id="excelEsxFile" name="file" class="file-loading"
+                                   type="file" accept=".xls,.xlsx" data-min-file-count="1"
+                                   data-show-preview="true"> <br>
+                        </form>
+                    </div>
+                    <div style="margin-top: 17px;">
+                        <a href="/v2v/esx/excel">下载模板</a>
+                    </div>
+                </div>
+                <div class="col-xs-7" style="padding-left: 0px;"><h3>方式二：表格填写</h3></div>
+                <div id="esx-box">
+                    <table class="table table-condensed ">
+                        <thead>
+                        <tr class="second-info">
+                            <th>迁移方式</th>
+                            <th>ESX ROOT密码</th>
+                            <th>ESX 环境</th>
+                            <th>ESX IP</th>
+                            <th>VM WARE虚拟机名称</th>
+                            <th>VM OS名称</th>
+                            <th>VM OS版本</th>
+                            <th>VM IP</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td style="line-height: 30px">
+                                ESX
+                                <!--<select name="" class="select-style">-->
+                                <!--<option value="Openstack">Openstack</option>-->
+                                <!--<option value="ESX">ESX</option>-->
+                                <!--</select>-->
+                            </td>
+                            <td>
+                                <input type="password" placeholder="请输入密码" class="input-stye " id="esx-batch-paseeword"
+                                       style="width: 110px">
+                            </td>
+                            <td class="DivSelect">
+                                <select name="" class="select-style" id="esx-batch-env">
+                                    <!--<option value="-1">请选择</option>-->
+                                    <!--<option value="1">SIT</option>-->
+                                    <!--<option value="2">STG</option>-->
+                                    <!--<option value="3">DEV</option>-->
+                                    <!--<option value="4">PRD</option>-->
+                                    <!--<option value="5">DR</option>-->
+                                    <!--<option value="6">MINIARCHDR</option>-->
+                                    <!--<option value="7">TENCENTDR</option>-->
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" placeholder="ESX IP" class="input-stye " id="esx-batch-ip"
+                                       style="width:135px">
+                            </td>
+                            <td><input type="text" placeholder="VM WARE虚拟机名称" class="input-stye"
+                                       id="esx-batch-vmware-name" style="width:150px"></td>
+                            <td class="DivSelect">
+                                <input type="text" placeholder="VM OS名称" class="input-stye" id="esx-batch-vmos-name">
+                            <td>
+                                <input type="text" placeholder="VM OS版本" class="input-stye " id="esx-batch-vmos">
+                            </td>
+                            <td><input type="text" placeholder="VM IP" value="192.168.202.202" class="input-stye"
+                                       id="esx-batch-vmip" style="width: 100px"></td>
+                        </tr>
+                        <tr class="second-info">
+                            <th>VM集群</th>
+                            <td>VM网段</td>
+                            <td>VM类型</td>
+                            <td>应用系统信息</td>
+                            <td>应用组</td>
+                            <td>应用管理员</td>
+                            <td>CPU数量</td>
+                            <td>内存容量</td>
+                        </tr>
+                        <tr>
+                            <td class="DivSelect">
+                                <input type="text" placeholder="VM集群" class="input-stye" id="esx-batch-hostpool"
+                                       style="width: 80px" disabled>
+                                <span id="editorHostpool"
+                                      style="font-size: 20px;color: #0d8ddb;cursor: pointer;line-height: 30px"> <i
+                                        class="fa fa-pencil-square"></i></span>
+                            </td>
+                            <td class="DivSelect">
+                                <select name="" class="select-style" id="esx-batch-vmsegment" style="width: 110px">
+                                    <option value="-1">请选择</option>
+                                    <option value="192.168.202.0">192.168.202.0</option>
+                                    <option value="192.168.202.0">192.168.202.0</option>
+                                </select>
+                            </td>
+                            <td class="DivSelect">
+                                <select name="" class="select-style" id="esx-batch-vmstyle" style="width: 110px;">
+                                    <option value="-1">请选择</option>
+                                    <option value="Windows">Windows</option>
+                                    <option value="Linux">Linux</option>
+                                </select>
+                            </td>l
+                            <td class="DivSelect">
+                                <input type="text" placeholder="应用系统信息" class="input-stye" id="esx-batch-appinfo"
+                                       style="width: 135px">
+                            </td>
+                            <td class="DivSelect">
+                                <!--<select name="" class="select-style" id="esx-batch-group" style="width: 150px">-->
+                                    <!--<option value="-1">请选择</option>-->
+                                <!--</select>-->
+                                <input type="text" class="input-stye" id="esx-batch-group" placeholder="应用组(支持模糊搜索)">
+                                <ul id="esx-batch-group-list">
+
+                                </ul>
+                            </td>
+                            <td class="DivSelect">
+                                <input type="text" placeholder="应用管理员" class="input-stye" id="esx-batch-admin"
+                                       style="width: 100px">
+                                </select></td>
+
+                            <td class="DivSelect">
+                                <select name="" class="select-style" style="width: 100px" id="esx-batch-cpu">
+                                    <option value="-1">请选择</option>
+                                </select></td>
+                            <td class="DivSelect">
+                                <select name="" class="select-style" style="width: 100px" id="esx-batch-mem">
+                                    <option value="-1">请选择</option>
+                                </select></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <p>
+                        <button class="btn btn-default pull-right" id="esx-add-one-vm">添加</button>
+                    </p>
+                    <table class="table table-bordered" style="margin-top: 70px">
+                        <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>ESX 环境</th>
+                            <th>ESX IP</th>
+                            <th>VM WARE虚拟机名称</th>
+                            <th>VM OS名称</th>
+                            <th>VM OS版本</th>
+                            <th>VM IP</th>
+                            <th>VM环境</th>
+                            <th>VM所在网段</th>
+                            <th>VM集群</th>
+                            <th>VM系统版本</th>
+                            <th>应用组</th>
+                            <th>CPU数量</th>
+                            <th>内存容量</th>
+                            <th>应用系统信息</th>
+                            <th>VM管理员</th>
+                            <th>操作</th>
+                        </tr>
+                        <tbody id="esx-batch-info-table">
+                        </tbody>
+                        </thead>
+                    </table>
+                    <p>
+                        <button class="btn btn-primary pull-right" id="esx-migrate-batch-vm">批量提交</button>
+                    </p>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<!--批量上传错误提示信息--开始-->
+<!-- Modal -->
+<div class="modal fade" id="uploadError" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">错误信息</h4>
+            </div>
+            <div class="modalContent" style="height: 300px;overflow-y:scroll;margin-left: 10px;">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--批量上传错误提示信息--结束-->
+
+<!--删除提示-->
+<div class="modal fade" id="delete-vm-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3 class="modal-title">删除</h3><span class="text-danger" id="delete-vm-text"></span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="col-xs-4 control-label text-right" style="margin-top: 12px;">VMIP：</label>
+                    <div class="col-sm-6">
+                       <span class="delete-vm-ip delete-item"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-4 control-label text-right" style="margin-top: 12px;">开始时间：</label>
+                    <div class="col-sm-6">
+                       <span class="delete-start-time delete-item"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="delete-vm-btn">确定</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+
+<!--批量迁移 错误提示-->
+<div class="modal fade" id="batch-err-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3 class="modal-title">错误提示</h3><span class="text-danger" id="warning-text"></span>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>VM名称</th>
+                        <th>错误信息</th>
+                    </tr>
+                    </thead>
+                    <tbody id="err-box">
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<div class="modal fade" id="esxtokvm-hostpool-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3 class="modal-title">选择ESX迁移的VM目标集群 </h3>
+                <!--<span class="text-danger">请确保虚拟机正常运行,vmtools运行正常！</span>-->
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="col-xs-4 control-label text-right" style="margin-top: 12px;">机房区域：</label>
+                    <div class="col-sm-6">
+                        <select name="" class="form-control" id="esx-vm-datacenter-area">
+
+                        </select>
+                    </div>
+                </div>
+                <div id="esx-areabox" style="display:none;">
+                    <div class="form-group">
+                        <label class="col-xs-4 control-label text-right" style="margin-top: 12px;">VM区域：</label>
+                        <div class="col-sm-6">
+                            <select name="" class="form-control" id="esx-vm-area-room">
+                                <option value="-1">请选择VM区域</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group esx_child_area_show">
+                        <label class="col-xs-4 control-label text-right" style="margin-top: 12px;">子区域：</label>
+                        <div class="col-sm-6">
+                            <select name="" class="form-control" id="esx-vm-childarea-room">
+                                <option value="-1">请选择子区域</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-4 control-label text-right" style="margin-top: 12px;">VM所属机房：</label>
+                    <div class="col-sm-6">
+                        <select name="" class="form-control" id="esx-vm-datacenter-room">
+                            <option value="-1">请选择VM所属机房</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-4 control-label text-right" style="margin-top: 12px;">VM环境：</label>
+                    <div class="col-sm-6">
+                        <input type="text" disabled class="form-control resetInput"
+                               id="esx-vm-enviroment-room">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-4 control-label text-right" style="margin-top: 12px;">VM网络区域：</label>
+                    <div class="col-sm-6">
+                        <select name="" class="form-control" id="esx-vm-net-area">
+                            <option value="-1">请选择网络区域</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-4 control-label text-right" style="margin-top: 12px;">VM集群：</label>
+                    <div class="col-sm-6">
+                        <select name="" class="form-control" id="esx-vm-hostpool">
+                            <option value="-1">请选择VM集群</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="selectHostpool">确定</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<!--ESX to Kvm-->
+<div class="modal fade" id="esxtokvm-user-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3 class="modal-title">ESX to Kvm </h3><span class="text-danger">请确保虚拟机正常运行,vmtools运行正常！</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="col-xs-4 control-label text-right" style="margin-top: 12px;">ESX ROOT密码：</label>
+                    <div class="col-sm-6">
+                        <input type="password" placeholder="请输入密码" class="form-control resetInput"
+                               id="esx-user-paseeword">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-4 control-label text-right" style="margin-top: 12px;">ESX 环境：</label>
+                    <div class="col-sm-6">
+                        <select name="" class="form-control" id="esx-user-environment">
+                            <option value="-1">请选择Esx环境</option>
+                            <!--<option value="1">SIT</option>-->
+                            <!--<option value="2">STG</option>-->
+                            <!--<option value="3">DEV</option>-->
+                            <!--<option value="4">PRD</option>-->
+                            <!--<option value="5">DR</option>-->
+                            <!--<option value="6">MINIARCHDR</option>-->
+                            <!--<option value="7">TENCENTDR</option>-->
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-4 control-label text-right" style="margin-top: 12px;">ESX IP：</label>
+                    <div class="col-sm-6">
+                        <input type="text" placeholder="请输入Esx Ip" class="form-control resetInput" id="esx-user-ip">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-4 control-label text-right" style="margin-top: 12px;">VM 名称：</label>
+                    <div class="col-sm-6">
+                        <input type="text" placeholder="请输入VM名称" class="form-control resetInput" id="vm-user-name">
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="esxtokvmUserBtn">下一步</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<div class="modal fade" id="esxtokvm-modal" style="top:-3%">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3 class="modal-title">ESX to Kvm </h3><span
+                    class="text-danger">请确保vm已下载并执行完成迁移前脚本并已处于关机状态,再提交v2v任务！</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="col-xs-4 control-label text-right" style="margin-top: 12px;">ESX 环境：</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="esx-envi-vm" disabled value="SIT">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-4 control-label text-right" style="margin-top: 12px;">ESX IP：</label>
+                    <div class="col-sm-6">
+                        <input type="text" disabled value="192.168.42.24" class="form-control"
+                               id="esx-ip-vmuser">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-4 control-label text-right" style="margin-top: 12px;">VM OS名称：</label>
+                    <div class="col-sm-6">
+                        <input type="text" disabled value="CNSZ22VL3289" class="form-control"
+                               id="esx-name-vm">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-4 control-label text-right" style="margin-top: 12px;">VM IP：</label>
+                    <div class="col-sm-6">
+                        <input type="text" disabled value="192.168.42.24" class="form-control"
+                               id="esx-ip-vmos">
+                    </div>
+                </div>
+                <hr>
+                <div class="form-group">
+                    <label class="col-xs-4 control-label text-right" style="margin-top: 12px;">机房区域：</label>
+                    <div class="col-sm-6">
+                        <select name="" class="form-control" id="vm-datacenter-area">
+                            <option value="-1">请选择机房区域</option>
+                            <option value="总部">总部</option>
+                            <option value="地区">地区</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="areabox" style="display:none;">
+                    <div class="form-group">
+                        <label class="col-xs-4 control-label text-right" style="margin-top: 12px;">VM区域：</label>
+                        <div class="col-sm-6">
+                            <select name="" class="form-control" id="vm-area-room">
+                                <option value="-1">请选择VM区域</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group child_area_show">
+                        <label class="col-xs-4 control-label text-right" style="margin-top: 12px;">子区域：</label>
+                        <div class="col-sm-6">
+                            <select name="" class="form-control" id="vm-childarea-room">
+                                <option value="-1">请选择子区域</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-4 control-label text-right" style="margin-top: 12px;">VM所属机房：</label>
+                    <div class="col-sm-6">
+                        <select name="" class="form-control" id="vm-datacenter-room">
+                            <option value="-1">请选择VM所属机房</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-4 control-label text-right" style="margin-top: 12px;">VM环境：</label>
+                    <div class="col-sm-6">
+                        <!--<select name="" class="form-control" id="vm-enviroment-room">-->
+                        <!--<option value="-1">请选择VM环境</option>-->
+                        <!--<option value="0">enviroment1</option>-->
+                        <!--<option value="1">enviroment2</option>-->
+                        <!--</select>-->
+                        <input type="text" disabled value="SIT" class="form-control resetInput"
+                               id="vm-enviroment-room">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-4 control-label text-right" style="margin-top: 12px;">VM网络区域：</label>
+                    <div class="col-sm-6">
+                        <select name="" class="form-control" id="vm-net-area">
+                            <option value="-1">请选择网络区域</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-4 control-label text-right" style="margin-top: 12px;">VM网段：</label>
+                    <div class="col-sm-6">
+                        <select name="" class="form-control" id="vm-net-area-segment">
+                            <option value="-1">请选择VM网段</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-4 control-label text-right" style="margin-top: 12px;">VM集群：</label>
+                    <div class="col-sm-6">
+                        <select name="" class="form-control" id="vm-hostpool">
+                            <option value="-1">请选择VM集群</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-4 control-label text-right" style="margin-top: 12px;">VM类型：</label>
+                    <div class="col-sm-6">
+                        <select name="" class="form-control" id="vm-type">
+                            <option value="-1">请选择VM类型</option>
+                            <option value="Windows">Windows</option>
+                            <option value="Linux">Linux</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-4 control-label text-right" style="margin-top: 12px;">应用系统信息：</label>
+                    <div class="col-sm-6">
+                        <input type="text" placeholder="请输入应用系统信息" class="form-control resetInput" id="vm-app-info">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-4 control-label text-right" style="margin-top: 12px;">VM应用管理员：</label>
+                    <div class="col-sm-6">
+                        <input type="text" placeholder="请输入VM应用管理员" class="form-control resetInput" id="vm-admin">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-4 control-label text-right" style="margin-top: 12px;">应用组：</label>
+                    <div class="col-sm-6 groupSel">
+                        <!--<select name="" class="form-control" id="vm-group">-->
+                            <!--<option value="-1">请选择应用组</option>-->
+                        <!--</select>-->
+                        <input type="text" id="vm-group" class="form-control resetInput" placeholder="应用组(支持模糊搜索)">
+                        <ul id="vm-group-list">
+
+                        </ul>
+                    </div>
+                </div>
+                <div class="form-group"><label class="col-xs-4 control-label text-right">CPU数量：</label>
+                    <div class="col-sm-6">
+                        <select name="" class="form-control" id="cpu-number">
+                            <option value="-1">请选择cpu数量</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group"><label class="col-xs-4 control-label text-right">内存容量：</label>
+                    <div class="col-sm-6">
+                        <select name="" class="form-control" id="mem-number">
+                            <option value="-1">请选择内存容量</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="esxvmgotoprev">上一步</button>
+                <button type="button" class="btn btn-primary" id="esxtokvmBtn">确定</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+
+<!--Openstack to kvm-->
+<div class="modal fade" id="openstacktokvm-modal" style="top:-3%;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3 class="modal-title">Openstack to Kvm</h3><span class="text-danger">请确保虚拟机已经关闭，否则会导致迁移失败！</span>
+            </div>
+            <div class="modal-body">
+                <form id="openstack-form">
+                    <div class="form-group">
+                        <label class="col-xs-4 control-label text-right" style="margin-top: 12px;">Openstack环境：</label>
+                        <div class="col-sm-6">
+                            <select name="" class="form-control" id="openstack-enviroment">
+                                <option value="-1">请选择Openstack环境</option>
+                                <option value="SIT">SIT</option>
+                                <option value="DEV">DEV</option>
+                            </select>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-group">
+                        <label class="col-xs-4 control-label text-right" style="margin-top: 12px;">VM 名称：</label>
+                        <div class="col-sm-6">
+                            <input type="text" placeholder="请输入VM名称" name="vm_name" class="form-control"
+                                   id="vm-openstack-name">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-4 control-label text-right" style="margin-top: 12px;">VM IP：</label>
+                        <div class="col-sm-6">
+                            <input type="text" placeholder="请输入VM Ip" name="vm_ip" class="form-control"
+                                   id="vm-openstack-ip">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-4 control-label text-right" style="margin-top: 12px;">vm所在网段：</label>
+                        <div class="col-sm-6">
+                            <select name="" class="form-control init-content" id="vm-openstack-segment">
+                                <option value="-1">请选择VM所在网段</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-4 control-label text-right init-content"
+                               style="margin-top: 12px;">VM环境：</label>
+                        <div class="col-sm-6">
+                            <!--<select name="" class="form-control init-content" id="vm-openstack-enviroment">-->
+                                <!--<option value="-1">请选择VM环境</option>-->
+                            <!--</select>-->
+                            <input type="text" placeholder="请VM环境与Openstack环境一致" name="vm_env" class="form-control"
+                                   id="vm-openstack-enviroment" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-4 control-label text-right" style="margin-top: 12px;">VM网络区域：</label>
+                        <div class="col-sm-6">
+                            <select name="" class="form-control init-content" id="vm-openstack-net-area">
+                                <option value="-1">请选择VM网络区域</option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-4 control-label text-right" style="margin-top: 12px;">VM集群：</label>
+                        <div class="col-sm-6">
+                            <select name="" class="form-control init-content" id="vm-openstack-hostpool">
+                                <option value="-1">请选择VM集群</option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-4 control-label text-right" style="margin-top: 12px;">VM类型：</label>
+                        <div class="col-sm-6">
+                            <select name="" class="form-control" id="openstack-vm-type">
+                                <!--<option value="-1">请选择应用组</option>-->
+                                <option value="0">Windows</option>
+                                <option value="1">Linux</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-4 control-label text-right" style="margin-top: 12px;">应用系统信息：</label>
+                        <div class="col-sm-6">
+                            <input type="text" placeholder="请输入应用系统信息" name="vm_app_info" class="form-control"
+                                   id="vm-openstack-app-info">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-4 control-label text-right" style="margin-top: 12px;">VM应用管理员：</label>
+                        <div class="col-sm-6">
+                            <input type="text" placeholder="请输入VM应用管理员" name="vm_owner" class="form-control"
+                                   id="vm-openstack-admin">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-4 control-label text-right" style="margin-top: 12px;">应用组：</label>
+                        <div class="col-sm-6 groupSel">
+                            <!--<select name="" class="form-control init-content" id="openstack-group">-->
+                                <!--<option value="-1">请选择应用组</option>-->
+                            <!--</select>-->
+                            <input type="text" id="openstack-group" class="form-control" placeholder="应用组(支持模糊搜索)">
+                            <ul id="openstack-group-list">
+
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="form-group"><label class="col-xs-4 control-label text-right">CPU数量：</label>
+                        <div class="col-sm-6">
+                            <select name="" class="form-control init-content" id="cpu-openstack-number">
+                                <option value="-1">请选择CPU数量</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group"><label class="col-xs-4 control-label text-right">内存容量：</label>
+                        <div class="col-sm-6">
+                            <select name="" class="form-control init-content" id="mem-openstack-number">
+                                <option value="-1">请选择内存容量</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="openstacktokvmBtn">确定</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+
+<!--进度条-->
+<div id="loading">
+    <div style="position:fixed;top:35%;left:43%">
+        <img src="img/lodaing.gif" alt="正在处理,请耐心等候">
+        <h2 class="text-warning">正在处理,请耐心等候...</h2>
+    </div>
+</div>
+
+<!-- Mainly scripts -->
+<script src="js/bootstrap.min.js"></script>
+
+<script src="js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+
+<!-- Custom and plugin javascript -->
+<script src="js/inspinia.js"></script>
+<script src="js/plugins/pace/pace.min.js"></script>
+
+
+<!-- data tables -->
+<script src="js/bootstrap-table.js"></script>
+<script src="js/bootstrap-table-zh-CN.min.js"></script>
+
+
+<!-- 消息框 -->
+<script src="js/jquery.bootstrap-growl.min.js"></script>
+
+
+<!--66666-->
+<script src="js/es6/traceur.js"></script>
+<script src="js/es6/BrowserSystem.js"></script>
+<script src="js/es6/bootstrap.js"></script>
+
+<!--本页面js-->
+<script src="js/module/migrate.js"></script>
+<script src="js/monitor_report.js"></script>
+<script src="js/bootstrap-table-export.js"></script>
+<script src="js/tableExport.js"></script>
+<script>
+    window.onload = function () {
+        //表格初始化
+        inittable();
+        (function () {
+            let envHtml = '<option value="-1">请选择Esx环境</option>'
+            for (var i = 0; i < allEnvArr.length; i++) {
+                if(i==0){continue}
+                envHtml = envHtml + ' <option value=' + i + '>' + allEnvArr[i] + '</option>'
+            }
+            $("#esx-user-environment").html(envHtml)
+            $("#esx-batch-env").html(envHtml)
+        })()
+        $("#delete-vm-btn").click(function(){
+            TableFun.deletemigratevm($("#delete-vm-btn").attr('request-id'));
+        })
+//        openstack to kvm !
+        $("#openstack-btn").click(function () {
+            OpenstackFun.initInfo();
+        });
+        $("#openstack-enviroment").change(function () {
+            var envi = $(this).val(),
+                arr = allEnvArr;
+            let list = OpenstackFun.group_str;
+            var areaArr = OpenstackFun.data.toarea[arr.indexOf(envi).toString()];
+            var envCode = arr.indexOf(envi);
+            OpenstackFun.groupListSimple = getGroupListArr(list, envCode);
+            $("#openstack-group").val("")
+            if(!areaArr){
+                showMessage('所选环境资源不足,无法迁移','danger',1000);
+                return;
+            }
+            $("#vm-openstack-segment option:not(:first-child)").remove();
+            $("#vm-openstack-segment").append(OpenstackFun.setSegement(envi));
+            if(envi != '-1'){
+                $('#vm-openstack-enviroment').val(envi);
+                $("#vm-openstack-net-area option:not(:first-child)").remove();
+                $("#vm-openstack-hostpool option:not(:first-child)").remove();
+                $("#vm-openstack-net-area").append(OpenstackFun.gotoarea(arr.indexOf(envi).toString()));
+            }else{
+                $('#vm-openstack-enviroment').val('请VM环境与Openstack环境一致')
+            }
+        });
+        $("#vm-openstack-net-area").change(function () {
+            var value = $("#vm-openstack-enviroment").val(), arr = allEnvArr;
+            var area_selected = $("#vm-openstack-net-area").val();
+            $("#vm-openstack-hostpool option:not(:first-child)").remove();
+            if (area_selected == -1) {
+                return;
+            }
+            $("#vm-openstack-hostpool").append(OpenstackFun.gotohostpool(arr.indexOf(value) + "to" + area_selected));
+        });
+        $("#cpu-openstack-number").change(function () {
+            var cpu_selected = $("#cpu-openstack-number").val();
+            $("#mem-openstack-number option:not(:first-child)").remove();
+            if (cpu_selected == -1) {
+                return;
+            }
+            $("#mem-openstack-number").append(OpenstackFun.gotomem(cpu_selected));
+        });
+/*-----------------------------------------------------------------------------*/
+        $("#openstack-group").focus(function () // 获取焦点生成下拉组信息
+        {
+            let that = this;
+            let envCode = $("#openstack-enviroment").val();
+            if (envCode == "-1") {
+                showMessage("请先选择Openstack环境", "danger", 600);
+                return;
+            }
+            if (OpenstackFun.groupListSimple.length <= 0) {
+                showMessage("所选择环境无可用应用组", "danger", 600);
+                return;
+            }
+            focusGroupInfo(OpenstackFun.groupListSimple, "#openstack-group-list")
+            $("#openstack-group-list").slideDown()
+        })
+
+        $("#openstack-group").keyup(function () // 模糊匹配组信息
+        {
+            let that = this;
+            let envCode = $("#openstack-enviroment").val();
+            if (envCode == "-1") {
+                showMessage("请先选择Openstack环境", "danger", 600);
+                return;
+            }
+            if (OpenstackFun.groupListSimple.length <= 0) {
+                showMessage("所选择环境无可用应用组", "danger", 600);
+                return;
+            }
+            initAdmin(that, OpenstackFun.groupListSimple, "#openstack-group-list")
+             $("#openstack-group-list").slideDown()
+        })
+
+        $("#openstack-group").blur(function () // 失去焦点收起下拉
+        {
+            $("#openstack-group-list").slideUp()
+        })
+        $("#openstack-group-list").on("click", "li", function () //获取用户选中的组
+        {
+            let group_id = $(this).attr("data-id"),
+                    group_name = $(this).text();
+            $("#openstack-group").attr("data-group-id", group_id);
+            $("#openstack-group").val(group_name);
+        })
+/*-----------------------------------------------------------------------------*/
+
+        $("#openstacktokvmBtn").click(function () {
+            var modal = $(this);
+            OpenstackFun.submitopenstackkvm(modal);
+        });
+        $("#retryVm").click(function () {
+
+            TableFun.retrymigratevm();
+        });
+
+        $("#esx-btn").click(function () {
+            EsxFun.initInfo();
+        });
+        $("#esxtokvmUserBtn").click(function () {
+            EsxFun.submitosinfo();
+        });
+
+        $("#esxvmgotoprev").click(function () {
+            $("#esxtokvm-modal").modal("hide");
+            $("#esxtokvm-user-modal").modal("show");
+        });
+/*--------------------------------------------------------------------------------------*/
+        $("#vm-group").focus(function () // 获取焦点生成下拉组信息
+        {
+            let list = EsxFun.data.grouplist;
+            let arr = allEnvArr;
+            let envCode = arr.indexOf($("#esx-envi-vm").val());
+            let groupList = getGroupListArr(list, envCode)
+            if (groupList.length <= 0) {
+                showMessage("所选择环境无可用应用组", "danger", 600);
+                return;
+            }
+            focusGroupInfo(groupList, "#vm-group-list")
+            $("#vm-group-list").slideDown()
+        })
+
+        $("#vm-group").keyup(function () // 模糊匹配组信息
+        {
+             let that = this;
+            let list = EsxFun.data.grouplist;
+            let arr = allEnvArr;
+            let envCode = arr.indexOf($("#esx-envi-vm").val());
+            let groupList = getGroupListArr(list, envCode)
+            if (groupList.length <= 0) {
+                showMessage("所选择环境无可用应用组", "danger", 600);
+                return;
+            }
+            initAdmin(that, groupList, "#vm-group-list")
+            $("#vm-group-list").slideDown()
+        })
+
+        $("#vm-group").blur(function () // 获取焦点生成下拉组信息
+        {
+            $("#vm-group-list").slideUp()
+        })
+        $("#vm-group-list").on("click", "li", function () //获取用户选中的组
+        {
+            let group_id = $(this).attr("data-id"),
+                    group_name = $(this).text();
+            $("#vm-group").attr("data-group-id", group_id);
+            $("#vm-group").val(group_name);
+        })
+
+
+/*--------------------------------------------------------------------------------------*/
+
+
+        $("#esxtokvmBtn").click(function () {
+            EsxFun.esxsubmit();
+        });
+        $("#openstack-batch").click(function () {
+            OpenstackFun.batchInfoInit();
+        });
+        $("#openstack-batch-env").change(function () {
+            let env = $(this).val();
+            $("#openstack-batch-segment option:not(:first-child)").remove();
+            $("#openstack-batch-segment").append(OpenstackFun.setSegement(env));
+        });
+        $("#openstack-batch-vmenvi").change(function () {
+            var envi = $(this).val();
+//            let envArr = ['其他', 'SIT', 'STG', 'DEV', 'PRD', 'DR', 'MINIARCHDR'];
+//            let envCode = envArr.indexOf(env);
+            let list = OpenstackFun.group_str_batch;
+            $("#openstack-batch-group").val("")
+            OpenstackFun.groupListSel = getGroupListArr(list, envi)
+            OpenstackFun.batchHtmlInit([], ["#openstack-batch-netarea", "#openstack-batch-hostpool"]);
+            $("#openstack-batch-netarea").append(OpenstackFun.gotoarea(envi));
+        });
+        $("#openstack-batch-netarea").change(function () {
+            var netarea = $(this).val();
+            var envi = $("#openstack-batch-vmenvi").val();
+            OpenstackFun.batchHtmlInit([], ["#openstack-batch-hostpool"]);
+            if (netarea == -1) {
+                return;
+            }
+            $("#openstack-batch-hostpool").append(OpenstackFun.gotohostpool(envi + "to" + netarea));
+        });
+        $("#openstack-batch-cpu").change(function () {
+            var cpu = $(this).val();
+            OpenstackFun.batchHtmlInit([], ["#openstack-batch-mem"]);
+            $("#openstack-batch-mem").append(OpenstackFun.gotomem(cpu));
+        });
+/***********************************************************************************************/
+        $("#openstack-batch-group").focus(function () // 获取焦点生成下拉组信息
+        {
+            let envCode = $("#openstack-batch-vmenvi").val();
+            if (envCode == "-1") {
+                showMessage("请先选择Vm环境", "danger", 600);
+                return;
+            }
+            if (OpenstackFun.groupListSel.length <= 0) {
+                showMessage("所选择环境无可用应用组", "danger", 600);
+                return;
+            }
+            focusGroupInfo(OpenstackFun.groupListSel, "#openstack-batch-group-list")
+            $("#openstack-batch-group-list").slideDown()
+        })
+
+        function getGroupListArr(list, envCode) {
+            let groupList = [];
+            for (var i = 0, len = list.length; i < len; i++) {
+                if (envCode == list[i].dc_type) {
+                    groupList.push(list[i])
+                }
+            }
+            return groupList
+        }
+        $("#openstack-batch-group").keyup(function () // 模糊匹配组信息  openstack批量
+        {
+            let that = this;
+            let envCode = $("#openstack-batch-vmenvi").val();
+            if (envCode == "-1") {
+                showMessage("请先选择Vm环境", "danger", 600);
+                return;
+            }
+             if (OpenstackFun.groupListSel.length <= 0) {
+                showMessage("所选择环境无可用应用组", "danger", 600);
+                return;
+            }
+            initAdmin(that, OpenstackFun.groupListSel, "#openstack-batch-group-list")
+        })
+
+        $("#openstack-batch-group").blur(function () // 获取焦点生成下拉组信息
+        {
+            $("#openstack-batch-group-list").slideUp()
+        })
+        $("#openstack-batch-group-list").on("click", "li", function () //获取用户选中的组
+        {
+            let group_id = $(this).attr("data-id"),
+                    group_name = $(this).text();
+            $("#openstack-batch-group").attr("data-group-id", group_id);
+            $("#openstack-batch-group").val(group_name);
+        })
+/***********************************************************************************************/
+
+
+
+        $("#add-one-vm").click(function () {
+            if (OpenstackFun.batchdata.length > 10) {
+                showMessage("最多可操作10条数据", "danger", 2000);
+                return;
+            }
+            if (OpenstackFun.getBatchInfo()) {
+                $("#batch-info-table").append(OpenstackFun.createTableInfo());
+                OpenstackFun.checkBatch();
+                OpenstackFun.batchNum += 1;
+            }
+        });
+        $("#batch-info-table").on("click", ".delete-one", function (e) {
+            e.preventDefault();
+            var vm_name = $(this).parent().siblings("[title='vm_name']").text();
+            var vm_ip = $(this).parent().siblings("[title='vm_ip']").text();
+            var list = OpenstackFun.batchdata;
+            list.forEach(function (tmp, index) {
+                if (tmp.vm_name == vm_name && tmp.vm_ip == vm_ip) {
+                    OpenstackFun.batchdata.splice(index, 1);
+                    $("#batch-info-table").children('[data-row=' + tmp.vm_name + ']').remove();
+                    OpenstackFun.batchNum -= 1;
+
+                    var ele_list = $("#batch-info-table").children().children(":first-child");
+                    for (var i = 0; i < ele_list.length; i++) {
+                        $(ele_list[i]).html(i + 1);
+                    }
+                    var err = OpenstackFun.errList;
+                    err.forEach(function (item, index) {
+                        if (tmp.vm_name == item.vm_name) {
+                            OpenstackFun.errList.splice(index, 1);
+                        }
+                    });
+                }
+            });
+//            console.log(OpenstackFun.errList.length);
+        });
+
+        $("#migrate-batch-vm").click(function () {
+            if (OpenstackFun.batchdata.length > 10) {
+                showMessage("最多可操作10条数据", "danger", 2000);
+                return;
+            }
+            OpenstackFun.openstackbatchSubmit();
+        });
+        $("#openstacktomain").click(function () {
+            OpenstackFun.batchdata = [];
+            OpenstackFun.batchNum = 0;
+            OpenstackFun.errList = [];
+//            $("#migrate-batch-vm").attr("disabled", true);
+            $("#batch-info-table").html("");
+            $("#main-paper").css("display", "block");
+            $("#openstack-paper").css("display", "none");
+        });
+
+
+        $("#esx-batch").click(function () {
+            EsxFun.esxbatchInitInfo();
+        });
+        $("#esx-batch-env").change(function () {
+            OpenstackFun.batchHtmlInit.call(this, ["#esx-batch-hostpool"], ["#esx-batch-vmsegment"], [])
+            let env = $(this).val();
+            let list = EsxFun.groupList;
+            EsxFun.groupSel = getGroupListArr(list, env);
+            $("#esx-batch-group").val("")
+        });
+        $("#editorHostpool").click(function () {
+            EsxFun.esxBatchHostpool();
+        });
+        $("#esx-vm-datacenter-area").change(function () {
+            var datacenter_addr = $(this).val();
+            EsxFun.removeEventFun(["#esx-batch-hostpool", "#esx-vm-hostpool", "#esx-batch-vmsegment", "#esx-vm-net-area", "#esx-vm-datacenter-room", "#esx-vm-childarea-room", "#esx-vm-area-room"]);
+            OpenstackFun.batchHtmlInit.call(this, ["#esx-batch-hostpool"], ["#esx-vm-hostpool", "#esx-batch-vmsegment", "#esx-vm-net-area", "#esx-vm-datacenter-room", "#esx-vm-childarea-room", "#esx-vm-area-room"], []);
+            if (datacenter_addr == "总部") {
+                $("#esx-areabox").css("display", "none");
+                $(".esx_child_area_show").css("display", "none");
+                EsxFun.esxBatch_ZB();
+                EsxFun.pivot = false;
+            }
+            if (datacenter_addr == "地区") {
+                $("#esx-areabox").css("display", "block");
+                $(".esx_child_area_show").css("display", "none");
+                EsxFun.esxBatch_DQ();
+            }
+        });
+        $("#selectHostpool").click(function () {
+            var hostpool_id = $("#esx-vm-hostpool").val();
+            var hostpool_name = $("#esx-vm-hostpool").children(':selected').text();
+            if (hostpool_id == "-1") {
+                showMessage("请选择集群", "danger", 2000);
+                return;
+            }
+            $("#esx-batch-hostpool").val(hostpool_name).attr("data-hostpool-id", hostpool_id);
+            $("#esxtokvm-hostpool-modal").modal("hide");
+        });
+// ----------------------------
+        $("#esx-batch-group").focus(function () // 获取焦点生成下拉组信息
+        {
+            let that = this;
+            let envCode = $("#esx-batch-env").val();
+            if (envCode == "-1") {
+                showMessage("请先选择ESX 环境", "danger", 600);
+                return;
+            }
+            if ( EsxFun.groupSel.length <= 0) {
+                showMessage("所选择环境无可用应用组", "danger", 600);
+                return;
+            }
+            focusGroupInfo(EsxFun.groupSel, "#esx-batch-group-list")
+            $("#esx-batch-group-list").slideDown()
+        })
+
+        $("#esx-batch-group").keyup(function () // 模糊匹配组信息
+        {
+            let that = this;
+            let envCode = $("#esx-batch-env").val();
+            if (envCode == "-1") {
+                showMessage("请先选择ESX 环境", "danger", 600);
+                return;
+            }
+            if ( EsxFun.groupSel.length <= 0) {
+                showMessage("所选择环境无可用应用组", "danger", 600);
+                return;
+            }
+            initAdmin(that,  EsxFun.groupSel, "#esx-batch-group-list")
+             $("#esx-batch-group-list").slideDown()
+        })
+
+        $("#esx-batch-group").blur(function () // 获取焦点生成下拉组信息
+        {
+            $("#esx-batch-group-list").slideUp()
+        })
+        $("#esx-batch-group-list").on("click", "li", function () //获取用户选中的组
+        {
+            let group_id = $(this).attr("data-id"),
+                    group_name = $(this).text();
+            $("#esx-batch-group").attr("data-group-id", group_id);
+            $("#esx-batch-group").val(group_name);
+        })
+// ----------------------------
+        $("#esx-add-one-vm").click(function () {
+            if (EsxFun.getesxaddInfo()) {
+                $("#esx-batch-info-table").append(EsxFun.esxcreateTable());
+                EsxFun.batchNum += 1;
+            }
+        });
+        $("#esx-batch-cpu").change(function () {
+            var that = this;
+            EsxFun.esxBatchQuato(that);
+        });
+        $("#esx-batch-vmsegment").click(function () {
+            var list = $("#esx-vm-net-area").children();
+            if (list.length <= 1) {
+                showMessage("请先编辑集群信息", "danger", 2000);
+            }
+        });
+
+        $("#esx-batch-info-table").on("click", ".delete-esx-one", function (e) {
+            e.preventDefault();
+            var vmware_vm = $(this).parent().siblings('[title="VM WARE虚拟机名称"]').text();
+            var vm_name = $(this).parent().siblings('[title="VM OS名称"]').text();
+            var vm_ip = $(this).parent().siblings('[title="VM IP"]').text();
+//            console.log(vmware_vm,vm_name,vm_ip);
+            var list = EsxFun.batcharr;
+            list.forEach(function (tmp, index) {
+                if (tmp.vm_name == vm_name || tmp.vm_ip == vm_ip || tmp.vmware_vm == vmware_vm) {
+                    EsxFun.batcharr.splice(index, 1);
+                    $("#esx-batch-info-table").children('[data-row=' + tmp.vm_name + ']').remove();
+                    EsxFun.batchNum -= 1;
+
+                    var ele_list = $("#esx-batch-info-table").children().children(":first-child");
+                    for (var i = 0; i < ele_list.length; i++) {
+                        $(ele_list[i]).html(i + 1);
+                    }
+                    var err = EsxFun.errList;
+                    err.forEach(function (item, index) {
+                        if (tmp.vm_name == item.vm_name) {
+                            EsxFun.errList.splice(index, 1);
+                        }
+                    });
+                }
+            });
+        });
+        $("#esx-migrate-batch-vm").click(function () {
+            EsxFun.esxBatchSubmit();
+        });
+
+        $("#esxtomain").click(function () {
+            EsxFun.batcharr = [];
+            EsxFun.pivot = false;
+            EsxFun.batchData = [];
+            EsxFun.errList = [];
+            $("#esx-batch-info-table").html("");
+            $("#main-paper").css("display", "block");
+            $("#esx-paper").css("display", "none");
+        });
+
+
+    }
+</script>
+
+<script type="module">
+    import initFileInput from './js/module/fileUploadUtil.js'
+
+    //初始化就调用该方法
+    $(function () {
+        initFun();
+        $('#uploadError').on('hidden.bs.modal', function (e) {
+            $('.modalContent').html();
+        })
+    })
+
+    function initFun() {
+        let openstackId = 'excelOpenstackFile'
+        let uploadOpenstackUrl = "/v2v/openstack/batch/import";
+        initFileInput.initFileInput(openstackId,uploadOpenstackUrl);
+
+        let esxId = 'excelEsxFile'
+        let uploadEsxUrl = "/v2v/esx/batch/import";
+        initFileInput.initFileInput(esxId,uploadEsxUrl);
+    }
+</script>
+
+</body>
+</html>

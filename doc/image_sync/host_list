@@ -1,0 +1,41 @@
+#GET /image_sync/host_list/get_hosts 镜像同步获取信息函数
+
+
+## 返回参数
+```json
+
+	{
+	  "code": 0,
+	  "data": {
+	    "area_ZB": [
+	        #总部的host信息
+	    ],
+	    "area_DQ": [
+	        #地区的host信息
+	    ]
+	  }
+    }
+其中area_ZB和area_DQ中信息如下：
+{
+"message":success"
+"area_id":area_id,
+"datacenter_name":datacenter_name,
+"dc_type":dc_type,
+"host_data":[host_list]
+}
+其中host_list中信息如下：
+[
+{
+"ipaddress":host_ip,
+"id":id
+...
+...
+},
+{
+"ipaddress":host_ip,
+"id":id
+...
+...
+},
+]
+

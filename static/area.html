@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>区域管理</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="font-awesome/css/font-awesome.css" rel="stylesheet">
+    <!-- Toastr style -->
+    <link href="css/plugins/toastr/toastr.min.css" rel="stylesheet">
+    <link href="css/animate.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <!-- 生成导航栏 -->
+    <script src="js/jquery-2.1.1.js"></script>
+    <script src="js/module/navigation.js"></script>
+</head>
+<body>
+<div id="wrapper">
+    <nav class="navbar-default navbar-static-side" role="navigation" id="navbar"></nav>
+    <div id="page-wrapper" class="gray-bg dashbard-1">
+        <div class="row border-bottom">
+            <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                <div class="navbar-header">
+                    <div class="pagetitle">区域管理</div>
+                </div>
+                <ul class="nav navbar-top-links navbar-right pull-right">
+                     <li>
+                        <a href="#" onclick="javascript:logout(); event.returnValue=false; ">
+                            <i class="fa fa-sign-out"></i> Log out
+                        </a>
+                    </li>
+                </ul>
+
+            </nav>
+        </div>
+        <div class="row  border-bottom white-bg dashboard-header" style="overflow: auto; z-index: 50;">
+            <div class="row" style="position: relative;">
+                <div class="col-xs-8"  id="mainWrapper">
+                    <div class="row">
+                        <div class="col-xs-2 col-md-1">
+                            <button class="btn btn-info" id="new-added" data-toggle="modal" data-target="#addAreaModal"
+                                    onclick="createAreaInfo.addParentSelect()" style="display: none;">新增
+                            </button>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                     <table id="area_list" data-locale="zh-US"></table>
+                </div>
+            </div>
+        </div>
+        <!-- 新增区域模态框 -->
+        <div class="modal fade" id="addAreaModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="addAreaModalLabel">创建区域</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group"><label class="col-sm-3 control-label">父区域名称</label>
+                            <div class="col-sm-9">
+                                <select id="parent_id" class="form-control col-sm-9 searchParent">
+                                    <option value="-1">请选择父区域，若无则不选</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-3 control-label">区域名称</label>
+                            <div class="col-sm-9">
+                                <input id="new_name" type="text" class="form-control" placeholder="请输入区域名称">
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-3 control-label">区域管理员</label>
+                            <div class="col-sm-9">
+                                <input id="new_manager" type="text" class="form-control" placeholder="请输入管理员账号">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="createAreaInfo.create_area()">确定</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+        <!-- 修改区域模态框 -->
+        <div class="modal fade" id="updateAreaModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">修改区域信息</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group"><label class="col-sm-3 control-label">区域名称：</label>
+                            <div class="col-sm-9">
+                                <input id="update_name" type="text" class="form-control" placeholder="请输入区域名称">
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-3 control-label">区域管理员：</label>
+                            <div class="col-sm-9">
+                                <input id="update_manager" type="text" class="form-control" placeholder="请输入管理员账号">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="createAreaInfo.update_area()">确定</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+        <!-- 新增机房模态框 -->
+        <div class="modal fade" id="addDatacenterModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">新增机房</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group"><label class="col-sm-3 control-label">区域名称：</label>
+                            <div class="col-sm-9">
+                                <span id="area_name_d"></span>
+                            </div>
+                        </div>
+                        <div class="form-group" id="child_area_div"><label class="col-sm-3 control-label">子区域：</label>
+                            <div class="col-sm-9">
+                                <select id="child_id_d" class="form-control col-sm-9 searchChildAreaD">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-3 control-label">机房名称：</label>
+                            <div class="col-sm-9">
+                                <input id="datacenter_name_d" type="text" class="form-control" placeholder="请输入名称（同CMDB）">
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-3 control-label">机房类型：</label>
+                            <div class="col-sm-9">
+                                <select id="datacenter_type" class="form-control col-sm-9">
+                                    <option value="1">测试SIT</option>
+                                    <option value="2">准生产STG</option>
+                                    <option value="3">研发DEV</option>
+                                    <option value="4">生产PRD</option>
+                                    <option value="5">容灾DR</option>
+                                    <option value="6">容灾微应用</option>
+                                     <option value="7">腾讯云双活</option>
+                                    <option value="0">其他</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-3 control-label">所在省份：</label>
+                            <div class="col-sm-9">
+                                <select id="local-province" class="form-control col-sm-9">
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-3 control-label">机房地址：</label>
+                            <div class="col-sm-9">
+                                <input id="datacenter_address_d" type="text" class="form-control" placeholder="请输入机房地址">
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-3 control-label">备注：</label>
+                            <div class="col-sm-9">
+                                <input id="datacenter_remarks_d" name="remarks" type="text" class="form-control" placeholder="请输入备注">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="addDatacenterInfo.add_datacenter()">确定</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+         <!--删除区域模态框-->
+        <div class="modal fade" id="deleteareamodal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">删除区域</h4>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th>区域名称</th>
+                                <th>管理员</th>
+                            </tr>
+                            </thead>
+                            <tbody id="area_table_list">
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="deleteareaSure">确定</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+    </div>
+</div>
+<div id="loading">
+    <div style="position:fixed;top:35%;left:43%">
+        <img src="img/lodaing.gif" alt="正在处理,请耐心等候">
+        <h2 class="text-primary">正在处理,请耐心等候...</h2>
+    </div>
+</div>
+<!-- Mainly scripts -->
+<script src="js/bootstrap.min.js"></script>
+<script src="js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+
+
+<!-- Custom and plugin javascript -->
+<script src="js/inspinia.js"></script>
+<script src="js/plugins/pace/pace.min.js"></script>
+
+<!-- jQuery UI -->
+<script src="js/plugins/jquery-ui/jquery-ui.min.js"></script>
+
+<!-- data tables -->
+<script src="js/bootstrap-table.js"></script>
+<script src="js/bootstrap-table-zh-CN.min.js"></script>
+
+<!-- 消息框 -->
+<script src="js/jquery.bootstrap-growl.min.js"></script>
+<script src="js/module/common.js"></script>
+<script src="js/module/area.js"></script>
+
+</body>
+</html>

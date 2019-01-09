@@ -1,0 +1,46 @@
+#POST  /image_sync/host_task_intodb 单台host的image同步任务入库
+
+## 请求参数
+| 参数 | 是否必须 | 类型 | 描述 |
+|-----|----------|------|-------------|-------|
+| host_list   | 是| list| 物理机id的list|
+| image_list   | 是| list| 镜像id的list|
+
+
+## 返回参数
+```json
+
+	{
+        'ErrorCode':success,
+        'data':task_return
+    }
+```
+其中 task_return 格式如下:
+[
+{
+            'host_id':host_id,
+            'image_return':host_return_list
+}
+,
+{
+            'host_id':host_id,
+            'image_return':host_return_list
+}
+...
+]
+其中host_return_list中格式如下:                #其中new为'0'代表镜像在本地无任务且无镜像,new为'1'代表镜像在本地有任务或有镜像
+[
+{
+                'image_data':image_data,
+                'image_id':image_id,
+                'new':'1'
+}
+,
+{
+                'image_data':image_data,
+                'image_id':image_id,
+                'new':'1'
+}
+...
+]
+

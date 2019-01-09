@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>VM管理</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta HTTP-EQUIV="pragma" CONTENT="no-cache">
+    <meta HTTP-EQUIV="Cache-Control" CONTENT="no-store, must-revalidate">
+    <meta HTTP-EQUIV="expires" CONTENT="Wed, 26 Feb 1997 08:21:57 GMT">
+    <meta HTTP-EQUIV="expires" CONTENT="0">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-slider.css">
+    <script src="js/jquery-2.1.1.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/bootstrap-slider.min.js"></script>
+
+    <link href="font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <!-- Toastr style -->
+    <link href="css/plugins/toastr/toastr.min.css" rel="stylesheet">
+
+    <link href="css/animate.css" rel="stylesheet">
+    <!--<link rel="stylesheet" href="css/bootstrap-table.min.css">-->
+    <link href="css/style.css" rel="stylesheet">
+    <!-- 生成导航栏 -->
+    <script src="js/module/navigation.js"></script>
+    <script src="js/module/common.js"></script>
+    <link rel="stylesheet" href="css/vm.css">
+    <style>
+        #pushFile{
+            display: inline;
+            z-index: 100;
+            position: relative;
+            left: -89px;
+            top: 2px;
+            opacity: 0;
+            width: 70px;
+        }
+        .seacrh_type{
+            display: inline;
+            position: relative;
+            left: -38px;
+        }
+        label{
+            margin-right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+<div id="wrapper">
+    <nav class="navbar-default navbar-static-side" role="navigation" id="navbar"></nav>
+    <div id="page-wrapper" class="gray-bg dashbard-1">
+        <div class="row border-bottom">
+            <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                <div class="navbar-header">
+                    <div class="pagetitle">VM管理</div>
+                </div>
+                <div class="tipWarning">
+                    <span id="tipText">注意：目前kvm虚拟机只支持本地盘创建，无法提供物理机数据丢失后的虚拟机恢复，请自行做好虚拟机重要数据备份，谢谢！</span>
+                </div>
+                <ul class="nav navbar-top-links navbar-right pull-right">
+                    <li>
+                        <a href="#" onclick="javascript:logout(); event.returnValue=false; ">
+                            <i class="fa fa-sign-out"></i> Log out
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="row  border-bottom white-bg dashboard-header"
+             style="overflow: auto; z-index: 50;position: relative;">
+            <div class="row">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div style="position: absolute; width: 100%;" id="mainWrapper">
+                            <div class="row" style="padding-left: 36px;">
+                                <div class="col-xs-12 btn-cel" style="margin-bottom: 10px">
+                                    <div class="row">
+                                        <div class="col-xs-12 col-md-12">
+                                            <button style="margin:0 10px 0 10px;display: none;" data-promission="create"
+                                                    class="btn btn-primary promission" id="btnCreate">创建
+                                            </button>
+                                            <button style="margin:0 10px 0 10px;display: none;"
+                                                    data-promission="startup" data-toggle="modal"
+                                                    class="btn btn-info promission"
+                                                    id="VmpowerOn" disabled>开机
+                                            </button>
+                                            <button style="margin:0 10px 0 10px;display: none;"
+                                                    data-promission="shutdown" data-toggle="modal"
+                                                    class="btn btn-danger promission"
+                                                    id="VmpowerOff" disabled>关机
+                                            </button>
+                                            <button style="margin:0 10px 0 10px;display: none;" data-promission="delete"
+                                                    data-toggle="modal" class="btn btn-danger promission"
+                                                    id="VmDelete" disabled>删除
+                                            </button>
+                                            <button style="margin:0 10px 0 10px;display: none;"
+                                                    data-promission="retry_create"
+                                                    data-toggle="modal" class="btn btn-info promission"
+                                                    id="VmRetry" disabled>重试
+                                            </button>
+
+                                            <input style="margin:0 10px 0 10px"
+                                                data-toggle="modal" class="btn btn-default"
+                                                id="downloadBtn" type="button" value="删除模板" title="下载批量删除的模板">
+
+
+                                            <input style="margin:0 10px 0 10px;"
+                                                    data-toggle="modal" class="btn btn-default"
+                                                    id="leadInBtn" type="button" value="批量删除" title="批量删除关机超过一个月的虚拟机">
+
+                                            <input type="file" accept=".xls,.xlsx,.xlsm" id="pushFile" style="cursor: pointer">
+                                            <!--<button style="margin:0 10px 0 10px;" data-promission="export" class="btn btn-warning"-->
+                                            <!--id="VmExport">Excel导出数据-->
+                                            <!--</button>-->
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12">
+                                    <div class="queryBox">
+                                        <div class="input-group">
+                                            <input type="text" style="cursor: default;background: #fff;" disabled class="form-control">
+                                              <span class="input-group-btn">
+                                                  <button class="btn btn-default searchClear" type="button">
+                                                      <i class="glyphicon glyphicon-remove"></i>
+                                                  </button>
+                                                <button class="btn btn-primary searchTrigger" type="button">搜索</button>
+                                              </span>
+                                        </div>
+                                         <div class="searchShow">请输入查询数据</div>
+                                        <div class="searchContent">
+                                            <div class="search_item">
+                                                <span>主机名</span>
+                                                <input type="text" class="form-control limitW" placeholder="请输入VM名称"
+                                                       id="vm_name_input">
+                                            </div>
+                                            <div class="search_item">
+                                                <span>VM状态</span>
+                                                <select class="form-control limitW" id="vm_statu_input">
+                                                    <option value="-1">选择VM的状态</option>
+                                                    <option value="0">创建中</option>
+                                                    <option value="1">关机</option>
+                                                    <option value="2">关机中</option>
+                                                    <option value="3">运行中</option>
+                                                    <option value="4">开机中</option>
+                                                    <option value="5">挂起</option>
+                                                    <option value="6">暂停</option>
+                                                    <option value="7">热迁移中</option>
+                                                    <option value="8">冷迁移中</option>
+                                                    <option value="9">转化中</option>
+                                                    <option value="10">克隆中</option>
+                                                    <option value="98">其他</option>
+                                                    <option value="99">Unknown</option>
+                                                    <option value="100">创建失败</option>
+                                                    <option value="108">MiniArch迁移中</option>
+                                                    <option value="109">MiniArch完成</option>
+                                                </select>
+                                            </div>
+                                            <div class="search_item">
+                                                <span>VM IP</span>
+                                                <input type="text" class="form-control limitW" placeholder="请输入VM IP"
+                                                       id="vm_ip_input">
+                                            </div>
+                                            <div class="seacrh_type">
+                                                <label><input name="chooseRadio" type="radio" value="1" checked="checked">模糊查询</label>
+                                                <label><input name="chooseRadio" type="radio" value="0">精确查询</label>
+                                            </div>
+                                            <div class="search_item">
+                                                <span>VM UUID</span>
+                                                <input type="text" class="form-control limitW" placeholder="请输入VM UUID"
+                                                       id="vm_uuid_input">
+                                            </div>
+                                            <div class="search_item">
+                                                <span>HOST IP</span>
+                                                <input type="text" class="form-control limitW" placeholder="请输入物理机IP"
+                                                       id="host_ip_input">
+                                            </div>
+                                            <div class="search_item">
+                                                <span>所属应用组</span>
+                                                <input type="text" class="form-control limitW" placeholder="请输入应用组名"
+                                                       id="vm_group_input">
+                                            </div>
+                                            <div class="search_item">
+                                                <span>应用管理员</span>
+                                                <input type="text" class="form-control limitW" placeholder="请输入应用管理员账号"
+                                                       id="vm_admin_input">
+                                            </div>
+                                            <div class="search_item">
+                                                <span><button class="btn btn-primary" id="searchSubmit">查询
+                                                </button></span>
+                                                <button class="btn btn-default" id="clearSearch">清除筛选条件</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <table id="myTable" data-locale="zh-US" data-classes="table table-hover"></table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
+                        <!--创建vm-->
+                        <div id="secondWrapper" class="row border-bottom white-bg dashboard-header"
+                             style="overflow: hidden;display: none; position: absolute; left: 100%;width: 850px;">
+                            <div class="slide">
+                                <div class="header">
+                                    <div class="back" id="backtolist">返回</div>
+                                    |
+                                    <div class="title">创建VM</div>
+                                </div>
+                                <div class="createContent">
+                                    <div class="row">
+                                        <div class="info Headquarters">
+                                            <div class="item">
+                                                <div class="control-label">机房区域:</div>
+                                                <div class="controls" id="instancePlace">
+                                                    <div class="optionlarge selected elevator zbsel-a">总部</div>
+                                                    <div class="optionlarge elevator dqsel-a">地区</div>
+                                                </div>
+                                            </div>
+                                            <div class="item Headquarterstype zbsel">
+                                                <div class="control-label">环境类型:</div>
+                                                <div class="controls" id="Headquarterstype">
+                                                </div>
+                                            </div>
+                                            <div class="item regionaltype dqsel">
+                                                <div class="control-label">区域:</div>
+                                                <div class="controls">
+                                                    <select name="area" id="area" class="form-control"
+                                                            style="display: inline-block;">
+                                                        <option value="-1">请选择</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="item regionaltype dqsel subarea_show" style="display: none">
+                                                <div class="control-label">子区域:</div>
+                                                <div class="controls">
+                                                    <select name="subarea" id="subarea"
+                                                            class="form-control"
+                                                            style="display: inline-block;">
+                                                        <option value="0">请选择</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="item regionaltype dqsel">
+                                                <div class="control-label">机房:</div>
+                                                <div class="controls">
+                                                    <select name="engineroom" id="engineroom" class="form-control">
+                                                        <option value="0">请选择</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="item">
+                                                <div class="control-label">网络区域:</div>
+                                                <div class="controls">
+                                                    <select name="networkarea" id="networkarea" class="form-control">
+                                                        <option value="0">请选择</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="item">
+                                                <div class="control-label">集群:</div>
+                                                <div class="controls">
+                                                    <select name="cluster" id="cluster" class="form-control">
+                                                        <option value="0">请选择</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="item">
+                                                <div class="control-label">主机类型:</div>
+                                                <div class="controls" id="constructmodelhook">
+                                                    <div class="optionlarge selected">linux</div>
+                                                    <div class="optionlarge">windows</div>
+                                                </div>
+                                            </div>
+                                            <div class="item">
+                                                <div class="control-label">搭建模板:</div>
+                                                <div class="controls">
+                                                    <select name="constructmodel" id="constructmodel"
+                                                            class="form-control modelWidth">
+                                                        <option value="0">请选择搭建模板</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="item">
+                                                <div class="control-label">CPU数量:</div>
+                                                <div class="controls hook" id="cpu-hook">
+                                                </div>
+                                            </div>
+                                            <div class="item">
+                                                <div class="control-label">内存容量:</div>
+                                                <div class="controls hook" id="mem-hook">
+                                                </div>
+                                            </div>
+                                            <div class="item">
+                                                <div class="control-label">系统盘容量:</div>
+                                                <div class="controls hook" id="disk-hook">
+                                                </div>
+                                            </div>
+                                            <div class="item">
+                                                <div class="control-label">数据盘容量:</div>
+                                                <div class="controls">
+                                                    <select name="datadisk" id="datadisk" class="form-control">
+                                                        <option value="-1">请选择</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="item">
+                                                <div class="control-label">主机数量:</div>
+                                                <div class="controls">
+                                                    <input class="smallinput" id="instancenumber" type="number" min="1"
+                                                           max="100"
+                                                           value="1"> 个
+                                                </div>
+                                            </div>
+                                            <div class="item">
+                                                <div class="control-label">应用系统信息:</div>
+                                                <div class="controls">
+                                                    <input type="text" id="appsystem" placeholder="系统编码(系统中文名称)">
+                                                </div>
+                                            </div>
+                                            <div class="item">
+                                                <div class="control-label">应用组:</div>
+                                                <div class="controls">
+                                                    <input type="text" id="appadmin" placeholder="应用组(支持模糊搜索)" >
+                                                    <ul id="group_list">
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="item">
+                                                <div class="control-label">应用管理员账号:</div>
+                                                <div class="controls">
+                                                    <input id="adminname" type="text" placeholder="请输入管理员账号">
+                                                </div>
+                                            </div>
+                                            <div class="item">
+                                                <div class="control-label">root密码:</div>
+                                                <div class="controls">
+                                                    <input id="adminnamepass" type="password"
+                                                           placeholder="Windows为Winsvruser的密码" style="width: 175px">
+                                                    <span style="font-size: 13px;display: inline-block;margin-left: 5px;background: #F3F3F4;padding:0 5px;color: #F8AC59">
+                                                        <i class="fa fa-info text-warning"
+                                                           title="(非必填项)最少10位,由大小字母+数字+特殊符号~@*()_"></i>&nbsp;
+                                                        (非必填项)最少10位,由大小字母+数字+特殊符号~@*()_
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="row text-center">
+                                        <button class="btn btn-success" id="goToNext">下一步</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
+                        <!--确认VM信息-->
+                        <div id="vmInfoSure" style="overflow: hidden;display: none; position: absolute; left: 100%;">
+                            <div class="vminfoheader">
+                                <div class="title">确认VM信息</div>
+                            </div>
+                            <form id="vmForm">
+                                <div class="itemCell">
+                                    <div class="titleCell text-right">机房区域:</div>
+                                    <div class="contentCell">
+                                        <input type="text" name="datacenter_area" class="form-control" disabled>
+                                    </div>
+                                </div>
+                                <div class="itemCell" id="environmentype">
+                                    <div class="titleCell text-right">环境类型:</div>
+                                    <div class=" contentCell">
+                                        <input type="text" name="enviroment_type" class="form-control" disabled>
+                                    </div>
+                                </div>
+                                <div id="dq_area_show">
+                                    <div class="itemCell">
+                                        <div class="titleCell text-right">区域:</div>
+                                        <div class=" contentCell">
+                                            <input type="text" name="area" class="form-control" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="itemCell area_child_info">
+                                        <div class="titleCell text-right">子区域:</div>
+                                        <div class="contentCell">
+                                            <input type="text" name="area_child" class="form-control" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="itemCell">
+                                        <div class="titleCell text-right">机房:</div>
+                                        <div class="contentCell">
+                                            <input type="text" name="datacenter" class="form-control" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="itemCell">
+                                    <div class="titleCell text-right">网络区域:</div>
+                                    <div class=" contentCell">
+                                        <input type="text" name="net_area" class="form-control" disabled>
+                                    </div>
+                                </div>
+                                <div class="itemCell">
+                                    <div class="titleCell text-right">主机类型:</div>
+                                    <div class=" contentCell">
+                                        <input type="text" name="host_type" class="form-control" disabled>
+                                    </div>
+                                </div>
+                                <!--<div class="itemCell">-->
+                                <!--<div class="titleCell text-right">操作系统版本:</div>-->
+                                <!--<div class=" contentCell">-->
+                                <!--<input type="text" value="CentOS Linux 7.2" class="form-control" disabled>-->
+                                <!--</div>-->
+                                <!--</div>-->
+                                <div class="itemCell">
+                                    <div class="titleCell text-right">CPU数量:</div>
+                                    <div class=" contentCell">
+                                        <input type="text" name="_cpu" class="form-control" disabled>
+                                    </div>
+                                </div>
+                                <div class="itemCell">
+                                    <div class="titleCell text-right">内存容量:</div>
+                                    <div class=" contentCell">
+                                        <input type="text" name="_mem" class="form-control" disabled>
+                                    </div>
+                                </div>
+                                <div class="itemCell">
+                                    <div class="titleCell text-right">系统盘容量:</div>
+                                    <div class=" contentCell">
+                                        <input type="text" name="_disk" class="form-control" disabled>
+                                    </div>
+                                </div>
+                                <div class="itemCell">
+                                    <div class="titleCell text-right">数据盘容量:</div>
+                                    <div class=" contentCell">
+                                        <input type="text" name="_disk_gb" class="form-control" disabled>
+                                    </div>
+                                </div>
+                                <div class="itemCell">
+                                    <div class="titleCell text-right">主机数量:</div>
+                                    <div class=" contentCell">
+                                        <input type="text" name="host_num" class="form-control" disabled>
+                                    </div>
+                                </div>
+                                <div class="itemCell">
+                                    <div class="titleCell text-right">应用系统信息:</div>
+                                    <div class=" contentCell">
+                                        <input type="text" name="sys_info" class="form-control" disabled>
+                                    </div>
+                                </div>
+                                <div class="itemCell">
+                                    <div class="titleCell text-right">应用管理员:</div>
+                                    <div class=" contentCell">
+                                        <input type="text" name="application" class="form-control" disabled>
+                                    </div>
+                                    <div class=" contentCell">
+                                        <input type="text" name="_group_name" class="form-control" disabled>
+                                    </div>
+                                </div>
+                                <div class="itemCell">
+                                    <div class="titleCell text-right">搭建模板:</div>
+                                    <div class=" contentCell">
+                                        <input type="text" name="model" class="form-control modelWidth" disabled>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="btnPlace">
+                                <button class="btn btn-default" id="gotoPrev">上一步</button>
+                                <button style="margin-left: 40px;" class="btn btn-info" id="createinstance">提交</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
+                        <!--修改配置-->
+
+                        <div id="configWrapper" class="row border-bottom white-bg"
+                             style="display: none; position: absolute; left: 100%;min-width: 835px;min-height: 650px;">
+                            <div class="slide">
+                                <div class="header">
+                                    <div class="back" id="configtolist">返回</div>
+                                    |
+                                    <div class="title">配置变更</div>
+                                </div>
+                                <div class="createContent">
+                                    <div class="row">
+                                        <div class="item">
+                                            <div class="control-label">主机名:</div>
+                                            <div class="controls  config-hook" id="config-instance-hook">
+                                            </div>
+                                        </div>
+                                        <div class="item">
+                                            <div class="control-label">CPU数量:</div>
+                                            <div class="controls  config-hook" id="config-cpu-hook">
+                                            </div>
+                                        </div>
+                                        <div class="item">
+                                            <div class="control-label">内存容量:</div>
+                                            <div class="controls  config-hook" id="config-mem-hook">
+                                            </div>
+                                        </div>
+                                        <div class="item">
+                                            <div class="control-label">系统盘容量:</div>
+                                            <div class="controls  config-hook" id="config-disk-hook">
+                                            </div>
+                                        </div>
+                                        <div class="item dilatationShow">
+                                            <div class="control-label">磁盘扩容:</div>
+                                            <div class="controls  config-hook" id="config-disk-dilatation">
+                                                <button class="btn btn-info getmountPoint">获取磁盘信息</button>
+                                        <span class="mountPointInfoLoad">
+                                        <i class="fa fa-spinner fa-pulse fa-2x fa-fw text-info"></i>
+                                        <span class="sr-only">Loading...</span>
+                                        </span>
+                                                <div class="mountPointTable">
+                                                   <div class="cart_caption">注意：windows虚拟机只支持新增一块磁盘,不支持现有磁盘扩容,申请成功后请在os内部磁盘管理中自行做初始化操作</div>
+                                                    <div class="mountPointHeader">
+                                                        <ul class="mountPointTitle">
+                                                            <li>挂载点</li>
+                                                            <li>磁盘大小</li>
+                                                            <li>使用率</li>
+                                                            <li>磁盘扩容后大小</li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="mountPointBody">
+                                                    </div>
+                                                </div>
+                                                <div style="margin-top: 10px;display:none;overflow: hidden;"
+                                                     class="addNewMount">
+                                                    <button class='btn btn-warning addNewBtn diskOrPoint'
+                                                            style="padding: 4px 12px;">新增挂载点
+                                                    </button>
+                                                    <div class="addMountPointBox controls"
+                                                         style="margin-left: 0;display: none;float: left">
+                                                        <div class="control-label diskOrPoint">新增挂载点</div>
+                                                        <span class="MountPointUnit">/</span>
+                                                        <input type="text" class="diskMountPoint form-inline"
+                                                               placeholder="请输入目录名">
+                                                        <input type="text" class="mountPointSize form-inline"
+                                                               placeholder="请输入新增磁盘大小"
+                                                               onkeyup="this.value=this.value.replace(/\D/g,'')"
+                                                               onafterpaste="this.value=this.value.replace(/\D/g,'')">
+                                                        <span class="diskUnit">G</span>
+                                                    </div>
+
+                                                </div>
+                                                <span class="errorTxt">此虚拟机无法进行扩容</span>
+                                            </div>
+                                        </div>
+                                        <div class="item net_card_box">
+                                            <div class="control-label">网卡配置:</div>
+                                            <div class="controls">
+                                                 <div class="cart_caption">注意：修改ip将重启网络，请注意应用影响。单台虚拟机最多只能拥有两块不同类型网卡。</div>
+                                                <div class="has-net-cart">
+                                                    <div class="cart_head">
+                                                        <span>网卡数量</span> <span>网卡IP类型</span><span>IP地址</span><span>MAC地址</span><span>连接状态</span>
+                                                    </div>
+                                                    <div class="cart_body">
+                                                    </div>
+                                                </div>
+                                                <div class="cart_btn" style="margin-top: 10px;">
+                                                    <button  class="btn btn-info add_cart_btn">添加网卡</button>
+                                                </div>
+                                                <div class="none-net-cart">
+                                                    <p style="font-size: 14px">暂无网卡配置</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="item">
+                                            <div class="control-label">应用系统信息:</div>
+                                            <div class="controls">
+                                                <input type="text" id="config-appsystem" placeholder="系统编码(系统中文名称)">
+                                            </div>
+                                        </div>
+                                        <div class="item">
+                                            <div class="control-label">应用组:</div>
+                                            <div class="controls">
+                                                <input type="text" id="config-appadmin" placeholder="应用组(支持模糊搜索)">
+                                                <ul id="config-group-list">
+
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="item">
+                                            <div class="control-label">应用管理员姓名:</div>
+                                            <div class="controls">
+                                                <input type="text" placeholder="请输入管理员姓名" id="config-dminname">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row text-center">
+                                    <button class="btn btn-success" id="config-submit">提交</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
+                        <!--查看vm信息-->
+                        <div id="vm-details" class="row border-bottom white-bg dashboard-header"
+                             style="overflow: hidden;display: none; position: absolute; left: 100%;width: 90%;">
+                            <div class="slide">
+                                <div class="header">
+                                    <div class="back" id="detailstomain">返回</div>
+                                    |
+                                    <div class="title">VM详情</div>
+                                </div>
+
+                                <div class="vm-details-body">
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <div class="row">
+                                                <div class="col-xs-6 col-md-4">
+                                                    <div class="col-xs-12 slide">
+                                                        <div class="header text-center" style="width: 120px">
+                                                            <div class="title">基本信息</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12">
+                                                        <table class="table table-responsive table-bordered text-center table-hover">
+                                                            <tr>
+                                                                <td>主机名</td>
+                                                                <td title="instance_name"></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>UUID</td>
+                                                                <td title="uuid"></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>IP地址</td>
+                                                                <td title="ip_address"></td>
+                                                            </tr>
+                                                            <!--<tr>-->
+                                                            <!--<td>Host IP</td>-->
+                                                            <!--<td></td>-->
+                                                            <!--</tr>-->
+                                                            <!--<tr>-->
+                                                            <!--<td>用途</td>-->
+                                                            <!--<td title="ip_address" ></td>-->
+                                                            <!--</tr>-->
+                                                            <tr>
+                                                                <td>环境类型</td>
+                                                                <td title="dc_type"></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>网络区域</td>
+                                                                <td title="net_area"></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>主机类型</td>
+                                                                <td title="system"></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>操作系统版本</td>
+                                                                <td title="sys_version"></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>使用模板</td>
+                                                                <td title="image_name"></td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-1"></div>
+                                                <div class="col-xs-5 col-md-4">
+                                                    <div class="col-xs-12">
+                                                        <div class="row">
+                                                            <div class="col-xs-12 slide">
+                                                                <div class="header text-center" style="width: 120px">
+                                                                    <div class="title">配置信息</div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12">
+                                                                <table class="table table-bordered text-center table-hover">
+                                                                    <tr>
+                                                                        <td>cpu</td>
+                                                                        <td title="cpu"></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>内存</td>
+                                                                        <td title="memory_mb"></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>系统盘容量</td>
+                                                                        <td title="root_disk_gb"></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>数据盘容量</td>
+                                                                        <td title="disk_gb"></td>
+                                                                    </tr>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12">
+                                                        <div class="row">
+                                                            <div class="col-xs-12 slide">
+                                                                <div class="header text-center" style="width: 120px">
+                                                                    <div class="title">管理信息</div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12">
+                                                                <table class="table table-bordered text-center table-hover">
+                                                                    <tr>
+                                                                        <td>应用系统信息</td>
+                                                                        <td title="app_info"></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>应用管理员</td>
+                                                                        <td title="owner"></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>所属应用组</td>
+                                                                        <td title="group_name"></td>
+                                                                    </tr>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!--添加网卡确认框-->
+<div class="modal fade" id="add_net_cart" style="top:10%">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 501px;">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">添加网卡</h4>
+            </div>
+            <div class="modal-body">
+                 <h3 class='text-danger'>请确认是否给虚拟机<span class="netCartVmName">ssss</span>添加一块网卡？</h3>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="check_add_cart">确定</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<!--编辑系统版本-->
+<div class="modal fade" id="edit_os_vm" style="top:10%">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 501px;">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">编辑操作系统版本</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group"><label class="col-sm-3 control-label">操作系统版本</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control new_os" placeholder="如6.6, 6.8, 7.2, 2008, 2012">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="check_os">确定</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<!--克隆备份模态框-->
+<div class="modal fade" id="vm-clone-modal" style="top:10%">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">克隆备份</h4>
+            </div>
+            <div class="modal-body">
+                <!--<h4><label class="col-sm-4 control-label text-left">您已选择主机：</label></h4>-->
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>主机名称</th>
+                        <th>主机Ip</th>
+                    </tr>
+                    </thead>
+                    <tbody id="vm-clone-table">
+                    </tbody>
+                </table>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="vm-clone-btn">确定</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<!--克隆创建模态框-->
+<div class="modal fade" id="vm-clone-create-modal">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 700px;">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">克隆创建</h4>
+            </div>
+            <div class="modal-body">
+                <div class="item">
+                    <div class="control-label">CPU数量:</div>
+                    <div class="cpu-list">
+
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="control-label">内存容量:</div>
+                    <div class="mem-list">
+
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="control-label">应用系统信息:</div>
+                    <div class="controls">
+                        <input type="text" id="appinfo" placeholder="系统编码(系统中文名称)">
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="control-label">主机数量:</div>
+                    <div class="controls">
+                        <input class="smallinput" id="vmnumber" type="number" min="1" max="100" value="1"> 个
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="control-label">应用组:</div>
+                    <div>
+                        <!--<select name="appadmin" id="group-box" class="form-control">-->
+                        <!--</select>-->
+                        <input type="text" id="group-box" placeholder="应用组(支持模糊搜索)">
+                        <ul id="group-box-list">
+
+                        </ul>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="control-label">应用管理员账号:</div>
+                    <div class="controls">
+                        <input id="managename" type="text" placeholder="请输入管理员账号">
+                    </div>
+                </div>
+
+                 <div class="item">
+                <div class="control-label">root密码:</div>
+                <div class="controls">
+                    <input id="rootPwd" type="password" placeholder="Windows为Winsvruser的密码" style="width: 175px">
+                                                    <span style="font-size: 13px;display: inline-block;margin-left: 5px;background: #F3F3F4;padding:0 5px;color: #F8AC59">
+                                                        <i class="fa fa-info text-warning"
+                                                           title="(非必填项)最少10位,由大小字母+数字+特殊符号~@*()_"></i>&nbsp;
+                                                        (非必填项)最少10位,由大小字母+数字+特殊符号~@*()_
+                                                    </span>
+                </div>
+            </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="vm-clone-create-btn">确定</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<!--//开机模态框-->
+<div class="modal fade" id="vm-power-on-modal" style="top:10%">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="vmpowerOn-clc">开机</h4>
+            </div>
+            <div class="modal-body">
+                <h4><label class="col-sm-3 control-label">您已选择主机：</label></h4>
+
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>主机名称</th>
+                        <th>主机Ip</th>
+                        <th>运行状态</th>
+                    </tr>
+                    </thead>
+                    <tbody id="vmpowerOn-table">
+                    </tbody>
+                </table>
+
+                <h3><span class='text-danger'>确认启动主机？</span></h3>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="vm-power-on-btn">确定</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<!--关机模态框-->
+<div class="modal fade" id="vm-power-off-modal" style="top:10%">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="vmpowerOff-clc">关机</h4>
+            </div>
+            <div class="modal-body">
+                <h4><label class="col-sm-3 control-label">您已选择主机：</label></h4>
+
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>主机名称</th>
+                        <th>主机IP</th>
+                        <th>运行状态</th>
+                    </tr>
+                    </thead>
+                    <tbody id="vmpowerOff-table">
+
+                    </tbody>
+                </table>
+
+                <div class="i-checks"><label> <input type="radio" checked value="option1" name="vmoff"> <i></i> 关机
+                </label></div>
+                <div class="i-checks"><label> <input type="radio" value="option2" name="vmoff"> <i></i> 强制关机 </label>
+                </div>
+                <div class="i-checks" style="display: none"><label> <input type="checkbox" value=""> <i></i> 确定强制关机
+                </label></div>
+                <div><span class='text-danger'>强制关机会导致未保存的数据丢失</span></div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="vmpowerOff-btn">确定</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<!--重启模态框-->
+<div class="modal fade" id="vm-restart-modal" style="top:10%">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="vm-restart-clc">重启</h4>
+            </div>
+            <div class="modal-body">
+                <h4><label class="col-sm-3 control-label">您已选择Host：</label></h4>
+
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>主机名称</th>
+                        <th>主机IP</th>
+                        <th>运行状态</th>
+                    </tr>
+                    </thead>
+                    <tbody id="vm-restart-table">
+
+                    </tbody>
+                </table>
+                <div class="i-checks-res"><label> <input type="radio" value="option1" name="vmres" checked=""> <i></i>
+                    重启 </label></div>
+                <div class="i-checks-res"><label> <input type="radio" value="option2" name="vmres"> <i></i> 强制重启
+                </label></div>
+                <div class="i-checks-res" style="display: none"><label> <input type="checkbox" value=""> <i></i> 确定强制重启
+                </label></div>
+                <div><span class='text-danger'>强制关机会导致未保存的数据丢失</span></div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="vm-restart-btn">确定</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<!--重试模态框-->
+<div class="modal fade" id="vm-retry-modal" style="top:10%">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="vm-retry-clc">重试</h4>
+            </div>
+            <div class="modal-body">
+                <h4><label class="col-sm-3 control-label">您已选择主机：</label></h4>
+
+                <table class="table table-bordered" id="retry-tables">
+                    <thead>
+                    <tr>
+                        <th>主机名称</th>
+                        <th>主机IP</th>
+                        <th>运行状态</th>
+                    </tr>
+                    </thead>
+                    <tbody id="vm-retry-table">
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="retryvmBtn">确定</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<!--删除模态框-->
+<div class="modal fade" id="vm-delete-modal" style="top:10%">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="vm-delete-clc">删除</h4>
+            </div>
+            <div class="modal-body">
+                <h4><label class="col-sm-3 control-label">您已选择主机：</label></h4>
+
+                <table class="table table-bordered" id="tables">
+                    <thead>
+                    <tr>
+                        <th>主机名称</th>
+                        <th>主机IP</th>
+                        <th>运行状态</th>
+                    </tr>
+                    </thead>
+                    <tbody id="vm-delete-table">
+
+                    </tbody>
+                </table>
+                <h3> 确认删除？</h3>
+                <div><label> <input type="checkbox" value="" id="removeChe"> <i></i> 确定删除主机 </label></div>
+                <div><span class='text-danger'>删除后所有数据将丢失，并且不可还原</span></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="removevmBtn" disabled>确定</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<!--迁移模态框-->
+<div class="modal fade" id="vm-removal-modal" style="top:10%">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="vm-removal-clc">迁移</h4>
+            </div>
+            <div class="modal-body" id="removal-info" style="display: none;">
+                <h3 class="col-xs-3 text-left" style="padding-left: 0px">已选虚拟机:</h3>
+                <table class="table table-bordered" id="removal-tables">
+                    <thead>
+                    <tr>
+                        <th>主机名称</th>
+                        <th>主机IP</th>
+                        <th>运行状态</th>
+                        <th>CPU</th>
+                        <th>内存</th>
+                        <th>磁盘</th>
+                    </tr>
+                    </thead>
+                    <tbody id="vm-removal-table">
+
+                    </tbody>
+                </table>
+                <div id="target-host-sel" style="margin-bottom: 10px;height:30px;">
+                    <h4 class="col-xs-3 text-left" style="padding-left: 0px">请选择目标主机：</h4>
+                    <!--<input type="text" placeholder="请输入需要查询的主机IP或名称" class="col-xs-6 form-inline">-->
+                </div>
+                <div id="target-table">
+                    <table class="table table-bordered">
+                        <thead class="text-center">
+                        <th></th>
+                        <th>主机名称</th>
+                        <th>CPU(使用率,%)</th>
+                        <th>内存(使用率,%)</th>
+                        <th>硬盘(剩余,gb)</th>
+                        </thead>
+                        <tbody id="target-host-detail">
+
+                        </tbody>
+                    </table>
+                </div>
+                <div id="speed-limit" style="margin-bottom: 10px">
+                    <h4 class="col-xs-2 text-left" style="padding-left: 0px">速度限制：</h4>
+                    <input type="number" min="160" value="160" step="1" class="col-xs-2 form-inline"
+                           style="padding-right: 0px">
+                    <span style="line-height: 30px;padding-left: 5px">Mbit/S</span>
+                </div>
+            </div>
+            <div class="modal-body" id="warning-text" style="display: none">
+                <h3 class='text-danger migrate_text'>没有合适的目标主机提供迁移</h3>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="removalBtn">确定</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<!-- 监控信息模态框 -->
+<div class="modal fade" id="hostMonitor" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document" style="width:1000px;left: 7%;">
+        <div class="modal-content ">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel"> 应用监控</h4>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <h4 style="display:inline; margin-top: 50px; margin-right: 6px">VM名称: </h4>
+                    <span id="model-title"></span>
+                </div>
+
+                <!-- echart div -->
+                <div id="main" style="width: 900px;height:1050px; margin-top: 30px"></div>
+
+                <div class="modal fade" id="time_range" style="margin-top:100px">
+                    <div class="modal-dialog" style="width: 580px">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <label>选择粒度: </label>
+                                <div class="btn-group" style="margin-top: 10px">
+                                    <button class="btn btn-success btn-outline" style="width:80px;margin-left: 5px"
+                                            value="30">30分
+                                    </button>
+                                    <button class="btn btn-success btn-outline" style="width:80px;margin-left: 5px"
+                                            value="60">60分
+                                    </button>
+                                    <button class="btn btn-success btn-outline" style="width:80px;margin-left: 5px"
+                                            value="day">天
+                                    </button>
+                                    <!--<button class="btn btn-success btn-outline" style="width:80px;margin-left: 5px"-->
+                                    <!--value="month">月-->
+                                    <!--</button>-->
+                                    <div class="btn-group" style="margin-top: 10px">
+                                        <div>
+                                            <span class="">开始时间: </span><input type="date" id="start_date"/>
+                                            <span class="">结束时间: </span><input type="date" id="end_date"/>
+                                            <button class="btn btn-primary refresh-chart">确定</button>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+<!--修改虚拟机IP地址模态框-->
+<div class="modal fade" id="vm-editIp-modal" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" >
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">修改IP地址</h4>
+      </div>
+        <div class="modal-body">
+            <div class="editIpItem">
+                <h3>原Ip地址</h3><span id="oriIp"></span>
+            </div>
+             <div class="editIpItem">
+                <h3>网卡IP类型</h3>
+                 <select name="" id="ipTypeSelect">
+                     <option value="-1">请选择网卡IP类型</option>
+                     <!--<option value="0">内网</option>-->
+                     <!--&lt;!&ndash;<option value="1">外网电信</option>&ndash;&gt;-->
+                     <!--&lt;!&ndash;<option value="2">外网联通</option>&ndash;&gt;-->
+                     <!--&lt;!&ndash;<option value="3">镜像模板机使用</option>&ndash;&gt;-->
+                     <!--<option value="4">内网NAS网段</option>-->
+                 </select>
+            </div>
+            <div class="editIpItem drop_down_ip" style="display: none;">
+                <h3>Ip地址修改为</h3>
+                <select class="js-example-basic-single" style="width: 150px;display: inline">
+                    <option value=""></option>
+                </select>
+            </div>
+
+        </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary changeVmIp">确定</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!--进度条-->
+<div id="loading">
+    <div style="position:fixed;top:35%;left:43%">
+        <img src="img/lodaing.gif" alt="正在处理,请耐心等候">
+        <h2 class="text-warning clone-text">正在处理,请耐心等候...</h2>
+    </div>
+</div>
+<!-- Mainly scripts -->
+<script src="js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+
+<!-- Custom and plugin javascript -->
+<script src="js/inspinia.js"></script>
+<script src="js/plugins/pace/pace.min.js"></script>
+
+<!-- jQuery UI -->
+<!--<script src="js/plugins/jquery-ui/jquery-ui.min.js"></script>-->
+
+<script src="js/bootstrap-table.js"></script>
+<script src="js/bootstrap-table-zh-CN.min.js"></script>
+<script src="js/jquery.bootstrap-growl.min.js"></script>
+<script src="js/module/common.js"></script>
+
+<!-- echart -->
+<script src="js/echarts/echarts.min.js"></script>
+<!--<script src="js/echarts/theme/macarons.js"></script>-->
+
+<script src="js/module/vm.js?time=1506737659394" charset="UTF-8"></script>
+<script src="js/monitor_report.js"></script>
+<script src="js/bootstrap-table-export.js"></script>
+<script src="js/tableExport.js"></script>
+
+<!--vm设置IP所需样式-->
+<link rel="stylesheet" href="js/select2/select2.css">
+<script src="js/select2/select2.js"></script>
+<script>
+    var myChart;
+
+</script>
+</body>
+</html>

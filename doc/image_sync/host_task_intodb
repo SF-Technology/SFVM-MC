@@ -1,0 +1,51 @@
+#POST  /image_sync/host_task_intodb 单台host的image同步任务入库
+
+## 请求参数
+| 参数 | 是否必须 | 类型 | 描述 |
+|-----|----------|------|-------------|-------|
+| host_id   | 是| str| 物理机id|
+| image_list   | 是| list| 镜像任务的list|
+
+image_list中格式如下
+[
+{image_task1},{image_task2}...
+]
+image_task1中格式如下
+{
+'image_id':image_id
+'task_list':task_list
+'start_time':start_time
+'speed_limit':speed_limit
+}
+task_list格式为[{task1},{task2}...]
+其中task1中格式如下
+{
+'sch_starttime':schedule_starttime
+'sch_endtime':schedule_endtime
+}
+
+
+
+## 返回参数
+```json
+
+	{
+        'ErrorCode':success,
+        'data':return_data
+    }
+```
+其中 return_data 格式如下
+return_data = {
+        'fail_task_num':str(total_fail_task_num),
+        'fail_task_list':error_image_task_list,
+        'succss_task_list':correct_image_task_list
+    }
+其中
+tail_task_num用于记录失败的image_task数量
+fail_task_list用于记录失败的image_task
+success_task_list用于记录成功的image_task
+fail_task_list中元素格式如下:
+{
+'image_task': image_task_info,    #用于记录task的信息
+'error_message': message          #用于记录失败原因
+}

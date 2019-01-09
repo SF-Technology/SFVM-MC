@@ -1,0 +1,10 @@
+<uwsgi>
+     <pythonpath></pythonpath> #网站根目录
+     <module>main_uwsgi</module>     #Flask的主入口文件，平时是直接运行这个文件启动测试服务器的
+     <callable>app</callable>
+     <socket>127.0.0.1:7777</socket>       #监听端口
+     <master/>
+     <threads>100</threads> 
+     <processes>2</processes> 
+     <memory-report/>
+</uwsgi>

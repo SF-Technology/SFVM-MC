@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>登录</title>
+    <!--icon不要忘记改-->
+    <link rel="shortcut icon" href="favicon.ico">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>  Login</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <link href="css/animate.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <!-- Mainly scripts -->
+    <script src="js/jquery-2.1.1.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/module/common.js"></script>
+</head>
+
+<body class="gray-bg" style="min-width: 1040px;;">
+<div class="middle-box text-center loginscreen animated fadeInDown">
+    <div>
+        <div>
+            <h1 class="logo-name"></h1>
+        </div>
+        <div><img src="img/IMG20.png" width="300px" height="200"></div>
+        <div id="error_msg"></div>
+        <form class="m-t" role="form" id="login_form" onsubmit="login(event)">
+            <div class="form-group" style="padding: 0px 70px;">
+                <!--<span class="pull-left"><input type="radio" checked value="0" name="auth">  User</span>-->
+                <!--<span class="pull-right"><input type="radio" value="1" name="auth">  Others</span>-->
+            </div>
+            <div class="form-group">
+                <input class="form-control" placeholder="账号" id="userid" required>
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control" placeholder="密码" id="password" required>
+            </div>
+            <button id="btnLogin" type="submit" class="btn btn-primary block full-width m-b">Login</button>
+        </form>
+        <p class="m-t">
+            <small>云计算产品2017</small>
+        </p>
+    </div>
+</div>
+
+
+<script>
+    $(function () {
+        $.ajax({
+            url: "/login/user",
+            type: "GET",
+            dataType: "json",
+            data: {},
+            success: function (req) {
+                if (req.code == 0) {
+                    //login
+                    var login_user = req.data;
+                    if (sessionStorage.user == undefined) {
+                        //新增session存储用户
+                        login_user['user_info'] = req.data.user_name + '(' + req.data.user_id + ')';
+                        sessionStorage.user = JSON.stringify(login_user)
+                    } else {
+                        var objUser = JSON.parse(sessionStorage.user);
+                        if (objUser['user_id'] != login_user['user_id']) {
+                            //登录用户与session存储的用户不一致，更新session存储用户
+                            login_user['user_info'] = req.data.user_name + '(' + req.data.user_id + ')';
+                            sessionStorage.user = JSON.stringify(login_user)
+                        }
+                    }
+                    if (login_user.user_permisson != null) {
+                        var list = login_user.user_permisson;
+                        var role_id_arr = [];
+                        $.each(list, function (index, tmp) {
+                            role_id_arr.push(tmp.role_id);
+                        });
+                        role_id_arr = role_id_arr.unique();
+                        if (role_id_arr.length == 1) {
+                            if (role_id_arr.indexOf(1) != -1) {
+                                window.location.href = 'http://' + window.location.host + '/kvm/index.html';
+                            } else if (role_id_arr.indexOf(2) != -1 || role_id_arr.indexOf(3) != -1) {
+                                window.location.href = 'http://' + window.location.host + '/kvm/index2.html';
+                            }
+                        } else {
+                            $("#error_msg").html("<span class='text-danger'>不好意思,您的权限有问题无法登陆请联系管理员!</span>");
+                        }
+
+                    }
+                }
+            },
+            error: function () {
+            }
+        });
+    });
+    function login(event) {
+        event.preventDefault();
+        var userid = $("#userid").val();
+//        var auth_type = $("input[type='radio']:checked").val();
+         var auth_type = "1";
+        //var base = new Base64();
+        //var password = base.encode($("#password").val());
+//        var verify_code = $("#authcode").val();
+        $.ajax({
+            url: "/login?t=" + Math.random(),
+            type: "POST",
+            dataType: "json",
+            data: {
+                "userid": userid,
+                "password": $("#password").val(),
+//                "verify_code": verify_code,
+                "auth_type": auth_type
+            },
+            success: function (req) {
+//                $("#repeat-code").prev().attr("src", '/VerifyCode?t=' + Math.random());
+                if (req.code != 0) {
+                    if (req.msg != null) {
+                        $("#error_msg").html("<span class='text-danger'>" + req.msg + "</span>");
+                    }
+                } else {
+                    //login
+                    var login_user = req.data;
+
+                    if (sessionStorage.user == undefined) {
+                        //新增session存储用户
+                        login_user['user_info'] = req.data.user_name + '(' + req.data.user_id + ')';
+                        sessionStorage.user = JSON.stringify(login_user);
+                    } else {
+                        var objUser = JSON.parse(sessionStorage.user);
+                        if (objUser['user_id'] != login_user['user_id']) {
+                            //登录用户与session存储的用户不一致，更新session存储用户
+                            login_user['user_info'] = req.data.user_name + '(' + req.data.user_id + ')';
+                            sessionStorage.user = JSON.stringify(login_user);
+                        }
+                    }
+                    if (login_user.user_permisson != null) {
+                        var list = login_user.user_permisson;
+                        var role_id_arr = [];
+                        $.each(list, function (index, tmp) {
+                            role_id_arr.push(tmp.role_id);
+                        });
+                        role_id_arr = role_id_arr.unique();
+
+                        if (role_id_arr.length == 1) {
+                            if (role_id_arr.indexOf(1) != -1) {
+                                window.location.href = 'http://' + window.location.host + '/kvm/index.html';
+                            } else if (role_id_arr.indexOf(2) != -1 || role_id_arr.indexOf(3) != -1) {
+                                window.location.href = 'http://' + window.location.host + '/kvm/index2.html';
+                            }
+                        } else {
+                            $("#error_msg").html("<span class='text-danger'>不好意思,您的权限有问题无法登陆请联系管理员!</span>");
+                            logout()
+                        }
+                    } else {
+                        window.location.href = 'http://' + window.location.host + '/kvm/index2.html';
+                    }
+                }
+            },
+            error: function () {
+
+            }
+        });
+    }
+    function Base64() {
+
+        // private property
+        _keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+
+        // public method for encoding
+        this.encode = function (input) {
+            var output = "";
+            var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
+            var i = 0;
+            input = _utf8_encode(input);
+            while (i < input.length) {
+                chr1 = input.charCodeAt(i++);
+                chr2 = input.charCodeAt(i++);
+                chr3 = input.charCodeAt(i++);
+                enc1 = chr1 >> 2;
+                enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+                enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+                enc4 = chr3 & 63;
+                if (isNaN(chr2)) {
+                    enc3 = enc4 = 64;
+                } else if (isNaN(chr3)) {
+                    enc4 = 64;
+                }
+                output = output +
+                        _keyStr.charAt(enc1) + _keyStr.charAt(enc2) +
+                        _keyStr.charAt(enc3) + _keyStr.charAt(enc4);
+            }
+            return output;
+        }
+
+        // public method for decoding
+        this.decode = function (input) {
+            var output = "";
+            var chr1, chr2, chr3;
+            var enc1, enc2, enc3, enc4;
+            var i = 0;
+            input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+            while (i < input.length) {
+                enc1 = _keyStr.indexOf(input.charAt(i++));
+                enc2 = _keyStr.indexOf(input.charAt(i++));
+                enc3 = _keyStr.indexOf(input.charAt(i++));
+                enc4 = _keyStr.indexOf(input.charAt(i++));
+                chr1 = (enc1 << 2) | (enc2 >> 4);
+                chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+                chr3 = ((enc3 & 3) << 6) | enc4;
+                output = output + String.fromCharCode(chr1);
+                if (enc3 != 64) {
+                    output = output + String.fromCharCode(chr2);
+                }
+                if (enc4 != 64) {
+                    output = output + String.fromCharCode(chr3);
+                }
+            }
+            output = _utf8_decode(output);
+            return output;
+        }
+        // private method for UTF-8 encoding
+        _utf8_encode = function (string) {
+
+            string = string.replace(/\r\n/g, "\n");
+
+            var utftext = "";
+            for (var n = 0; n < string.length; n++) {
+                var c = string.charCodeAt(n); //返回返回指定位置的字符的 Unicode 编码。这个返回值是 0 - 65535 之间的整数。
+                if (c < 128) {
+                    utftext += String.fromCharCode(c); //接受一个指定的 Unicode 值，然后返回一个字符串。
+
+                } else if ((c > 127) && (c < 2048)) {
+                    utftext += String.fromCharCode((c >> 6) | 192);
+                    utftext += String.fromCharCode((c & 63) | 128);
+
+                } else {
+                    utftext += String.fromCharCode((c >> 12) | 224);
+                    utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+                    utftext += String.fromCharCode((c & 63) | 128);
+
+                }
+
+            }
+            return utftext;
+        }
+
+        // private method for UTF-8 decoding
+        _utf8_decode = function (utftext) {
+            var string = "";
+            var i = 0;
+            var c = c1 = c2 = 0;
+            while (i < utftext.length) {
+                c = utftext.charCodeAt(i);
+                if (c < 128) {
+                    string += String.fromCharCode(c);
+                    i++;
+                } else if ((c > 191) && (c < 224)) {
+                    c2 = utftext.charCodeAt(i + 1);
+                    string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
+                    i += 2;
+                } else {
+                    c2 = utftext.charCodeAt(i + 1);
+                    c3 = utftext.charCodeAt(i + 2);
+                    string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+                    i += 3;
+                }
+            }
+            return string;
+        }
+    }
+    function logout() {
+        $.ajax({
+            url: "/logout",
+            type: "GET",
+            dataType: "json",
+            success: function (req) {
+                sessionStorage.removeItem("user");
+                location.replace('http://' + window.location.host + '/kvm/login.html');
+
+            },
+            error: function () {
+
+            }
+        });
+    }
+
+</script>
+</body>
+
+</html>

@@ -1,0 +1,7 @@
+1.v2v模块展示页面分页BUG修复
+2.v2v模块展示页面无法显示BUG修复
+3. 机房 修复创建下拉菜单出现已删除的区域数据的bug
+4.网络区域 修复创建下拉菜单出现已删除的机房数据的bug
+5.用户登录密码加密传输
+6.修改kafka consumer配置为16线程
+7.修改kafka client配置auto_commit_enable=True、auto_commit_interval_ms=1

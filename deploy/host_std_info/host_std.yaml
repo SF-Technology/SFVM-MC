@@ -1,0 +1,193 @@
+---
+- name: kvm host easy configure test
+  hosts: 'all'
+  gather_facts: false
+  
+  tasks:
+
+    - name: add cloudkvm user
+      user: name=cloudkvm uid=2000 group=usr01 createhome=yes home=/home/cloudkvm
+
+    - name: stop NetworkManager
+      service: name=NetworkManager state=stopped enabled=no
+
+    - name: copy host_used_get file to host
+      copy: src={{ srcdir }}/get_host_used.sh dest=/root
+
+    - name: set host crontab to gather self performance
+      cron: name=get_host_usage minute="*/2" job='/bin/sh /root/get_host_used.sh '{{ host_perform_data_url }}''
+
+    - name: set host crontab to delete migrate_backup_directory
+      cron: name=delete_migrate_backup_directory minute="5" hour="0" job='find /app/image/ -mtime +2 -name "*-migrate-to-*" | xargs rm -rf {}'
+
+    - name: copy v2v vm_vmstandlize file to host
+      copy: src={{ srcdir }}/vm_standardlize.sh dest=/home/cloudlog
+
+    - name: copy v2v orginal_linux  file to host
+      copy: src={{ srcdir }}/orginal_linux.xml dest=/root
+
+    - name: copy v2v orginal_windows  file to host
+      copy: src={{ srcdir }}/orginal_windows.xml dest=/root
+
+    - name: copy speedlimit file to host
+      copy: src={{ srcdir }}/migratespeedQos  dest=/root
+
+    - name: copy speedlimit file to host
+      copy: src={{ srcdir }}/deletemigratespeedQos  dest=/root
+
+    - name: stop and disable firewall
+      service: name=firewalld.service state=stopped enabled=no
+
+    - name: copy get_file_mtime to host
+      copy: src={{ srcdir }}/get_file_mtime.py dest=/root
+
+    - name: delete iptable rules
+      shell: /sbin/iptables -F
+
+    - name: yum install libvirt-2.0
+      shell: yum install -y libvirt-2.0.0-10.el7.x86_64
+
+    - name: yum install qemu-2:2.0.0-1.el7.3
+      shell: yum install -y qemu-2:2.0.0-1.el7.3.x86_64
+
+    - name: yum install sasl-md5 cyrus-sasl-devel
+      shell: yum install -y cyrus-sasl-md5 cyrus-sasl-devel
+
+    - name: yum install libguestfs-tools packages
+      shell: yum install -y libguestfs-tools
+
+    - name: yum install qemu-kvm packages
+      shell: yum install -y qemu-kvm.x86_64
+ 
+    - name: yum install qemu-kvm-tools packages
+      shell: yum install -y qemu-kvm-tools
+  
+    - name: yum install python-libvirt
+      shell: yum install -y libvirt-python.x86_64
+
+    - name: download qemu-img-1.5.3-126.el7.centos.x86_64.rpm
+      shell: cd /root;wget http://'{{ yum_server_ip }}'/tools/kvm/hot_migrate/qemu-img-1.5.3-126.el7.centos.x86_64.rpm
+
+    - name: download qemu-kvm-1.5.3-126.el7.centos.x86_64.rpm
+      shell: cd /root;wget http://'{{ yum_server_ip }}'/tools/kvm/hot_migrate/qemu-kvm-1.5.3-126.el7.centos.x86_64.rpm
+
+    - name: download qemu-kvm-common-1.5.3-126.el7.centos.x86_64.rpm
+      shell: cd /root;wget http://'{{ yum_server_ip }}'/tools/kvm/hot_migrate/qemu-kvm-common-1.5.3-126.el7.centos.x86_64.rpm
+
+    - name: yum install qemu-kvm qemu-kvm-common qemu-img
+      shell: yum install -y qemu-kvm qemu-kvm-common qemu-img
+
+    - name: yum erase qemu-kvm qemu-kvm-common qemu-img
+      shell: yum erase -y qemu-kvm qemu-kvm-common qemu-img
+
+    - name: rpm install qemu-kvm-1.5.3-126.el7.centos.x86_64.rpm
+      shell: rpm -i /root/qemu-kvm-1.5.3-126.el7.centos.x86_64.rpm /root/qemu-kvm-common-1.5.3-126.el7.centos.x86_64.rpm /root/qemu-img-1.5.3-126.el7.centos.x86_64.rpm
+
+    - name: yum install qemu package
+      shell: yum install -y libguestfs libguestfs-tools libguestfs-tools-c libvirt libvirt-daemon-driver-qemu libvirt-daemon-driver-storage libvirt-daemon-kvm perl-Sys-Guestfs qemu qemu-common qemu-system-alpha qemu-system-arm qemu-system-cris qemu-system-lm32 qemu-system-m68k qemu-system-microblaze qemu-system-mips qemu-system-moxie qemu-system-or32 qemu-system-s390x
+
+    - name: edit file /etc/sysconfig/libvirtd
+      shell: sed -i 's/#LIBVIRTD_ARGS/LIBVIRTD_ARGS/g' /etc/sysconfig/libvirtd
+   
+    - name: deleteI file /etc/libvirt/libvirtd.conf
+      shell: rm -rf /etc/libvirt/libvirtd.conf
+
+    - name: cp libvirtd.conf file to remote server
+      copy: src={{ srcdir }}/libvirtd.conf dest=/etc/libvirt/
+
+    - name: cp clone_dir_sh to remote server
+      copy: src={{ srcdir }}/auto-del-2-days-bt-files.sh dest=/root/
+
+    - name: clone_dir_del_cron set
+      cron: name=auto_del_bt_files hour=1 job='/bin/sh /root/auto-del-2-days-bt-files.sh >/dev/null 2>&1'
+
+    - name: delete file /etc/sasl2/libvirt.conf
+      shell: rm -rf /etc/sasl2/libvirt.conf
+
+    - name: cp libvirt.conf file to remote server for sasl
+      copy: src={{ srcdir }}/libvirt.conf dest=/etc/sasl2/
+
+    - name: restart libvirtd service
+      service: name=libvirtd state=restarted enabled=yes
+
+    - name: copy create sasl user shell to destination host
+      copy: src={{ srcdir }}/create_sasl_user.sh dest=/root/
+
+    - name: create sas tcp auth user libvirt
+      shell: /bin/bash /root/create_sasl_user.sh '{{ libvirt_user_pwd }}' '{{ root_pwd }}'
+
+    - name: create lvm lvapp
+      lvol: vg=VolGroup00 lv=LVapp size=100%FREE
+
+    - name: change lvapp format to xfs
+      filesystem: fstype=xfs dev=/dev/mapper/VolGroup00-LVapp
+
+    - name: mount /app
+      mount: name=/app src=/dev/mapper/VolGroup00-LVapp fstype=xfs state=mounted opts=defaults
+
+    - name: create dir /app/image to store images
+      file: path=/app/image state=directory mode=755
+
+    - name: create dir /app/clone to store clone files
+      file: path=/app/clone state=directory mode=755
+
+    - name: yum install transmission packages
+      shell: yum install -y transmission*
+
+    - name: start transmission-daemon
+      shell: ps -ef|grep transmission|grep -v grep;if [ $? -eq 0 ];then echo 'pass';else transmission-daemon --download-dir /app/clone --logfile /var/log/transmission.log --log-info;fi
+
+    - name: rm transmission task in rc.local
+      shell: sed -i '/transmission-daemon*/'d /etc/rc.local
+
+    - name: add transmission-daemon to rc.local
+      shell: echo "su - root -c \"transmission-daemon --logfile /var/log/transmission.log --log-info\"" >>/etc/rc.local
+
+    - name: add conf1 to system.conf
+      shell: echo "DefaultLimitCORE=infinity" >> /etc/systemd/system.conf
+
+    - name: add conf2 to system.conf
+      shell: echo "DefaultLimitNOFILE=524288" >> /etc/systemd/system.conf
+
+    - name: add conf3 to system.conf
+      shell: echo "DefaultLimitNPROC=524288" >> /etc/systemd/system.conf
+
+    - name: add conf1 to user.conf
+      shell: echo "DefaultLimitCORE=infinity" >> /etc/systemd/user.conf
+
+    - name: add conf2 to user.conf
+      shell: echo "DefaultLimitNOFILE=524288" >> /etc/systemd/user.conf
+
+    - name: add conf3 to user.conf
+      shell: echo "DefaultLimitNPROC=524288" >> /etc/systemd/user.conf
+
+    - name: create file nf_conntrack.conf
+      shell: echo "options nf_conntrack hashsize=131072" >> /etc/modprobe.d/nf_conntrack.conf
+
+    - name: rm sys-sysctl.conf
+      shell: rm -rf /etc/sysctl.d/sys-sysctl.conf
+
+    - name: add 98-kvm.conf
+      copy: src={{ srcdir }}/98-kvm.conf dest=/etc/sysctl.d/
+
+    - name: copy host_checklist.sh to dest host
+      copy: src={{ srcdir }}/host_checklist.sh dest=/root/
+
+    - name: run host performance script
+      shell: /bin/bash /root/get_host_used.sh {{ host_perform_data_url }}
+
+    - name: yum install virt-v2v
+      shell: yum install -y virt-v2v-1.32.7-3.el7.centos.x86_64
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>镜像管理</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <!-- Toastr style -->
+    <link href="css/plugins/toastr/toastr.min.css" rel="stylesheet">
+
+    <link href="css/animate.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <!-- 生成导航栏 -->
+    <script src="js/jquery-2.1.1.js"></script>
+    <script src="js/module/navigation.js"></script>
+
+    <link rel="stylesheet" href="css/bootstrap-datetimepicker.min.css">
+    <style>
+        .title {
+            font-size: 20px;
+            height: 40px;
+            line-height: 40px;
+            width: 150px;
+            margin-left: 20px;
+            text-align: center;
+            border-bottom: 2px solid #ddd;
+            box-shadow: 1px 1px 1px #aaaaaa;
+        }
+
+        .body {
+            width: 97%;
+            margin-top: 15px;
+        }
+        .edit-image{
+            color: #128dff;
+        }
+    </style>
+</head>
+
+<body>
+<div id="wrapper">
+    <nav class="navbar-default navbar-static-side" role="navigation" id="navbar"></nav>
+
+    <div id="page-wrapper" class="gray-bg dashbard-1">
+        <div class="row border-bottom">
+            <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                <div class="navbar-header">
+                    <div class="pagetitle">镜像列表</div>
+                </div>
+                <ul class="nav navbar-top-links navbar-right">
+                    <li>
+                        <a href="#" onclick="javascript:logout(); event.returnValue=false; ">
+                            <i class="fa fa-sign-out"></i> Log out
+                        </a>
+                    </li>
+                </ul>
+
+            </nav>
+        </div>
+        <div class="row  border-bottom white-bg dashboard-header"
+             style="overflow: auto; z-index: 50;position: relative;">
+            <div class="row" id="imageMain" style="position: relative;">
+                <!--<div class="col-xs-8" id="mainWrapper">-->
+                    <!--<div class="row">-->
+                        <!--<div class="col-xs-2 col-md-1">-->
+                            <!--<button class="btn btn-info" data-toggle="modal"-->
+                                    <!--style="display: none" id="image-create-show">创建-->
+                            <!--</button>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <div class="col-xs-12">
+                    <table id="image_list" data-locale="zh-US"></table>
+                </div>
+            </div>
+        </div>
+        <!-- 新增镜像模态框 -->
+        <div class="modal fade" id="addImageModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">创建镜像</h4>
+                    </div>
+                    <div class="modal-body" style="margin-bottom: 15px">
+                        <div class="form-group"><label class="col-sm-3 control-label">操作系统</label>
+                            <div class="col-sm-9">
+                                <select id="new_system" class="form-control col-sm-9"
+                                        onchange="addImageInfo.changeSystem();">
+                                    <option value="1">linux</option>
+                                    <option value="2">windows</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-3 control-label">系统版本</label>
+                            <div class="col-sm-9">
+                                <select id="new_version_linux" class="form-control col-sm-9" style="display:block;">
+                                    <option value="-1">请选择版本</option>
+                                    <option value="6.6"> centos6.6</option>
+                                    <option value="6.8">centos6.8</option>
+                                    <option value="7.2">centos7.2</option>
+                                </select>
+                                <select id="new_version_win" class="form-control col-sm-9" style="display:none;">
+                                    <option value="-1">请选择版本</option>
+                                    <option value="win2008r2_en">win2008r2_en</option>
+                                    <option value="win2012r2_en">win2012r2_en</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-3 control-label">文件路径</label>
+                            <div class="col-sm-9">
+                                <input id="new_file" type="text" class="form-control"
+                                       placeholder="例如：/centos7.2/centos7.2">
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-3 control-label">镜像名称</label>
+                            <div class="col-sm-9">
+                                <input id="new_name" type="text" class="form-control"
+                                       placeholder="请输入镜像名称(必须是英文字母或者_组成)">
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-3 control-label">镜像显示名称</label>
+                            <div class="col-sm-9">
+                                <input id="new_displayname" type="text" class="form-control" placeholder="请输入镜像显示名称">
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-3 control-label">镜像类型</label>
+                            <div class="col-sm-9">
+                               <select id="new_type" class="form-control col-sm-9">
+                                    <option value="-1">请选择镜像类型</option>
+                                    <option value="0">系统盘</option>
+                                    <option value="1">数据盘</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-3 control-label">镜像格式</label>
+                            <div class="col-sm-9">
+                                <select id="new_format" class="form-control col-sm-9">
+                                    <option value="-1">请选择镜像格式</option>
+                                    <option value="qcow2">qcow2</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-3 control-label">镜像md5</label>
+                            <div class="col-sm-9">
+                                <input id="new_md5" type="text" class="form-control" placeholder="请输入镜像md5">
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-3 control-label">镜像实际大小(MB)</label>
+                            <div class="col-sm-9">
+                                <input id="new_actual_size_mb" type="text" class="form-control" placeholder="请输入镜像实际大小">
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-3 control-label">镜像大小(G)</label>
+                            <div class="col-sm-9">
+                                <input id="new_size_gb" type="text" class="form-control" placeholder="请输入镜像大小">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="addImageInfo.add_image()">确定</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+
+        <!--编辑镜像模态框-->
+        <div class="modal fade" id="editImageModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">编辑镜像</h4>
+                    </div>
+                    <div class="modal-body" style="margin-bottom: 15px">
+                        <div class="form-group"><label class="col-sm-4 control-label">镜像显示名称</label>
+                            <div class="col-sm-8">
+                                <input id="edit_display_name"  disabled type="text" class="form-control" placeholder="请输入镜像显示名称">
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-4 control-label">镜像md5</label>
+                            <div class="col-sm-8">
+                                <input id="edit_md5" type="text" class="form-control" placeholder="请输入镜像md5">
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-4 control-label">镜像实际大小(MB)</label>
+                            <div class="col-sm-8">
+                                <input id="edit_actual_size_mb" type="text" class="form-control" placeholder="请输入镜像实际大小">
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-4 control-label">镜像大小(G)</label>
+                            <div class="col-sm-8">
+                                <input id="edit_size_gb" type="text" class="form-control" placeholder="请输入镜像大小">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="editImage()">确定</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+    </div>
+</div>
+<div id="loading">
+    <div style="position:fixed;top:35%;left:43%">
+        <img src="img/lodaing.gif" alt="正在处理,请耐心等候">
+        <h2 class="text-primary">正在处理,请耐心等候...</h2>
+    </div>
+</div>
+<!-- Mainly scripts -->
+<script src="js/bootstrap.min.js"></script>
+<script src="js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+
+<!-- Custom and plugin javascript -->
+<script src="js/inspinia.js"></script>
+<script src="js/plugins/pace/pace.min.js"></script>
+
+<!-- jQuery UI -->
+<script src="js/plugins/jquery-ui/jquery-ui.min.js"></script>
+
+<!-- data tables -->
+<script src="js/bootstrap-table.js"></script>
+<script src="js/bootstrap-table-zh-CN.min.js"></script>
+<script src="js/bootstrap-datetimepicker.js"></script>
+<script src="js/bootstrap-datetimepicker.zh-CN.js"></script>
+
+<!-- 消息框 -->
+<script src="js/jquery.bootstrap-growl.min.js"></script>
+<script src="js/module/common.js"></script>
+
+<script src="js/module/image.js"></script>
+</body>
+</html>

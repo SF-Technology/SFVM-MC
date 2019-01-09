@@ -1,0 +1,1151 @@
+-- MySQL dump 10.14  Distrib 5.5.44-MariaDB, for Linux (x86_64)
+--
+-- Host: FKVM-M.dbsit.sfdc.com.cn    Database: kvm
+-- ------------------------------------------------------
+-- Server version	5.6.21-log
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `access`
+--
+
+DROP TABLE IF EXISTS `access`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `access` (
+  `role_id` int(11) NOT NULL COMMENT '关联角色表ID',
+  `group_id` int(11) NOT NULL COMMENT '关联组表ID',
+  `area_id` int(11) NOT NULL COMMENT '关联区域ID'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='权限表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `access`
+--
+
+LOCK TABLES `access` WRITE;
+/*!40000 ALTER TABLE `access` DISABLE KEYS */;
+INSERT INTO `access` VALUES (1,108,34),(1,109,113),(2,107,122),(2,107,34),(2,107,48),(2,107,49),(2,107,50),(2,107,51),(2,107,52),(2,107,117),(2,107,53),(2,107,54),(2,107,55),(2,107,118),(2,107,56),(2,107,58),(2,107,59),(2,107,60),(2,107,62),(2,107,63),(2,107,64),(2,107,65),(2,107,66),(2,107,67),(2,107,68),(2,107,69),(2,107,70),(2,107,71),(2,107,72),(2,107,73),(2,107,74),(2,107,75),(2,107,76),(2,107,77),(2,107,78),(2,107,79),(2,107,80),(2,107,81),(2,107,82),(2,107,83),(2,107,84),(2,107,85),(2,107,86),(2,107,119),(2,107,87),(2,107,88),(2,107,89),(2,107,90),(2,107,91),(2,107,92),(2,107,93),(2,107,94),(2,107,95),(2,107,96),(2,107,97),(2,107,98),(2,107,99),(2,107,100),(2,107,101),(2,107,102),(2,107,103),(2,107,104),(2,107,105),(2,107,106),(2,107,107),(2,107,108),(2,107,109),(2,107,110),(2,107,120),(2,107,112),(2,107,113),(3,106,48),(3,106,52),(3,106,117),(3,106,99),(3,117,122),(3,117,34),(3,117,48),(3,117,49),(3,117,50),(3,117,51),(3,117,52),(3,117,117),(3,117,53),(3,117,54),(3,117,55),(3,117,118),(3,117,56),(3,117,58),(3,117,59),(3,117,60),(3,117,62),(3,117,63),(3,117,64),(3,117,65),(3,117,66),(3,117,67),(3,117,68),(3,117,69),(3,117,70),(3,117,71),(3,117,72),(3,117,73),(3,117,74),(3,117,75),(3,117,76),(3,117,77),(3,117,78),(3,117,79),(3,117,80),(3,117,81),(3,117,82),(3,117,83),(3,117,84),(3,117,85),(3,117,86),(3,117,119),(3,117,87),(3,117,88),(3,117,89),(3,117,90),(3,117,91),(3,117,92),(3,117,93),(3,117,94),(3,117,95),(3,117,96),(3,117,97),(3,117,98),(3,117,99),(3,117,100),(3,117,101),(3,117,102),(3,117,103),(3,117,104),(3,117,105),(3,117,106),(3,117,107),(3,117,108),(3,117,109),(3,117,110),(3,117,120),(3,117,112),(3,117,113),(1,1,122),(1,1,34),(1,1,48),(1,1,49),(1,1,50),(1,1,51),(1,1,52),(1,1,117),(1,1,53),(1,1,54),(1,1,55),(1,1,118),(1,1,56),(1,1,58),(1,1,59),(1,1,60),(1,1,62),(1,1,63),(1,1,64),(1,1,65),(1,1,66),(1,1,67),(1,1,68),(1,1,69),(1,1,70),(1,1,71),(1,1,72),(1,1,73),(1,1,74),(1,1,75),(1,1,76),(1,1,77),(1,1,78),(1,1,79),(1,1,80),(1,1,81),(1,1,82),(1,1,83),(1,1,84),(1,1,85),(1,1,86),(1,1,119),(1,1,87),(1,1,88),(1,1,89),(1,1,90),(1,1,91),(1,1,92),(1,1,93),(1,1,94),(1,1,95),(1,1,96),(1,1,97),(1,1,98),(1,1,99),(1,1,100),(1,1,101),(1,1,102),(1,1,103),(1,1,104),(1,1,105),(1,1,106),(1,1,107),(1,1,108),(1,1,109),(1,1,110),(1,1,120),(1,1,112),(1,1,113),(1,119,122),(1,119,34),(1,119,48),(1,119,49),(1,119,50),(1,119,51),(1,119,52),(1,119,117),(1,119,53),(1,119,54),(1,119,55),(1,119,118),(1,119,56),(1,119,58),(1,119,59),(1,119,60),(1,119,62),(1,119,63),(1,119,64),(1,119,65),(1,119,66),(1,119,67),(1,119,68),(1,119,69),(1,119,70),(1,119,71),(1,119,72),(1,119,73),(1,119,74),(1,119,75),(1,119,76),(1,119,77),(1,119,78),(1,119,79),(1,119,80),(1,119,81),(1,119,82),(1,119,83),(1,119,84),(1,119,85),(1,119,86),(1,119,119),(1,119,87),(1,119,88),(1,119,89),(1,119,90),(1,119,91),(1,119,92),(1,119,93),(1,119,94),(1,119,95),(1,119,96),(1,119,97),(1,119,98),(1,119,99),(1,119,100),(1,119,101),(1,119,102),(1,119,103),(1,119,104),(1,119,105),(1,119,106),(1,119,107),(1,119,108),(1,119,109),(1,119,110),(1,119,120),(1,119,112),(1,119,113),(1,114,113);
+/*!40000 ALTER TABLE `access` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `area`
+--
+
+DROP TABLE IF EXISTS `area`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `area` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `parent_id` int(11) DEFAULT NULL COMMENT '自关联id，表示父区域ID',
+  `name` varchar(50) DEFAULT NULL COMMENT '名称',
+  `displayname` varchar(50) DEFAULT NULL COMMENT '显示名称',
+  `area_type` enum('0','1') DEFAULT '0' COMMENT '区域类型：0表示总部，1表示地区',
+  `manager` varchar(50) DEFAULT NULL COMMENT '区域管理员',
+  `isdeleted` enum('1','0') DEFAULT '0' COMMENT '是否删除',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
+  `deleted_at` datetime DEFAULT NULL COMMENT '删除时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=124 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=1 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC COMMENT='区域表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `area`
+--
+
+LOCK TABLES `area` WRITE;
+/*!40000 ALTER TABLE `area` DISABLE KEYS */;
+/*!40000 ALTER TABLE `area` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `datacenter`
+--
+
+DROP TABLE IF EXISTS `datacenter`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `datacenter` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) DEFAULT NULL COMMENT '机房名称',
+  `displayname` varchar(50) DEFAULT NULL COMMENT '中文显示名',
+  `dc_type` enum('0','1','2','3','4','5') DEFAULT NULL COMMENT '机房类型：0:其他、1:测试SIT、2:准生产STG、3:研发DEV、4:生产PRD、5:容灾DR',
+  `area_id` int(11) DEFAULT NULL COMMENT '关联区域ID',
+  `province` varchar(4) DEFAULT NULL COMMENT '所在省',
+  `address` varchar(50) DEFAULT NULL COMMENT '地址',
+  `description` varchar(255) DEFAULT NULL COMMENT '机房描述',
+  `isdeleted` enum('1','0') DEFAULT '0' COMMENT '是否删除。0表示没有删除，1表示已经删除',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
+  `deleted_at` datetime DEFAULT NULL COMMENT '删除时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=195 DEFAULT CHARSET=utf8 MIN_ROWS=1 AVG_ROW_LENGTH=1 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC COMMENT='机房表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `datacenter`
+--
+
+LOCK TABLES `datacenter` WRITE;
+/*!40000 ALTER TABLE `datacenter` DISABLE KEYS */;
+/*!40000 ALTER TABLE `datacenter` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `feedback_info`
+--
+
+DROP TABLE IF EXISTS `feedback_info`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `feedback_info` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` varchar(20) NOT NULL COMMENT '关联用户工号',
+  `problem_category` varchar(60) NOT NULL COMMENT '问题类型',
+  `problem_id` varchar(20) NOT NULL COMMENT '关联问题分类ID',
+  `problem_description` varchar(255) DEFAULT NULL COMMENT '问题描述',
+  `network_address` varchar(100) DEFAULT NULL COMMENT '出现问题的相关页面',
+  `submit_time` datetime DEFAULT NULL COMMENT '反馈时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=89 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `feedback_info`
+--
+
+LOCK TABLES `feedback_info` WRITE;
+/*!40000 ALTER TABLE `feedback_info` DISABLE KEYS */;
+/*!40000 ALTER TABLE `feedback_info` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `flavor`
+--
+
+DROP TABLE IF EXISTS `flavor`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `flavor` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) DEFAULT NULL COMMENT '规格的名称',
+  `vcpu` int(11) DEFAULT NULL COMMENT 'VCPU个数',
+  `memory_mb` int(11) DEFAULT NULL COMMENT '内存大小MB',
+  `root_disk_gb` int(11) DEFAULT NULL COMMENT '根分区大小GB',
+  `isenable` enum('1','0') DEFAULT '1' COMMENT '是否启用，1表示启用，0表示未启用',
+  `isdeleted` enum('0','1') DEFAULT '0' COMMENT '是否删除，1表示已经删除，0表示未删除',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=490 DEFAULT CHARSET=utf8 COMMENT='规格表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `flavor`
+--
+
+LOCK TABLES `flavor` WRITE;
+/*!40000 ALTER TABLE `flavor` DISABLE KEYS */;
+INSERT INTO `flavor` VALUES (1,'2-2048-80',2,2048,80,'1','0'),(2,'2-4096-80',2,4096,80,'1','0'),(3,'2-8192-80',2,8192,80,'1','0'),(4,'4-4096-80',4,4096,80,'1','0'),(5,'4-8192-80',4,8192,80,'1','0'),(6,'4-16384-80',4,16384,80,'1','0'),(489,'1-512-80',1,512,80,'1','0');
+/*!40000 ALTER TABLE `flavor` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `host`
+--
+
+DROP TABLE IF EXISTS `host`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `host` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) DEFAULT NULL COMMENT '物理机主机名',
+  `displayname` varchar(50) DEFAULT NULL COMMENT '中文名称或描述',
+  `sn` varchar(20) DEFAULT NULL COMMENT '序列号',
+  `ipaddress` varchar(50) DEFAULT NULL COMMENT 'IP地址',
+  `manage_ip` varchar(50) DEFAULT NULL COMMENT '管理IP',
+  `status` enum('99','1','0') DEFAULT '0' COMMENT '物理机稳定的状态：运行中0，关机1，错误99',
+  `typestatus` enum('2','1','0') DEFAULT '0' COMMENT '业务状态：正常0，锁定1，维护2',
+  `libvirtd_status` enum('0','1') DEFAULT '0' COMMENT 'libvirt状态，正常0，异常1',
+  `cpu` int(11) DEFAULT '0' COMMENT '逻辑cpu 核数(逻辑core个数)',
+  `hostpool_id` int(11) DEFAULT NULL COMMENT '关联hostpool 表',
+  `isdeleted` enum('1','0') DEFAULT '0' COMMENT '是否删除：0表示未删除',
+  `deleted_at` datetime DEFAULT NULL COMMENT '删除时间',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
+  `memory_mb` int(11) DEFAULT '0' COMMENT '内存剩余大小MB（排除了保留）',
+  `ostype` varchar(50) DEFAULT NULL COMMENT '物理机操作系统版本',
+  `app_disk_mb` int(11) DEFAULT '0' COMMENT '虚拟机所在盘的剩余大小',
+  `hold_mem_gb` int(11) DEFAULT '0' COMMENT '保留内存',
+  `instances_collect_time` datetime DEFAULT NULL COMMENT '物理机下所有虚拟机的上次收集时间',
+  `host_collect_time` datetime DEFAULT NULL COMMENT '物理机状态的上次收集时间',
+  `host_performance_collect_time` datetime DEFAULT NULL COMMENT '物理机性能数据上一次收集时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=80 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=1 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC COMMENT='物理机表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `host`
+--
+
+LOCK TABLES `host` WRITE;
+/*!40000 ALTER TABLE `host` DISABLE KEYS */;
+/*!40000 ALTER TABLE `host` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `hostpool`
+--
+
+DROP TABLE IF EXISTS `hostpool`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `hostpool` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) DEFAULT NULL COMMENT 'hostpool的名称',
+  `displayname` varchar(50) DEFAULT NULL COMMENT '显示名称',
+  `least_host_num` int(11) DEFAULT NULL COMMENT '集群主机数目下限',
+  `isdeleted` enum('1','0') DEFAULT '0' COMMENT '是否删除： 0表示未删除',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
+  `deleted_at` datetime DEFAULT NULL COMMENT '删除时间',
+  `net_area_id` int(11) DEFAULT '1' COMMENT '关联网络区域表',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8 COMMENT='物理机池表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `hostpool`
+--
+
+LOCK TABLES `hostpool` WRITE;
+/*!40000 ALTER TABLE `hostpool` DISABLE KEYS */;
+/*!40000 ALTER TABLE `hostpool` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `image`
+--
+
+DROP TABLE IF EXISTS `image`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `image` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `displayname` varchar(200) DEFAULT NULL COMMENT '显示名',
+  `name` varchar(50) DEFAULT NULL COMMENT '镜像的名称唯一',
+  `system` varchar(50) DEFAULT NULL COMMENT '操作系统',
+  `version` varchar(20) DEFAULT NULL COMMENT '系统版本',
+  `url` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL COMMENT '镜像服务器上镜像的路径',
+  `md5` varchar(50) DEFAULT NULL COMMENT '镜像的MD5值',
+  `format` varchar(20) DEFAULT NULL COMMENT '镜像的格式',
+  `actual_size_mb` float DEFAULT NULL COMMENT '镜像实际大小',
+  `size_gb` int(11) DEFAULT NULL COMMENT '镜像预分配大小',
+  `type` enum('0','1') DEFAULT NULL COMMENT '类型：0表示系统盘，1表示数据盘',
+  `description` varchar(200) DEFAULT NULL COMMENT '描述',
+  `isdeleted` enum('1','0') DEFAULT '1' COMMENT '是否删除： 0表示未删除',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `deleted_at` datetime DEFAULT NULL COMMENT '删除时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8 COMMENT='镜像表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `image`
+--
+
+LOCK TABLES `image` WRITE;
+/*!40000 ALTER TABLE `image` DISABLE KEYS */;
+INSERT INTO `image` VALUES (1,'Centos7.2纯净模板','centos7.2','linux','7.2','/centos7.2/centos7.2','94aeb6969fd4ed9de5043aa9474448b0','qcow2',1187.56,80,'0','系统盘','0','2017-03-21 18:14:13',NULL,NULL),(2,'Centos7.2纯净模板','centos7.2','linux','7.2','/centos7.2/centos7.2_disk2','1b02ed8b3ff8341f1655c24e934144f8','qcow2',0.63,50,'1','数据盘','0','2017-03-21 18:14:13',NULL,NULL),(3,'Windows2008r2 英文企业版','win2008r2_en','windows','2008','/win2008r2_en/win2008r2_en','1beaf51d51d1924285697d2a590665ba','qcow2',5851.06,50,'0','系统盘','0','2017-03-21 18:14:13',NULL,NULL),(4,'Windows2012r2 英文企业版','win2012r2_en','windows','2012','/win2012r2_en/win2012r2_en','d1d948c0452351e911eb7e8807c5742f','qcow2',5989.12,50,'0','系统盘','0','2017-03-21 18:14:13',NULL,NULL),(27,'Centos6.8 Jboss','centos6.8_jboss','linux','6.8','/centos6.8_jboss/centos6.8_jboss','e637ff314d1390fcaf3d32c0a56d516c','qcow2',25108.1,80,'0','系统盘','0','2017-05-24 14:21:50',NULL,NULL),(28,'Centos6.8 Jboss','centos6.8_jboss','linux','6.8','/centos6.8_jboss/centos6.8_jboss_disk2','039a25b785a311545dc0fee4055d996a','qcow2',468.06,50,'1','数据盘','0','2017-05-24 14:22:51',NULL,NULL),(29,'Centos6.6纯净模板','centos6.6','linux','6.6','/centos6.6/centos6.6','7dfe114cc88762dbff7ddd8b97512725','qcow2',3727.56,80,'0','系统盘','0','2017-05-25 14:37:43',NULL,NULL),(30,'Centos6.6纯净模板','centos6.6','linux','6.6','/centos6.6/centos6.6_disk2','ddf4048eb27c1c01f3a45408b984c36b','qcow2',2.25,50,'1','数据盘','0','2017-05-25 14:37:51',NULL,NULL),(31,'Centos6.6 Haproxy1.5','centos6.6_haproxy_1.5','linux','6.6','/centos6.6_haproxy_1.5/centos6.6_haproxy_1.5','36829986ef43c4cccc76afb6040ea396','qcow2',1890.63,80,'0','系统盘','0','2017-05-25 14:37:54',NULL,NULL),(32,'Centos6.6 Haproxy1.5','centos6.6_haproxy_1.5','linux','6.6','/centos6.6_haproxy_1.5/centos6.6_haproxy_1.5_disk2','a9b56c24fc390c05da31bd66fe453f15','qcow2',20.75,50,'1','数据盘','0','2017-05-25 14:37:56',NULL,NULL),(33,'Centos6.6 inc_sgs_core','centos6.6_inc_sgs_core','linux','6.6','/centos6.6_inc_sgs_core/centos6.6_inc_sgs_core','f7d34ca548012d0d279944ea04f70668','qcow2',7526.04,80,'0','系统盘','0','2017-05-25 14:37:58',NULL,NULL),(34,'Centos6.6 inc_sgs_core','centos6.6_inc_sgs_core','linux','6.6','/centos6.6_inc_sgs_core/centos6.6_inc_sgs_core_disk2','e0ac9d0ff567bc42ff6f8c0b10546dc9','qcow2',2.25,50,'1','数据盘','0','2017-05-25 14:38:00',NULL,NULL),(35,'Centos6.8纯净模板','centos6.8','linux','6.8','/centos6.8/centos6.8','b00e7ab0b117963e5e2cf704cdc3449f','qcow2',2418.63,80,'0','系统盘','0','2017-05-25 14:38:03',NULL,NULL),(36,'Centos6.8纯净模板','centos6.8','linux','6.8','/centos6.8/centos6.8_disk2','ce9342563bdfe5bec5b82e24522d5b90','qcow2',2.25,50,'1','数据盘','0','2017-05-25 14:38:05',NULL,NULL),(37,'Centos6.8 Gate','centos6.8_gate','linux','6.8','/centos6.8_gate/centos6.8_gate','7cc0a9d7449980bd160a6c12fe24a188','qcow2',3483.75,80,'0','系统盘','0','2017-05-25 14:38:07',NULL,NULL),(38,'Centos6.8 Gate','centos6.8_gate','linux','6.8','/centos6.8_gate/centos6.8_gate_disk2','3115fded3c0a305cbd96cbf5ff8a48e7','qcow2',676.38,50,'1','数据盘','0','2017-05-25 14:38:09',NULL,NULL),(39,'Centos6.8 Haproxy','centos6.8_haproxy','linux','6.8','/centos6.8_haproxy/centos6.8_haproxy','4d0bc9e1c02d9ebfe1391bd6e8880663','qcow2',2589.38,80,'0','系统盘','0','2017-05-25 14:38:11',NULL,NULL),(40,'Centos6.8 Haproxy','centos6.8_haproxy','linux','6.8','/centos6.8_haproxy/centos6.8_haproxy_disk2','1cc40e618c3662f4334751321db61b30','qcow2',17.69,50,'1','数据盘','0','2017-05-25 14:38:13',NULL,NULL),(43,'Centos6.8 jdk1.7','centos6.8_jdk1.7','linux','6.8','/centos6.8_jdk1.7/centos6.8_jdk1.7','25ffed6f85fab494860dd793fd4f0eef','qcow2',2807.06,80,'0','系统盘','0','2017-05-25 14:38:15',NULL,NULL),(44,'Centos6.8 jdk1.7','centos6.8_jdk1.7','linux','6.8','/centos6.8_jdk1.7/centos6.8_jdk1.7_disk2','2bb25ef280034801e22404a864c27b2b','qcow2',2.25,50,'1','数据盘','0','2017-05-25 14:38:17',NULL,NULL),(45,'Centos6.8 jdk1.8','centos6.8_jdk1.8','linux','6.8','/centos6.8_jdk1.8/centos6.8_jdk1.8','e2034eb3116ef1bef0d853a26af84983','qcow2',2984.38,80,'0','系统盘','0','2017-05-25 14:38:19',NULL,NULL),(46,'Centos6.8 jdk1.8','centos6.8_jdk1.8','linux','6.8','/centos6.8_jdk1.8/centos6.8_jdk1.8_disk2','83210d0760536336b21801f7e9567661','qcow2',2.25,50,'1','数据盘','0','2017-05-25 14:38:21',NULL,NULL),(47,'Centos6.8 Nginx','centos6.8_nginx','linux','6.8','/centos6.8_nginx/centos6.8_nginx','4acd6f1ad6ff3a8de1f8229d1f9265e9','qcow2',3016.25,80,'0','系统盘','0','2017-05-25 14:38:22',NULL,NULL),(48,'Centos6.8 Nginx','centos6.8_nginx','linux','6.8','/centos6.8_nginx/centos6.8_nginx_disk2','d0362e317f15457a3e5d71132bfc51d2','qcow2',552.25,50,'1','数据盘','0','2017-05-25 14:38:24',NULL,NULL),(52,'Centos7.2 Jboss','centos7.2_jboss','linux','7.2','/centos7.2_jboss/centos7.2_jboss','bf7259e9b45404dc98e31c12bb3a89f8','qcow2',1305.19,80,'0','系统盘','0','2017-05-26 09:18:41',NULL,NULL),(53,'Centos7.2 Jboss','centos7.2_jboss','linux','7.2','/centos7.2_jboss/centos7.2_jboss_disk2','7f0b89a60e57ab5d967ffc4a48bb65c8','qcow2',569.45,50,'1','数据盘','0','2017-05-26 09:18:44',NULL,NULL);
+/*!40000 ALTER TABLE `image` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `increment`
+--
+
+DROP TABLE IF EXISTS `increment`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `increment` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `prex_str` varchar(20) DEFAULT NULL COMMENT '前缀',
+  `increment_value` int(11) DEFAULT NULL COMMENT '增量值',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `increment`
+--
+
+LOCK TABLES `increment` WRITE;
+/*!40000 ALTER TABLE `increment` DISABLE KEYS */;
+/*!40000 ALTER TABLE `increment` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `instance`
+--
+
+DROP TABLE IF EXISTS `instance`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `instance` (
+  `id` int(20) NOT NULL AUTO_INCREMENT,
+  `uuid` varchar(50) DEFAULT NULL COMMENT 'vm的uuid',
+  `name` varchar(50) DEFAULT NULL COMMENT '实例名',
+  `displayname` varchar(50) DEFAULT NULL COMMENT '显示名称',
+  `status` enum('100','99','98','10','9','8','7','6','5','4','3','2','1','0') DEFAULT '1' COMMENT '虚拟机状态： 0创建中，1关机，2关机中，3运行中，4开机中，5挂起，6暂停，7热迁移中，8冷迁移中，9转化中，10克隆中，98其他，99错误，100虚机创建失败',
+  `typestatus` enum('2','1','0') DEFAULT '0' COMMENT '业务状态:0表示正常，1表示下线，2表示锁定',
+  `create_source` enum('2','1','0') DEFAULT '0' COMMENT '创建来源：0:丰云，1:OpenStack 2:ESX',
+  `isdeleted` enum('1','0') DEFAULT '0' COMMENT '是否删除；0表示未删除',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
+  `deleted_at` datetime DEFAULT NULL COMMENT '删除时间',
+  `app_info` varchar(255) DEFAULT NULL COMMENT '应用系统信息',
+  `owner` varchar(50) DEFAULT NULL COMMENT '应用管理员',
+  `password` varchar(100) DEFAULT NULL COMMENT '管理员密码',
+  `description` varchar(255) DEFAULT NULL COMMENT '描述',
+  `p_cluster_id` varchar(20) DEFAULT NULL COMMENT 'CMDB中物理集群的ID',
+  `p_cluster_name` varchar(50) DEFAULT NULL COMMENT 'CMDB中物理集群的名称',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3072 DEFAULT CHARSET=utf8 COMMENT='VM虚拟机表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `instance`
+--
+
+LOCK TABLES `instance` WRITE;
+/*!40000 ALTER TABLE `instance` DISABLE KEYS */;
+/*!40000 ALTER TABLE `instance` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `instance_actions`
+--
+
+DROP TABLE IF EXISTS `instance_actions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `instance_actions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `task_id` varchar(255) DEFAULT NULL COMMENT '任务ID',
+  `request_id` varchar(255) DEFAULT NULL COMMENT '请求ID',
+  `action` varchar(255) DEFAULT NULL COMMENT '操作名称如create，start等',
+  `instance_uuid` varchar(36) DEFAULT NULL,
+  `user_id` varchar(255) DEFAULT NULL COMMENT '用户工号',
+  `start_time` datetime DEFAULT NULL COMMENT '启动任务时间',
+  `finish_time` datetime DEFAULT NULL COMMENT '完成时间',
+  `message` varchar(5000) DEFAULT NULL COMMENT '消息内容',
+  `status` int(11) DEFAULT NULL COMMENT '状态,1代表步骤执行成功，2代表步骤执行失败',
+  PRIMARY KEY (`id`),
+  KEY `instance_uuid_idx` (`instance_uuid`),
+  KEY `request_id_idx` (`request_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=21990 DEFAULT CHARSET=utf8 COMMENT='instance操作表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `instance_actions`
+--
+
+LOCK TABLES `instance_actions` WRITE;
+/*!40000 ALTER TABLE `instance_actions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `instance_actions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `instance_actions_events`
+--
+
+DROP TABLE IF EXISTS `instance_actions_events`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `instance_actions_events` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `event` varchar(255) DEFAULT NULL COMMENT '调用的函数名称',
+  `action_id` int(11) DEFAULT NULL COMMENT '操作ID关联instance_actions表',
+  `start_time` datetime DEFAULT NULL,
+  `finish_time` datetime DEFAULT NULL,
+  `result` varchar(255) DEFAULT NULL COMMENT 'success or failed',
+  `traceback` text COMMENT '报错记录',
+  `host` varchar(255) DEFAULT NULL COMMENT '主机uuid或虚拟机uuid',
+  `details` text COMMENT '详细信息',
+  PRIMARY KEY (`id`),
+  KEY `action_id` (`action_id`),
+  CONSTRAINT `instance_actions_events_ibfk_1` FOREIGN KEY (`action_id`) REFERENCES `instance_actions` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='操作消息表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `instance_actions_events`
+--
+
+LOCK TABLES `instance_actions_events` WRITE;
+/*!40000 ALTER TABLE `instance_actions_events` DISABLE KEYS */;
+/*!40000 ALTER TABLE `instance_actions_events` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `instance_disk`
+--
+
+DROP TABLE IF EXISTS `instance_disk`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `instance_disk` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `instance_id` int(11) DEFAULT NULL COMMENT '虚拟机ID，关联instance表',
+  `size_gb` int(11) DEFAULT NULL COMMENT '数据盘大小，GB',
+  `mount_point` varchar(20) DEFAULT NULL COMMENT '挂载点',
+  `dev_name` varchar(4) DEFAULT NULL COMMENT '磁盘dev名，例如vda,vdb,vdc',
+  `disk_type` enum('0','1') DEFAULT NULL COMMENT '磁盘类型',
+  `isdeleted` enum('1','0') DEFAULT '0' COMMENT '是否删除，0表示未删除',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `deleted_at` datetime DEFAULT NULL COMMENT '删除时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2307 DEFAULT CHARSET=utf8 COMMENT='VM数据盘表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `instance_disk`
+--
+
+LOCK TABLES `instance_disk` WRITE;
+/*!40000 ALTER TABLE `instance_disk` DISABLE KEYS */;
+/*!40000 ALTER TABLE `instance_disk` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `instance_flavor`
+--
+
+DROP TABLE IF EXISTS `instance_flavor`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `instance_flavor` (
+  `instance_id` int(11) DEFAULT NULL COMMENT '管理instance表ID',
+  `flavor_id` int(11) DEFAULT NULL COMMENT '管理规格表flavor表ID',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '修改时间',
+  KEY `pk_instance_id` (`instance_id`),
+  KEY `pk_flavor_id` (`flavor_id`),
+  CONSTRAINT `pk_flavor_id` FOREIGN KEY (`flavor_id`) REFERENCES `flavor` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `pk_instance_id` FOREIGN KEY (`instance_id`) REFERENCES `instance` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='虚拟机机规格关联表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `instance_flavor`
+--
+
+LOCK TABLES `instance_flavor` WRITE;
+/*!40000 ALTER TABLE `instance_flavor` DISABLE KEYS */;
+/*!40000 ALTER TABLE `instance_flavor` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `instance_group`
+--
+
+DROP TABLE IF EXISTS `instance_group`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `instance_group` (
+  `instance_id` int(20) DEFAULT NULL,
+  `group_id` int(20) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
+  KEY `fk_instance_id` (`instance_id`),
+  CONSTRAINT `fk_instance_id` FOREIGN KEY (`instance_id`) REFERENCES `instance` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='虚拟机管理的应用组关联表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `instance_group`
+--
+
+LOCK TABLES `instance_group` WRITE;
+/*!40000 ALTER TABLE `instance_group` DISABLE KEYS */;
+/*!40000 ALTER TABLE `instance_group` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `instance_host`
+--
+
+DROP TABLE IF EXISTS `instance_host`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `instance_host` (
+  `instance_id` bigint(20) DEFAULT NULL COMMENT '管理虚拟机表ID',
+  `instance_name` varchar(50) DEFAULT NULL COMMENT '虚拟机的名称',
+  `host_id` bigint(20) DEFAULT NULL COMMENT '管理物理机的ID',
+  `host_name` varchar(50) DEFAULT NULL COMMENT '物理机的主机名称',
+  `isdeleted` enum('0','1') DEFAULT NULL COMMENT '是否删除，0未删除，1已删除',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '修改时间',
+  `deleted_at` datetime DEFAULT NULL COMMENT '删除时间'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='虚拟机与HOST关联表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `instance_host`
+--
+
+LOCK TABLES `instance_host` WRITE;
+/*!40000 ALTER TABLE `instance_host` DISABLE KEYS */;
+/*!40000 ALTER TABLE `instance_host` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `instance_image`
+--
+
+DROP TABLE IF EXISTS `instance_image`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `instance_image` (
+  `instance_id` int(11) NOT NULL COMMENT '虚拟机ID',
+  `image_id` int(11) DEFAULT NULL COMMENT '关联镜像ID',
+  `isdeleted` enum('1','0') DEFAULT '0' COMMENT '表示是否删除：0表示未删除',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `deleted_at` datetime DEFAULT NULL COMMENT '删除时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '更新时间'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='虚拟机镜像表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `instance_image`
+--
+
+LOCK TABLES `instance_image` WRITE;
+/*!40000 ALTER TABLE `instance_image` DISABLE KEYS */;
+/*!40000 ALTER TABLE `instance_image` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `instance_ip`
+--
+
+DROP TABLE IF EXISTS `instance_ip`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `instance_ip` (
+  `ip_id` int(11) DEFAULT NULL COMMENT '管理IP表的ID',
+  `instance_id` int(11) DEFAULT NULL COMMENT '管理虚拟机表的ID',
+  `mac` varchar(20) DEFAULT NULL COMMENT 'MAC地址',
+  `isdeleted` enum('1','0') DEFAULT '0' COMMENT '是否删除： 0表示未删除',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
+  `deleted_at` datetime DEFAULT NULL COMMENT '删除时间'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='虚拟机IP关联表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `instance_ip`
+--
+
+LOCK TABLES `instance_ip` WRITE;
+/*!40000 ALTER TABLE `instance_ip` DISABLE KEYS */;
+/*!40000 ALTER TABLE `instance_ip` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `instance_migrate`
+--
+
+DROP TABLE IF EXISTS `instance_migrate`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `instance_migrate` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `instance_id` int(11) DEFAULT NULL COMMENT '虚拟机ID，关联instance表',
+  `src_host_id` int(11) DEFAULT NULL COMMENT '源物理机ID，关联host表',
+  `dst_host_id` int(11) DEFAULT NULL COMMENT '目标物理机ID，关联host表',
+  `nc_port` int(11) DEFAULT NULL COMMENT 'nc使用端口',
+  `migrate_status` enum('0','1') DEFAULT '0' COMMENT '0为迁移中，1为迁移完成, 2为迁移失败',
+  `created_at` datetime DEFAULT NULL COMMENT '迁移任务开始时间',
+  `deleted_at` datetime DEFAULT NULL COMMENT '迁移任务完成时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `instance_migrate`
+--
+
+LOCK TABLES `instance_migrate` WRITE;
+/*!40000 ALTER TABLE `instance_migrate` DISABLE KEYS */;
+/*!40000 ALTER TABLE `instance_migrate` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ip`
+--
+
+DROP TABLE IF EXISTS `ip`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ip` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `ip_address` varchar(15) DEFAULT NULL COMMENT 'IP 地址',
+  `segment_id` int(11) DEFAULT NULL COMMENT '管理网段表ID',
+  `netmask` varchar(2) DEFAULT NULL COMMENT '子网掩码',
+  `vlan` varchar(3) DEFAULT NULL COMMENT 'vlan ID ',
+  `gateway_ip` varchar(15) DEFAULT NULL COMMENT '网关',
+  `dns1` varchar(15) DEFAULT NULL COMMENT 'DNS1',
+  `dns2` varchar(15) DEFAULT NULL COMMENT 'DNS2',
+  `status` enum('0','1','2') DEFAULT '0' COMMENT '状态:0表示未使用，1表示已使用，2表示已保留',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6283 DEFAULT CHARSET=utf8 COMMENT='IP表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ip`
+--
+
+LOCK TABLES `ip` WRITE;
+/*!40000 ALTER TABLE `ip` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ip` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `net_area`
+--
+
+DROP TABLE IF EXISTS `net_area`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `net_area` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) DEFAULT NULL COMMENT '网络区域名称',
+  `displayname` varchar(50) DEFAULT NULL COMMENT '显示名',
+  `datacenter_id` int(11) DEFAULT NULL COMMENT '管理机房ID',
+  `isdeleted` enum('1','0') DEFAULT '0' COMMENT '是否删除：0表示未删除',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
+  `deleted_at` datetime DEFAULT NULL COMMENT '删除时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8 COMMENT='网络区域表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `net_area`
+--
+
+LOCK TABLES `net_area` WRITE;
+/*!40000 ALTER TABLE `net_area` DISABLE KEYS */;
+/*!40000 ALTER TABLE `net_area` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `network_segment`
+--
+
+DROP TABLE IF EXISTS `network_segment`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `network_segment` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `net_area_id` int(11) DEFAULT NULL COMMENT '网络区域ID',
+  `segment` varchar(15) DEFAULT NULL COMMENT '网段名称',
+  `netmask` varchar(2) DEFAULT NULL COMMENT '子网掩码',
+  `vlan` varchar(3) DEFAULT NULL COMMENT 'vlan ID ',
+  `gateway_ip` varchar(15) DEFAULT NULL COMMENT '网关IP',
+  `dns1` varchar(15) DEFAULT NULL COMMENT 'DNS1',
+  `dns2` varchar(15) DEFAULT NULL COMMENT 'DNS2',
+  `status` int(11) DEFAULT NULL COMMENT '状态',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '删除时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COMMENT='网段表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `network_segment`
+--
+
+LOCK TABLES `network_segment` WRITE;
+/*!40000 ALTER TABLE `network_segment` DISABLE KEYS */;
+/*!40000 ALTER TABLE `network_segment` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `obj_req_map`
+--
+
+DROP TABLE IF EXISTS `obj_req_map`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `obj_req_map` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `obj_id` int(11) DEFAULT NULL COMMENT '操作对象ID',
+  `obj_type` varchar(20) DEFAULT NULL COMMENT '操作对象类型',
+  `req_id` varchar(50) DEFAULT NULL COMMENT '请求ID',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `obj_req_map`
+--
+
+LOCK TABLES `obj_req_map` WRITE;
+/*!40000 ALTER TABLE `obj_req_map` DISABLE KEYS */;
+/*!40000 ALTER TABLE `obj_req_map` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `permission`
+--
+
+DROP TABLE IF EXISTS `permission`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `permission` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) DEFAULT NULL COMMENT '名称',
+  `displayname` varchar(50) DEFAULT NULL COMMENT '显示名称',
+  `module` varchar(20) DEFAULT NULL COMMENT '模块名称',
+  `path` varchar(50) DEFAULT NULL COMMENT 'URL',
+  `acl` enum('1','0') DEFAULT '1' COMMENT '1表示允许，0表示拒绝',
+  `area` enum('other','all') DEFAULT 'all' COMMENT '范围',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8 COMMENT='权限功能详细表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `permission`
+--
+
+LOCK TABLES `permission` WRITE;
+/*!40000 ALTER TABLE `permission` DISABLE KEYS */;
+INSERT INTO `permission` VALUES (1,'create','创建虚拟机','instance','/instance/create','1','all'),(2,'delete','删除虚拟机','instance','/instance/delete','1','all'),(3,'shutdown','虚拟机关机','instance','/instance/shutdown','1','all'),(4,'startup','虚拟机开机','instance','/instance/startup','1','all'),(5,'reboot','虚拟机重启','instance','/instance/reboot','1','all'),(6,'configure','修改虚拟机的规格','instance','/instance/configure','1','all'),(7,'console','虚拟机控制台','instance','/instance/console','1','all'),(8,'add','创建物理机','host','/host/add','1','all'),(9,'delete','删除物理机','host','/host/delete','1','all'),(10,'lock','锁定物理机','host','/host/lock','1','all'),(11,'unlock','解除锁定物理机','host','/host/unlock','1','all'),(12,'maintain','维护物理机','host','/host/maintain','1','all'),(13,'unmaintain','结束维护物理机','host','/host/unmaintain','1','all'),(14,'start','物理机开机','host','/host/start','1','all'),(15,'stop','物理机关机','host','/host/stop','1','all'),(16,'softstop','物理机重启','host','/host/softstop','1','all'),(17,'softreset','物理机软重启','host','/host/softreset','1','all'),(18,'console','物理机控制台','host','/host/console','1','all'),(19,'migrate','虚拟机迁移','instance','/instance/migrate','1','all'),(20,'cold_migrate','虚拟机冷迁移','instance','/instance/cold_migrate','1','all'),(21,'console','物理机控制台','host','/host/console','1','all'),(22,'clone','虚拟机克隆','instance','/instance/clone','1','all');
+/*!40000 ALTER TABLE `permission` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `problem_category_info`
+--
+
+DROP TABLE IF EXISTS `problem_category_info`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `problem_category_info` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `parent_id` int(11) NOT NULL COMMENT '问题分类ID',
+  `category` varchar(150) DEFAULT NULL COMMENT '问题的详细分类',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=102 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `problem_category_info`
+--
+
+LOCK TABLES `problem_category_info` WRITE;
+/*!40000 ALTER TABLE `problem_category_info` DISABLE KEYS */;
+INSERT INTO `problem_category_info` VALUES (1,0,'概览'),(2,1,'监控'),(3,1,'拓扑图'),(4,1,'操作日志'),(5,2,'无法显示'),(6,2,'数据无变化'),(7,2,'数据有误'),(8,2,'其他'),(9,3,'无法显示'),(10,3,'无法展开'),(11,3,'数据有误'),(12,3,'其他'),(13,4,'无法显示'),(14,4,'数据无变化'),(15,4,'数据有误'),(16,4,'其他'),(17,0,'区域'),(18,17,'创建'),(19,17,'查询'),(20,17,'添加子区域'),(21,17,'添加机房'),(22,17,'编辑'),(23,18,'无法创建'),(24,18,'创建失败'),(25,18,'其他'),(26,19,'列表无法显示'),(27,19,'列表无法刷新'),(28,19,'列表数据有误'),(29,19,'其他'),(30,20,'添加失败'),(31,20,'无法添加'),(32,20,'其他'),(33,21,'添加失败'),(34,21,'无法添加'),(35,21,'其他'),(36,22,'编辑后无法保存'),(37,22,'无法编辑'),(38,22,'其他'),(39,0,'机房'),(40,39,'查询'),(41,39,'创建'),(42,39,'监控'),(43,39,'其他'),(44,0,'网络区域'),(45,44,'查询'),(46,44,'创建'),(47,44,'监控'),(48,44,'其他'),(49,0,'集群'),(50,49,'查询'),(51,49,'创建'),(52,49,'监控'),(53,49,'新增host'),(54,49,'其他'),(55,0,'HOST'),(56,55,'查询'),(57,55,'开机'),(58,55,'关机'),(59,55,'重启'),(60,55,'锁定'),(61,55,'维护'),(62,55,'监控'),(63,55,'控制台'),(64,55,'其他'),(65,0,'VM'),(66,65,'查询'),(67,65,'开机'),(68,65,'关机'),(69,65,'重启'),(70,65,'监控'),(71,65,'快照'),(72,65,'配置'),(73,65,'删除'),(74,65,'控制台'),(75,65,'其他'),(76,0,'IP'),(77,76,'查询'),(78,76,'初始化'),(79,76,'保留'),(80,76,'其他'),(81,0,'镜像管理'),(82,81,'查询'),(83,81,'创建'),(84,81,'计划任务'),(85,81,'限速'),(86,81,'其他'),(87,0,'组管理'),(88,87,'查询'),(89,87,'创建'),(90,87,'删除'),(91,87,'编辑'),(92,87,'成员查询'),(93,87,'添加成员'),(94,87,'删除成员'),(95,87,'角色变更'),(96,0,'迁移'),(97,96,'esx'),(98,96,'openstack'),(99,96,'批量迁移'),(100,96,'模板'),(101,96,'其他');
+/*!40000 ALTER TABLE `problem_category_info` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `role`
+--
+
+DROP TABLE IF EXISTS `role`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `role` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) DEFAULT NULL COMMENT '1:管理员；2:应用管理员；3：只读用户',
+  `type` varchar(20) DEFAULT NULL COMMENT '类型',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='角色表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `role`
+--
+
+LOCK TABLES `role` WRITE;
+/*!40000 ALTER TABLE `role` DISABLE KEYS */;
+INSERT INTO `role` VALUES (1,'superadmin','3'),(2,'operator','2'),(3,'onlyReady','1');
+/*!40000 ALTER TABLE `role` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `role_permission`
+--
+
+DROP TABLE IF EXISTS `role_permission`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `role_permission` (
+  `role_id` int(11) DEFAULT NULL COMMENT '关联角色ID',
+  `permission_id` int(11) DEFAULT NULL COMMENT '管理权限ID'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='角色功能对应表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `role_permission`
+--
+
+LOCK TABLES `role_permission` WRITE;
+/*!40000 ALTER TABLE `role_permission` DISABLE KEYS */;
+INSERT INTO `role_permission` VALUES (1,1),(1,2),(1,3),(1,4),(1,5),(1,6),(1,7),(1,8),(1,9),(1,10),(1,11),(1,12),(1,13),(1,14),(1,15),(1,16),(1,17),(1,18),(1,19),(1,20),(1,21),(2,1),(2,2),(2,3),(2,4),(2,5),(2,6),(2,7),(1,22);
+/*!40000 ALTER TABLE `role_permission` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `send_msg`
+--
+
+DROP TABLE IF EXISTS `send_msg`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `send_msg` (
+  `id` int(11) DEFAULT NULL,
+  `req_id` varchar(50) DEFAULT NULL COMMENT '请求ID',
+  `routing_key` varchar(20) DEFAULT NULL COMMENT '消息类型KEY',
+  `send_time` datetime DEFAULT NULL COMMENT '发送时间',
+  `message` varchar(5000) DEFAULT NULL COMMENT '消息内容',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `send_msg`
+--
+
+LOCK TABLES `send_msg` WRITE;
+/*!40000 ALTER TABLE `send_msg` DISABLE KEYS */;
+/*!40000 ALTER TABLE `send_msg` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tb_group`
+--
+
+DROP TABLE IF EXISTS `tb_group`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tb_group` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) DEFAULT NULL COMMENT '组名',
+  `displayname` varchar(200) DEFAULT NULL COMMENT '显示名',
+  `description` varchar(255) DEFAULT NULL COMMENT '描述',
+  `owner` varchar(20) DEFAULT NULL COMMENT '应用组的创建者ID',
+  `cpu` int(11) DEFAULT '120' COMMENT '应用组cpu配额',
+  `mem` int(11) DEFAULT '960' COMMENT '应用组mem配额， G',
+  `disk` int(11) DEFAULT '1000' COMMENT '应用组disk配额，G',
+  `vm` int(11) DEFAULT '200' COMMENT '应用组vm配额',
+  `p_cluster_id` varchar(20) DEFAULT NULL COMMENT 'CMDB中物理集群ID',
+  `isdeleted` enum('1','0') CHARACTER SET utf8 COLLATE utf8_croatian_ci DEFAULT '0' COMMENT '是否删除： 0表示未删除',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
+  `deleted_at` datetime DEFAULT NULL COMMENT '删除时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `pk_id` (`id`) USING BTREE,
+  UNIQUE KEY `pk_name` (`name`) USING BTREE,
+  KEY `tb_group_group_id_group_name` (`id`,`name`,`owner`)
+) ENGINE=InnoDB AUTO_INCREMENT=120 DEFAULT CHARSET=utf8 COMMENT='用户组表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tb_group`
+--
+
+LOCK TABLES `tb_group` WRITE;
+/*!40000 ALTER TABLE `tb_group` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tb_group` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tb_host_perform`
+--
+
+DROP TABLE IF EXISTS `tb_host_perform`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tb_host_perform` (
+  `id` bigint(50) NOT NULL AUTO_INCREMENT,
+  `ip` varchar(25) DEFAULT NULL COMMENT '物理机的IP',
+  `hostname` varchar(30) DEFAULT NULL COMMENT '物理机的主机名',
+  `collect_time` datetime DEFAULT NULL COMMENT '性能采集时间',
+  `metric_key` varchar(50) DEFAULT NULL COMMENT '性能采集的指标',
+  `data_value` varchar(2000) DEFAULT NULL COMMENT '性能采集的值',
+  PRIMARY KEY (`id`),
+  KEY `px_ip` (`ip`) USING BTREE,
+  KEY `px_hostname` (`hostname`) USING BTREE,
+  KEY `px_ip_hostname` (`ip`,`hostname`),
+  KEY `px_metric` (`metric_key`)
+) ENGINE=InnoDB AUTO_INCREMENT=810099 DEFAULT CHARSET=utf8 COMMENT='物理机性能数据表（实时表）';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tb_host_perform`
+--
+
+LOCK TABLES `tb_host_perform` WRITE;
+/*!40000 ALTER TABLE `tb_host_perform` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tb_host_perform` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tb_user`
+--
+
+DROP TABLE IF EXISTS `tb_user`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tb_user` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `userid` varchar(20) DEFAULT NULL COMMENT '登录用户工号',
+  `username` varchar(50) DEFAULT NULL COMMENT '姓名',
+  `email` varchar(50) DEFAULT NULL COMMENT '邮件地址',
+  `telephone` varchar(50) DEFAULT NULL COMMENT '电话号码',
+  `fengsheng` varchar(50) DEFAULT NULL COMMENT '丰声地址',
+  `status` enum('2','1','0') DEFAULT '0' COMMENT '状态(0:正常，1：锁定，2：其他)',
+  `auth_type` int(11) DEFAULT '0' COMMENT '用户认证类型，0为ad，1为本地',
+  `password` varchar(50) DEFAULT NULL COMMENT '密码',
+  `isdeleted` enum('1','0') DEFAULT '0' COMMENT '是否删除：0表示已经删除',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
+  `deleted_at` datetime DEFAULT NULL COMMENT '删除时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=169 DEFAULT CHARSET=utf8 COMMENT='用户表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tb_user`
+--
+
+LOCK TABLES `tb_user` WRITE;
+/*!40000 ALTER TABLE `tb_user` DISABLE KEYS */;
+INSERT INTO `tb_user` VALUES (114,'admin','admin',NULL,NULL,NULL,'0',1,'kvLdgzNuwIM=','0',NULL,NULL,NULL);
+/*!40000 ALTER TABLE `tb_user` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `user_group`
+--
+
+DROP TABLE IF EXISTS `user_group`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `user_group` (
+  `user_id` varchar(20) DEFAULT NULL COMMENT '关联用户工号',
+  `user_name` varchar(11) DEFAULT NULL COMMENT '用户工号',
+  `group_id` int(11) DEFAULT NULL COMMENT '管理组ID',
+  `group_name` varchar(50) DEFAULT NULL COMMENT '组名',
+  `role_id` int(11) DEFAULT NULL COMMENT '这个字段实际作废/角色ID',
+  `status` enum('1','0') DEFAULT '0' COMMENT '状态',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `expire_at` datetime DEFAULT NULL COMMENT '过期时间',
+  KEY `ix_group_id` (`group_id`) USING BTREE,
+  KEY `ix_user_id` (`user_name`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户与组关联表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user_group`
+--
+
+LOCK TABLES `user_group` WRITE;
+/*!40000 ALTER TABLE `user_group` DISABLE KEYS */;
+INSERT INTO `user_group` VALUES ('admin','admin',1,'supergroup',1,'0',NULL,NULL);
+/*!40000 ALTER TABLE `user_group` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `v2v_instance_info`
+--
+
+DROP TABLE IF EXISTS `v2v_instance_info`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `v2v_instance_info` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `instance_id` int(11) DEFAULT NULL COMMENT '虚拟机ID，关联instance表',
+  `os_type` varchar(20) DEFAULT NULL COMMENT '虚拟机OS类型（windows/linux）',
+  `os_version` varchar(20) DEFAULT NULL COMMENT '虚拟机OS版本',
+  `isdeleted` enum('0','1') DEFAULT '0' COMMENT '是否删除；0表示未删除',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated_at` datetime DEFAULT NULL COMMENT '更新时间',
+  `deleted_at` datetime DEFAULT NULL COMMENT '删除时间',
+  `request_id` varchar(50) DEFAULT NULL COMMENT 'v2v任务id',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `v2v_instance_info`
+--
+
+LOCK TABLES `v2v_instance_info` WRITE;
+/*!40000 ALTER TABLE `v2v_instance_info` DISABLE KEYS */;
+/*!40000 ALTER TABLE `v2v_instance_info` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `v2v_task`
+--
+
+DROP TABLE IF EXISTS `v2v_task`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `v2v_task` (
+  `request_id` varchar(255) NOT NULL COMMENT '请求ID',
+  `destory` varchar(2) DEFAULT '0' COMMENT '销毁字段,1代表销毁，0代表未销毁',
+  `start_time` datetime DEFAULT NULL COMMENT '开始时间',
+  `finish_time` datetime DEFAULT NULL COMMENT '结束时间',
+  `status` int(2) DEFAULT NULL COMMENT '任务状态,0为进行中,1为已完成,2为出错,3为已取消',
+  `vm_ip` varchar(50) DEFAULT NULL COMMENT 'vmip',
+  `step_done` varchar(50) DEFAULT NULL COMMENT '当前已完成的进度',
+  `user_id` varchar(50) DEFAULT NULL COMMENT '用户id',
+  `dest_dir` varchar(100) DEFAULT NULL COMMENT '目标vm路径',
+  `dest_host` varchar(50) DEFAULT NULL COMMENT '目标kvm host',
+  `vm_name` varchar(50) DEFAULT NULL COMMENT '虚拟机名称',
+  `vmvlan` varchar(10) DEFAULT NULL COMMENT '虚拟机vlan',
+  `flavor_id` varchar(50) DEFAULT NULL COMMENT '虚拟机flavor_id',
+  `cloud_area` varchar(20) DEFAULT NULL COMMENT '虚拟机云环境',
+  `vm_ostype` varchar(20) DEFAULT NULL COMMENT '虚拟机OS类型',
+  `vm_app_info` varchar(50) DEFAULT NULL COMMENT '虚拟机应用信息',
+  `vm_owner` varchar(20) DEFAULT NULL COMMENT '应用负责人',
+  `vm_group_id` varchar(20) DEFAULT NULL COMMENT '应用组',
+  `cancel` varchar(10) DEFAULT NULL COMMENT '是否取消任务：1为取消，0不取消',
+  `vm_uuid` varchar(100) DEFAULT NULL COMMENT '虚拟机uuid',
+  `vm_mac` varchar(50) DEFAULT NULL COMMENT '虚拟机MAC',
+  `message` varchar(100) DEFAULT NULL COMMENT '任务处理详细信息',
+  `on_task` varchar(10) DEFAULT NULL COMMENT '任务是否在处理；0为未处理，1为进行中',
+  `port` varchar(50) DEFAULT NULL COMMENT 'nc所使用port',
+  PRIMARY KEY (`request_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `v2v_task`
+--
+
+LOCK TABLES `v2v_task` WRITE;
+/*!40000 ALTER TABLE `v2v_task` DISABLE KEYS */;
+/*!40000 ALTER TABLE `v2v_task` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `vm_disks`
+--
+
+DROP TABLE IF EXISTS `vm_disks`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `vm_disks` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `instance_uuid` varchar(11) DEFAULT NULL,
+  `instance_name` varchar(50) DEFAULT NULL,
+  `path` varchar(255) DEFAULT NULL,
+  `image` varchar(50) DEFAULT NULL,
+  `storage_pool` varchar(50) DEFAULT NULL,
+  `devices` varchar(20) DEFAULT NULL,
+  `file_format` varchar(20) DEFAULT NULL,
+  `insert_datetime` datetime DEFAULT NULL COMMENT '数据插入时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='vm实时磁盘信息';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `vm_disks`
+--
+
+LOCK TABLES `vm_disks` WRITE;
+/*!40000 ALTER TABLE `vm_disks` DISABLE KEYS */;
+/*!40000 ALTER TABLE `vm_disks` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `vm_networks`
+--
+
+DROP TABLE IF EXISTS `vm_networks`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `vm_networks` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `instance_uuid` varchar(50) DEFAULT NULL,
+  `network` varchar(50) DEFAULT NULL,
+  `nic` varchar(10) DEFAULT NULL,
+  `mac_address` varchar(20) DEFAULT NULL,
+  `instance_name` varchar(50) DEFAULT NULL,
+  `insert_datetime` datetime DEFAULT NULL COMMENT '数据插入时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='vm实时网络信息表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `vm_networks`
+--
+
+LOCK TABLES `vm_networks` WRITE;
+/*!40000 ALTER TABLE `vm_networks` DISABLE KEYS */;
+/*!40000 ALTER TABLE `vm_networks` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `vm_osinfo`
+--
+
+DROP TABLE IF EXISTS `vm_osinfo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `vm_osinfo` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `instance_uuid` varchar(50) DEFAULT NULL,
+  `instance_name` varchar(50) DEFAULT NULL,
+  `vcpu` int(11) DEFAULT NULL,
+  `memory_mb` int(11) DEFAULT NULL,
+  `disks` int(11) DEFAULT NULL,
+  `status` int(11) DEFAULT NULL,
+  `insert_datetime` datetime DEFAULT NULL COMMENT '数据插入时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='vm实时配置信息表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `vm_osinfo`
+--
+
+LOCK TABLES `vm_osinfo` WRITE;
+/*!40000 ALTER TABLE `vm_osinfo` DISABLE KEYS */;
+/*!40000 ALTER TABLE `vm_osinfo` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2017-05-31 10:47:17

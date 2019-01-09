@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>镜像管理</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <!-- Toastr style -->
+    <link href="css/plugins/toastr/toastr.min.css" rel="stylesheet">
+
+    <link href="css/animate.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <!-- 生成导航栏 -->
+    <script src="js/jquery-2.1.1.js"></script>
+    <script src="js/module/navigation.js"></script>
+
+    <link rel="stylesheet" href="css/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" href="css/image/imageSet.css">
+</head>
+
+<body>
+<div id="wrapper">
+    <nav class="navbar-default navbar-static-side" role="navigation" id="navbar"></nav>
+
+    <div id="page-wrapper" class="gray-bg dashbard-1">
+        <div class="row border-bottom">
+            <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                <div class="navbar-header">
+                    <div class="pagetitle">镜像管理</div>
+                </div>
+                <ul class="nav navbar-top-links navbar-right">
+                    <li>
+                        <a href="#" onclick="javascript:logout(); event.returnValue=false; ">
+                            <i class="fa fa-sign-out"></i> Log out
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="row  border-bottom white-bg dashboard-header"
+             style="overflow: auto; z-index: 50;position: relative;">
+            <div class="row" id="imageMain" style="position: relative;">
+                <div class="col-xs-8" id="mainWrapper">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <button class="btn btn-info" style="display: none" id="image-create-show">创建
+                            </button>
+                            <button class="btn btn-primary" style="display: none;margin-left: 20px;" id="image-type-in">镜像补录
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <table id="image_list" data-locale="zh-US"></table>
+                </div>
+            </div>
+            <div class="create-image-page row" style="margin-top: 10px;">
+                <div class="col-xs-12">
+                    <div class="header">
+                        <div class="back" id="backBtn">返回</div>
+                        |
+                        <div class="title">创建镜像</div>
+                    </div>
+                    <ul id="create_tab" class="nav nav-tabs">
+                        <li class="active"><a href="#new-image" data-toggle="tab">
+                            新建镜像</a></li>
+                        <li id="create_used"><a href="#used-image" data-toggle="tab">从已有镜像生成新镜像</a></li>
+                    </ul>
+                    <div id="myTabContent" class="tab-content">
+                        <div class="tab-pane fade in active new-image" id="new-image">
+                            <div class="form-group"><label class="col-sm-4 col-lg-2 control-label item_t">操作系统</label>
+                                <div class="col-sm-8">
+                                    <select id="new_system" class="form-control item_w">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group"><label class="col-sm-4 col-lg-2 control-label item_t">系统版本</label>
+                                <div class="col-sm-8 search_input_os">
+                                    <input id="image_os" type="text" class="form-control item_w"
+                                           placeholder="请输入镜像名称">
+                                    <ul class="select_list_os">
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="form-group"><label class="col-sm-4 col-lg-2 control-label item_t">镜像名称</label>
+                                <div class="col-sm-8">
+                                    <input id="new_name" type="text" class="form-control item_w"
+                                           placeholder="请输入镜像名称(必须是英文字母或者_组成)">
+                                </div>
+                            </div>
+                            <div class="form-group"><label class="col-sm-4 col-lg-2 control-label item_t">镜像显示名称</label>
+                                <div class="col-sm-8">
+                                    <input id="new_display_name" type="text" class="form-control item_w"
+                                           placeholder="请输入镜像显示名称">
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-top: 20px;">
+                                <label class="col-sm-4 col-lg-2 control-label item_t">
+                                </label>
+                                 <div class="col-sm-8">
+                                     <button class="btn-primary btn create_new_image_btn">确认创建</button>
+                                 </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade used-image" id="used-image">
+                            <div class="search_image">
+                                <div class="form-group"><label class="col-sm-4 col-lg-2 col-md-1control-label item_t">镜像名称</label>
+                                <div class="col-sm-8 search_input_used">
+                                    <input id="display_name_input" type="text" class="form-control item_w"
+                                           placeholder="请输入镜像名称">
+                                    <ul class="select_list_used">
+                                        <!--<li class="select_item_used"><a href="javascript:void(0)">镜像11</a></li>-->
+                                    </ul>
+                                </div>
+                            </div>
+                                <div class="form-group"><label class="col-sm-4 col-lg-2 control-label item_t">操作系统</label>
+                                <div class="col-sm-8">
+                                    <select id="new_system_used" class="form-control  item_w" disabled>
+                                        <option value="1">linux</option>
+                                    </select>
+                                </div>
+                            </div>
+                                <div class="form-group"><label class="col-sm-4 col-lg-2 control-label item_t">系统版本</label>
+                                    <div class="col-sm-8 search_input_used_os">
+                                        <input id="display_name_input_os" type="text" class="form-control item_w"
+                                               placeholder="系统版本" disabled>
+                                    </div>
+                                </div>
+                                <div class="form-group"><label class="col-sm-4 col-lg-2 control-label item_t">镜像名称</label>
+                                    <div class="col-sm-8">
+                                        <input id="new_name_used" type="text" class="form-control item_w"
+                                               placeholder="请输入镜像名称(必须是英文字母或者_组成)">
+                                    </div>
+                                </div>
+                                <div class="form-group"><label class="col-sm-4 col-lg-2 control-label item_t">镜像显示名称</label>
+                                    <div class="col-sm-8">
+                                        <input id="new_display_name_used" type="text" class="form-control item_w"
+                                               placeholder="请输入镜像显示名称">
+                                    </div>
+                                </div>
+                                <div class="form-group" style="margin-top: 20px;">
+                                    <label class="col-sm-4 col-lg-2 control-label item_t"></label>
+                                    <div class="col-sm-8">
+                                        <button class="btn-primary btn" id="create_used_image">确认创建</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--任务详情-->
+        <div class="modal fade" id="errorInfo">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title confirm_title">任务详情</h4>
+                    </div>
+                    <div class="modal-body errorTask" style="margin-bottom: 15px">
+
+                    </div>
+                    <!--<div class="modal-footer">-->
+                        <!--<button type="button" id="operate_submit" class="btn btn-primary">确定</button>-->
+                        <!--<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>-->
+                    <!--</div>-->
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+        <!--确认操作模态框-->
+        <div class="modal fade" id="checkOperate">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title confirm_title">请确认</h4>
+                    </div>
+                    <div class="modal-body" style="margin-bottom: 15px">
+                       <p class="tickText">确认是否<span class="confirm_body"></span>!!!</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="operate_submit" class="btn btn-primary">确定</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+
+        <!--镜像补录模态框-->
+        <div class="modal fade" id="type_in_image">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title confirm_title">镜像补录</h4>
+                    </div>
+                    <div class="modal-body" style="margin-bottom: 15px">
+                        <div class="form-group"><label class="col-sm-3 control-label item_t">镜像名称</label>
+                            <div class="col-sm-9 search_input_type_in">
+                                <input id="display_name_type_in" type="text" class="form-control item_w"
+                                       placeholder="请输入镜像名称">
+                                <ul class="select_list_type_in">
+                                    <!--<li class="select_item_used"><a href="javascript:void(0)">镜像11</a></li>-->
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-3 control-label item_t">操作系统</label>
+                            <div class="col-sm-9">
+                                <select id="new_system_type_in" class="form-control  item_w" disabled>
+                                    <option value="1">linux</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-3 control-label item_t">系统版本</label>
+                            <div class="col-sm-9 search_input_used_os">
+                                <input id="display_name_type_in_os" type="text" class="form-control item_w"
+                                       placeholder="系统版本" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="type_in_submit" class="btn btn-primary">确定</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+    </div>
+</div>
+<div id="loading">
+    <div style="position:fixed;top:35%;left:43%">
+        <img src="img/lodaing.gif" alt="正在处理,请耐心等候">
+        <h2 class="text-primary">正在处理,请耐心等候...</h2>
+    </div>
+</div>
+<!-- Mainly scripts -->
+<script src="js/bootstrap.min.js"></script>
+<script src="js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+
+<!-- Custom and plugin javascript -->
+<script src="js/inspinia.js"></script>
+<script src="js/plugins/pace/pace.min.js"></script>
+
+<!-- jQuery UI -->
+<script src="js/plugins/jquery-ui/jquery-ui.min.js"></script>
+
+<!-- data tables -->
+<script src="js/bootstrap-table.js"></script>
+<script src="js/bootstrap-table-zh-CN.min.js"></script>
+<script src="js/bootstrap-datetimepicker.js"></script>
+<script src="js/bootstrap-datetimepicker.zh-CN.js"></script>
+
+<!-- 消息框 -->
+<script src="js/jquery.bootstrap-growl.min.js"></script>
+<script src="js/module/common.js"></script>
+<script src="js/module/imageSet.js"></script>
+</body>
+</html>

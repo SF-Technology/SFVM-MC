@@ -1,0 +1,22 @@
+改动项
+1、区域 单个删除操作
+2、机房  单个/批量删除操作
+3、网络区域 单个/批量删除操作
+4、集群 单个/批量删除操作
+5、组管理 获取区域列表排除已删除的区域
+6、区域 修改区域信息时判断是否重名
+7、API接口返回数据   增加XSS攻击过滤
+8、区域（area、html） 增加单个删除操作
+9、机房（datacenter、html） 增加单个以及批量删除操作
+10、网络区域(net_area、html) 增加单个以及批量删除操作
+11、集群（hostpool、html） 增加单个以及批量删除操作
+12、组管理页面的分页数量调整
+13、v2v迁移删除模块添加vm destroy操作
+14、v2v迁移worker模块将迁移后vm的网络模式由macvt改成bridge
+15、v2v迁移worker模块添加限速功能，根据目标kvm host进行动态限速
+16、instance状态获取函数 新增对创建中虚拟机是否超时判断，超时修改状态为创建失败；
+17、default配置文件 新增PRO_1环境配置语句；
+18、/kvmmgr_dashboard/deploy/host_std_info/libvirtd、conf更改
+	 	物理机初始化注入kvm用户密码更改
+	 	修改libvirtd连接认证为sasl
+	 	修改libvirt连接用户为kvm以及密码

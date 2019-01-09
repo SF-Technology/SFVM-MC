@@ -1,0 +1,53 @@
+
+一、新增功能
+前端：1、新增申请vip功能
+2、新增虚拟机创建失败重试功能
+后端：
+    维石接口
+        1、虚拟机创建接口新增分配同网段vip功能模块
+        2、虚拟机创建接口新增虚拟机工单失败重做功能模块
+    kvm平台
+        1、虚拟机创建函数新增支持虚拟机重试逻辑
+        2、新增vip分配函数
+配置文件：
+1、新增维石用户验收环境配置到default文件中
+
+二、BUG
+修改ip分配bug，让ip分配更高效
+
+三、优化
+前端：1、虚拟机页面每个20秒刷新一次
+后端：
+配置文件：
+1、将kafka主题名称配置在default，使每套环境都可以配置独立的kafka主题名称
+
+
+@思远
+数据库表更新
+1、instance表新增request_id、task_id字段
+执行语句：
+alter table instance add request_id varchar(255);
+alter table instance add task_id varchar(255);
+
+2、permission表中新增一行数据，'retry_create'
+执行语句：
+insert into permission (name, displayname, module, path, acl, area) values ('retry_create', '重新创建虚拟机', 'instance', '/instance/retry', '1', 'all');
+
+3、role_permission中插入两行数据，角色1、2支持权限23
+执行语句：
+insert into role_permission (role_id, permission_id) values (1, 23);
+insert into role_permission (role_id, permission_id) values (2, 23);
+
+4、新建数据库表vip_info
+执行语句：
+CREATE TABLE `vip_info` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `ip_id` int(11) NOT NULL COMMENT '此字段为ip表中的id字段，用于表示ip唯一性',
+  `cluster_id` varchar(20) DEFAULT NULL COMMENT '使用此ip的物理集群id',
+  `apply_user_id` varchar(30) DEFAULT NULL COMMENT '申请vip的用户工号',
+  `sys_code` varchar(50) DEFAULT NULL COMMENT 'cmdb中对应系统编码',
+  `isdeleted` enum('0','1') DEFAULT '0' COMMENT '是否删除;0表示未删除，1表示已删除',
+  `created_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `deleted_at` datetime DEFAULT NULL COMMENT '删除时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;

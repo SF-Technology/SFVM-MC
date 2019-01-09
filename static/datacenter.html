@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>机房管理</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <!-- Toastr style -->
+    <link href="css/plugins/toastr/toastr.min.css" rel="stylesheet">
+
+    <link href="css/animate.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <!-- 生成导航栏 -->
+    <script src="js/jquery-2.1.1.js"></script>
+    <script src="js/module/navigation.js"></script>
+</head>
+
+<body>
+<div id="wrapper">
+    <nav class="navbar-default navbar-static-side" role="navigation" id="navbar"></nav>
+
+    <div id="page-wrapper" class="gray-bg dashbard-1">
+        <div class="row border-bottom">
+            <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                <div class="navbar-header">
+                    <div class="pagetitle">机房管理</div>
+                </div>
+                <ul class="nav navbar-top-links navbar-right">
+                    <li>
+                        <a href="#" onclick="javascript:logout(); event.returnValue=false; ">
+                            <i class="fa fa-sign-out"></i> Log out
+                        </a>
+                    </li>
+                </ul>
+
+            </nav>
+        </div>
+        <div class="row  border-bottom white-bg dashboard-header" style="overflow: auto; z-index: 50;">
+            <div class="row" style="position: relative;">
+                <div class="col-xs-8" id="mainWrapper">
+                    <button class="btn btn-info" style="display: none;margin: 0 10px" id="datacenter-create-show"
+                            data-toggle="modal" data-target="#addDatacenterModal"
+                            onclick="createDatacenterInfo.addAreaSelect()">新增
+                    </button>
+                    <button class="btn btn-danger" style="display: none;margin: 0 10px" disabled
+                            id="datacenter-delete-show">删除
+                    </button>
+                </div>
+                <div class="col-xs-12">
+                    <table id="datacenter_list" data-locale="zh-US"></table>
+                </div>
+            </div>
+        </div>
+        <!-- 创建机房模态框 -->
+        <div class="modal fade" id="addDatacenterModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">创建机房</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="form-group"><label class="col-sm-3 control-label">区域名称：</label>
+                            <div class="col-sm-9">
+                                <select id="new_area_id" name="searchtype" class="form-control">
+                                    <option value="-1">请选择区域</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="childDiv" class="form-group hidden"><label
+                                class="col-sm-3 control-label">子区域名称：</label>
+                            <div class="col-sm-9">
+                                <select id="new_child_area_id" name="searchtype" class="form-control">
+                                    <option value="-1">请选择子区域</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-3 control-label">机房名称：</label>
+                            <div class="col-sm-9">
+                                <input id="new_dc_name" type="text" class="form-control" placeholder="请输入名称（同CMDB）">
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-3 control-label">机房类型：</label>
+                            <div class="col-sm-9">
+                                <select id="new_dc_type" class="form-control col-sm-9">
+                                    <!--<option value="1">SIT</option>-->
+                                    <!--<option value="2">STG</option>-->
+                                    <!--<option value="3">DEV</option>-->
+                                    <!--<option value="4">PRD</option>-->
+                                    <!--<option value="5">DR</option>-->
+                                    <!--<option value="6">MINIARCHDR</option>-->
+                                    <!--<option value="7">TENCENTDR</option>-->
+                                    <!--<option value="0">其他</option>-->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-3 control-label">所在省份：</label>
+                            <div class="col-sm-9">
+                                <select id="local-province" class="form-control col-sm-9">
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-3 control-label">机房地址：</label>
+                            <div class="col-sm-9">
+                                <input id="new_dc_address" type="text" class="form-control" placeholder="请输入机房地址">
+                            </div>
+                        </div>
+
+                        <div class="form-group"><label class="col-sm-3 control-label">备注：</label>
+                            <div class="col-sm-9">
+                                <input id="new_dc_remarks" type="text" class="form-control"
+                                       placeholder="请输入备注，不超过25个字符">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="createDatacenterInfo.add_datacenter()">
+                            确定
+                        </button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+
+        <!-- 监控信息模态框 -->
+        <div class="modal fade" id="dcMonitor" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document" style="width:1000px;left: 7%;">
+                <div class="modal-content ">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel"> 机房监控</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <h4 style="display:inline; margin-top: 50px; margin-right: 6px">机房名: </h4>
+                            <span id="model-title"></span>
+                        </div>
+
+                        <!-- echart div -->
+                        <div id="main" style="width: 900px;height:400px; margin-top: 30px"></div>
+
+                        <div class="modal fade" id="time_range" style="margin-top:100px">
+                            <div class="modal-dialog" style="width: 580px">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <label>选择粒度: </label>
+                                        <div class="btn-group" style="margin-top: 10px">
+                                            <button class="btn btn-success btn-outline"
+                                                    style="width:80px;margin-left: 5px"
+                                                    value="30">30分
+                                            </button>
+                                            <button class="btn btn-success btn-outline"
+                                                    style="width:80px;margin-left: 5px"
+                                                    value="60">60分
+                                            </button>
+                                            <button class="btn btn-success btn-outline"
+                                                    style="width:80px;margin-left: 5px"
+                                                    value="today">天
+                                            </button>
+                                            <!--<button class="btn btn-success btn-outline" style="width:80px;margin-left: 5px"-->
+                                            <!--value="month">月-->
+                                            <!--</button>-->
+                                            <div class="btn-group" style="margin-top: 10px">
+                                                <div>
+                                                    <span class="">开始时间: </span><input type="date" id="start_date"/>
+                                                    <span class="">结束时间: </span><input type="date" id="end_date"/>
+                                                    <button class="btn btn-primary refresh-chart">确定</button>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--删除机房-->
+        <div class="modal fade" id="deleteDatacenter">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">删除机房</h4>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th>机房名</th>
+                                <th>机房类型</th>
+                            </tr>
+                            </thead>
+                            <tbody id="delete_table_datacenter">
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="deletedatacenterSure">确定</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+        <!--修改信息-->
+        <div class="modal fade" id="updateDatacenterModal" style="top:10%;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">修改机房信息</h4>
+                    </div>
+
+                    <div class="modal-body">
+                        <form id="datacenter-form">
+                            <div class="form-group"><label class="col-sm-3 control-label">机房名：</label>
+                                <div class="col-sm-6">
+                                    <input id="update-datacenter-name" name="displayname" type="text"
+                                           class="form-control"
+                                           placeholder="请输入机房名称" required oninvalid="setCustomValidity('必须填写！');"
+                                           oninput="setCustomValidity('');">
+                                </div>
+                            </div>
+                            <div class="form-group"><label class="col-sm-3 control-label">所在省份：</label>
+                                <div class="col-sm-6">
+                                     <select id="update-province-name" class="form-control col-sm-9">
+
+                                     </select>
+                                </div>
+                            </div>
+                            <div class="form-group"><label class="col-sm-3 control-label">机房地址：</label>
+                                <div class="col-sm-6">
+                                    <input id="update-address-name" name="address" type="text" class="form-control"
+                                           placeholder="请输入机房地址">
+                                </div>
+                            </div>
+                            <div class="form-group"><label class="col-sm-3 control-label">备注：</label>
+                                <div class="col-sm-6">
+                                    <input id="update-description-name" name="description" type="text"
+                                           class="form-control"
+                                           placeholder="请输入备注">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" id="update_datacenter_sure">确定</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+    </div>
+</div>
+<div id="loading">
+    <div style="position:fixed;top:35%;left:43%">
+        <img src="img/lodaing.gif" alt="正在处理,请耐心等候">
+        <h2 class="text-primary">正在处理,请耐心等候...</h2>
+    </div>
+</div>
+<!-- Mainly scripts -->
+<script src="js/bootstrap.min.js"></script>
+<script src="js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+
+<!-- Custom and plugin javascript -->
+<script src="js/inspinia.js"></script>
+<script src="js/plugins/pace/pace.min.js"></script>
+
+<!-- jQuery UI -->
+<script src="js/plugins/jquery-ui/jquery-ui.min.js"></script>
+
+<!-- data tables -->
+<script src="js/bootstrap-table.js"></script>
+<script src="js/bootstrap-table-zh-CN.min.js"></script>
+
+<!-- 消息框 -->
+<script src="js/jquery.bootstrap-growl.min.js"></script>
+<script src="js/module/common.js"></script>
+
+<script src="js/module/datacenter.js"></script>
+
+<!-- echart -->
+<script src="js/echarts/echarts.min.js"></script>
+<script src="js/monitor_report.js"></script>
+<script>
+    var myChart;
+
+</script>
+</body>
+</html>

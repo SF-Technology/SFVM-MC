@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>操作记录</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>INSPINIA | Dashboard</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!--<link href="css/bootstrap-table.min.css" rel="stylesheet">-->
+    <link href="font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <!-- Toastr style -->
+    <link href="css/plugins/toastr/toastr.min.css" rel="stylesheet">
+
+
+    <link href="css/animate.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <!-- 生成导航栏 -->
+    <script src="js/jquery-2.1.1.js"></script>
+    <script src="js/module/navigation.js"></script>
+    <link rel="stylesheet" href="css/bootstrap-datetimepicker.min.css">
+    <style>
+        .searchSgment{
+            margin-bottom: 20px;
+            margin-top: 20px;
+        }
+        .contentSpace{
+            margin-bottom: 10px;
+        }
+
+        .tableSpace{
+            margin-top: 20px;
+        }
+
+        .searchTableRecord {
+            border: 0;
+            appearance: none;
+            -moz-appearance: none;
+            -webkit-appearance: none;
+            padding-right: 22px;
+            color: #555;
+            min-width: 95px;
+            height: 36px;
+            overflow: hidden;
+            background: url(./img/arrow.jpg) no-repeat right #FFffff;
+            text-align: center;
+        }
+
+        .timeType{
+            height: 36px;
+            line-height: 36px;
+            width: 150px;
+             outline: 0;
+             /*border: 1px solid #cfeaf8;*/
+            padding: 0 10px;
+            margin-right: 15px;
+        }
+        .table>thead>tr>th.littleStyle{
+            padding-top: 14px;
+            vertical-align: middle !important;
+        }
+        .cellWidth{
+            vertical-align: middle !important;
+        }
+        .searchBox{
+            margin-right: 20px;
+        }
+        .smallStyle{
+             vertical-align: middle !important;
+        }
+    </style>
+</head>
+
+<body>
+<div id="wrapper">
+    <nav class="navbar-default navbar-static-side" role="navigation" id="navbar"></nav>
+    <div id="page-wrapper" class="gray-bg dashbard-1">
+        <div class="row border-bottom">
+            <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                <div class="navbar-header">
+                    <div class="pagetitle">操作记录</div>
+                </div>
+                <ul class="nav navbar-top-links navbar-right pull-right">
+                     <li>
+                        <a href="#" onclick="javascript:logout(); event.returnValue=false; ">
+                            <i class="fa fa-sign-out"></i> Log out
+                        </a>
+                    </li>
+                </ul>
+
+            </nav>
+        </div>
+        <div class="row  border-bottom white-bg dashboard-header"
+             style="overflow: auto; z-index: 50;position: relative;">
+                    <!--<div class="class-xs-12">-->
+                         <!--<div class="searchBox pull-right">-->
+                                <!--&lt;!&ndash;<span style="border: 0;margin: 0;font-size: 18px;padding-left: 0px">搜索条件:</span>&ndash;&gt;-->
+                                <!--<input type="text" placeholder="开始时间" class="form-inline timeType" id="record-start-time">-->
+                                <!--<input type="text" placeholder="结束时间" class="form-inline timeType" id="record-end-time">-->
+                                <!--<input type='text' placeholder='用户名' id='operator' class='inline searchRecord timeType' name='operator'/>-->
+                                <!--<input type='text' placeholder='VM或者HOST' id='record-extra-data' class='inline searchRecord timeType' name='operation_action'/>-->
+                                <!--<button class="btn btn-success" id="searchBtn">查询</button>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <div class="col-xs-12 tableSpace">
+                        <table id="recordTable"  data-locale="zh-US"></table>
+                        <div id="toolbar" style="position: absolute;right: 50px">
+                            <div class="searchBox">
+                                <!--<span style="border: 0;margin: 0;font-size: 18px;padding-left: 0px">搜索条件:</span>-->
+                                <input type="text" placeholder="开始时间" class="form-inline timeType" id="record-start-time">
+                                <input type="text" placeholder="结束时间" class="form-inline timeType" id="record-end-time">
+                                <input type='text' placeholder='用户名' id='operator' class='inline searchRecord timeType' name='operator'/>
+                                <input type='text' placeholder='VM或者HOST' id='record-extra-data' class='inline searchRecord timeType' name='operation_action'/>
+                                <button class="btn btn-success" id="searchBtn">查询</button>
+                        </div>
+                        </div>
+                    </div>
+        </div>
+    </div>
+</div>
+<!-- Mainly scripts -->
+<script src="js/bootstrap.min.js"></script>
+<script src="js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="js/inspinia.js"></script>
+<script src="js/plugins/pace/pace.min.js"></script>
+
+<!-- jQuery UI -->
+<script src="js/plugins/jquery-ui/jquery-ui.min.js"></script>
+
+<!-- data tables -->
+<script src="js/bootstrap-table.js"></script>
+<script src="js/bootstrap-table-zh-CN.min.js"></script>
+<script src="js/bootstrap-datetimepicker.js"></script>
+<script src="js/bootstrap-datetimepicker.zh-CN.js"></script>
+
+<script src="js/module/common.js"></script>
+<script src="js/jquery.bootstrap-growl.min.js"></script>
+<script src="js/module/recordLog.js"></script>
+
+
+</body>
+</html>

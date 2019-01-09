@@ -1,0 +1,26 @@
+# GET /image_manage/create_new_init  创建全新镜像初始化时需返回给前台的字段
+
+## 返回参数
+```
+    json
+```
+后端字段说明
+{
+"os_type":os_type,  #操作系统类型
+"os_ver_list":os_ver_list,    #操作系统版本
+}
+
+
+返回值：
+{
+  "code": 0,
+  "data": {
+    "os_type": "linux",
+    "os_ver_list": [
+      "6.6",
+      "6.8",
+      "7.2"
+    ]
+  },
+  "msg": "success"
+}
